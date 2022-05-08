@@ -1,0 +1,140 @@
+{
+	"available_routes": {
+		"1": {
+			"ETH": {
+				"137": [
+					{
+						"name": "HYPHEN",
+						"contractAddress": "0x6A53Aa62dba933aEcd25B3d37F9878136d74E850",
+						"gasFees": "",
+						"amountToGet": "",
+						"transferFee": "",
+						"uniswapFees": "",
+						"tokenAddress": ["0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"]
+					},
+					{
+						"name": "HOP",
+						"contractAddress": "0x6A53Aa62dba933aEcd25B3d37F9878136d74E850",
+						"gasFees": "",
+						"amountToGet": "",
+						"transferFee": "",
+						"uniswapFees": "",
+						"tokenAddress": ["0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"]
+					}
+				]
+			},
+			"USDT": {
+				"137": [
+					{
+						"name": "HYPHEN",
+						"contractAddress": "0x6A53Aa62dba933aEcd25B3d37F9878136d74E850",
+						"gasFees": "",
+						"amountToGet": "",
+						"transferFee": "",
+						"uniswapFees": "",
+						"tokenAddress": ["0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"]
+					},
+					{
+						"name": "HOP",
+						"contractAddress": "0x6A53Aa62dba933aEcd25B3d37F9878136d74E850",
+						"gasFees": "",
+						"amountToGet": "",
+						"transferFee": "",
+						"uniswapFees": "",
+						"tokenAddress": ["0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"]
+					}
+				]
+			},
+			"USDC": {
+				"137": [
+					{
+						"name": "HYPHEN",
+						"contractAddress": "0x6A53Aa62dba933aEcd25B3d37F9878136d74E850",
+						"gasFees": "",
+						"amountToGet": "",
+						"transferFee": "",
+						"uniswapFees": "",
+						"tokenAddress": ["0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"]
+					},
+					{
+						"name": "HOP",
+						"contractAddress": "0x6A53Aa62dba933aEcd25B3d37F9878136d74E850",
+						"gasFees": "",
+						"amountToGet": "",
+						"transferFee": "",
+						"uniswapFees": "",
+						"tokenAddress": ["0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"]
+					}
+				]
+			}
+		},
+		"137": {
+			"MATIC": {
+				"1": [
+					{
+						"name": "HYPHEN",
+						"contractAddress": "0x6A53Aa62dba933aEcd25B3d37F9878136d74E850",
+						"gasFees": "",
+						"amountToGet": "",
+						"transferFee": "",
+						"uniswapFees": "",
+						"tokenAddress": ["0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174", "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"]
+					},
+					{
+						"name": "HOP",
+						"contractAddress": "0x6A53Aa62dba933aEcd25B3d37F9878136d74E850",
+						"gasFees": "",
+						"amountToGet": "",
+						"transferFee": "",
+						"uniswapFees": "",
+						"tokenAddress": ["0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174", "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"]
+					}
+				]
+			},
+			"USDT": {
+				"1": [
+					{
+						"name": "HYPHEN",
+						"contractAddress": "0x6A53Aa62dba933aEcd25B3d37F9878136d74E850",
+						"gasFees": "",
+						"amountToGet": "",
+						"transferFee": "",
+						"uniswapFees": "",
+						"tokenAddress": ["0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"]
+					},
+					{
+						"name": "HOP",
+						"contractAddress": "0x6A53Aa62dba933aEcd25B3d37F9878136d74E850",
+						"gasFees": "",
+						"amountToGet": "",
+						"transferFee": "",
+						"uniswapFees": "",
+						"tokenAddress": ["0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"]
+					}
+				]
+			},
+			"USDC": {
+				"1": [
+					{
+						"name": "HYPHEN",
+						"contractAddress": "0x6A53Aa62dba933aEcd25B3d37F9878136d74E850",
+						"gasFees": "",
+						"amountToGet": "",
+						"transferFee": "",
+						"uniswapFees": "",
+						"tokenAddress": ["0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"]
+					},
+					{
+						"name": "HOP",
+						"contractAddress": "0x6A53Aa62dba933aEcd25B3d37F9878136d74E850",
+						"gasFees": "",
+						"amountToGet": "",
+						"transferFee": "",
+						"uniswapFees": "",
+						"tokenAddress": ["0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"]
+					}
+				]
+			}
+		}
+	}
+}
