@@ -6,10 +6,10 @@ const  useHyphen = () => {
 	const TESTNET_HYPHEN_BASE_URL = "https://hyphen-v2-api.biconomy.io/api/v1"
 	const NATIVE_ADDRESS = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
 
-	const getTransferFees = async (fromChainId, toChainId, tokenAddress, amount) => {
+	const getTransferFees = async (fromChainId, toChainId, token, amount) => {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const res = await fetch(`${HYPHEN_BASE_URL}/data/transferFee?fromChainId=${fromChainId}&toChainId=${toChainId}&tokenAddress=${tokenAddress}&amount=${amount}`)
+				const res = await fetch(`${HYPHEN_BASE_URL}/data/transferFee?fromChainId=${fromChainId}&toChainId=${toChainId}&tokenAddress=${token.address}&amount=${amount}`)
 				if(res.status >= 400) throw "Error 404"
 				const data = await res.json()
 	

@@ -23,7 +23,7 @@ const useHyphenV2 = () => {
 		}
 	}
 
-	const approve = (tokenAddress, address, signer, amount) => {
+	const approve = async (tokenAddress, address, signer, amount) => {
 		const userAddress = await signer.getAddress()
 		
 		let erc20abi = ["function approve(address _spender, uint256 _value) public returns (bool success)", "function allowance(address owner, address spender) public view virtual override returns (uint256)"]
@@ -32,7 +32,7 @@ const useHyphenV2 = () => {
 		await erc20.approve(address, ethers.utils.parseUnits(amount, 6))
 	}
 
-	const getFunds = (ethereum, toTokenAddress, amount, address, depositHash) => {
+	const getFunds = async (ethereum, toTokenAddress, amount, address, depositHash) => {
 		await ethereum.request({
 			method: "wallet_switchEthereumChain",
 			params: [{ chainId: "0x1" }],

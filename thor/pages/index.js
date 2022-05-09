@@ -17,6 +17,7 @@ import useHyphenV2 from "../hooks/useHyphenV2";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import Authereum from "authereum"
 import Web3Modal from "web3modal"
+import useBridgeV2 from "../hooks/useBridgeV2";
 
 const chainIds = {
   'ETH': 1,
@@ -56,7 +57,7 @@ function WagPay() {
   const [showModal, setShowModal] = useState(false)
   const [connectWallet, setConnectWallet] = useState("")
 
-  const [chooseBridge, checkLowGasFees] = useBridge();
+  const [chooseBridge] = useBridgeV2();
   const [getTransferFees, bridge] = useHyphen()
   const [data, setData] = useState({});
   const [signer, setSigner] = useState()
@@ -101,6 +102,8 @@ function WagPay() {
     } else {
       setToTokenValue(BaseTokenValue - 8)
     }
+
+    chooseBridge(137, 1, JSON.parse(BaseToken), JSON.parse(ToToken), BaseTokenValue, signer).then(a => console.log(a)).catch(e => console.log(e))
   }, [BaseTokenValue])
 
   return (
