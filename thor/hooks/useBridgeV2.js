@@ -55,7 +55,8 @@ const useBridgeV2 = () => {
 			}
 
 			if(UNISWAP_REQUIRED) {
-				const swappedToken = token[fromChain][toToken.name]
+				console.log(fromChain, toToken.name)
+				const swappedToken = token[fromChain.toString()][toToken.name]
 
 				for(let i = 0; i < routes.length; i++) {
 					var fees;
@@ -102,7 +103,7 @@ const useBridgeV2 = () => {
 					routes[i].uniswapFees = 0
 					routes[i].uniswapData = {
 						chainId: fromChain,
-						fromTokenAddress: swappedToken, 
+						fromTokenAddress: fromToken, 
 						toTokenAddress: toToken, 
 					}
 				}

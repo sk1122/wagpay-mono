@@ -12,14 +12,14 @@ const  useHyphen = () => {
 				const res = await fetch(`${HYPHEN_BASE_URL}/data/transferFee?fromChainId=${fromChainId}&toChainId=${toChainId}&tokenAddress=${token.address}&amount=${amount}`)
 				if(res.status >= 400) throw "Error 404"
 				const data = await res.json()
-	
+				
 				let fees = {
 					gas: data["gasFee"],
 					amountToGet: data["amountToGet"],
 					transferFee: data["transferFee"],
 					transferFeePerc: data["transferFeePercentage"]
 				}
-	
+				console.log(data, "DATA")
 				resolve(fees)
 			} catch (e) {
 				reject(e)
