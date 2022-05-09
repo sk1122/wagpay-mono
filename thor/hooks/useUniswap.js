@@ -137,9 +137,11 @@ const useUniswap = () => {
         await WETHContract.deposit({value: ethers.utils.parseEther(amount)})
     }
 
-    // const unwrapWETH = () => {
-        
-    // }
+    const unwrapWETH = async (amount) => {
+        const WETH = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'
+        const WETHContract = new ethers.Contract(WETH, WETHabi, signer)
+        await WETHContract.withdraw(amount)
+    }
 
     return [approve, swapTokens, getPair]
 }
