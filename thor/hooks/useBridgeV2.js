@@ -3,6 +3,8 @@ import route from "../routes/route2.json"
 import useHop from "./useHop"
 import useHyphen from "./useHyphen"
 import { ethers } from "ethers"
+import useHyphenV2 from "./useHyphenV2"
+import useUniswap from "./useUniswap"
 
 const token = {
 	1: {
@@ -26,8 +28,10 @@ const chains = {
 }
 
 const useBridgeV2 = () => {
-	const [getTransferFees] = useHyphen()
+	const [getTransferFees, ] = useHyphen()
 	const [get] = useHop()
+	const [bridgeFunds, getFunds] = useHyphenV2()
+	const [swapTokens] = useUniswap()
 	
 	const getRouteFees = async (route, fromChain, toChain, fromToken, toToken, amount, signer) => {
 		if(route.name === 'HYPHEN') {
@@ -46,7 +50,7 @@ const useBridgeV2 = () => {
 	const chooseBridge = async (fromChain, toChain, fromToken, toToken, amount, signer) => {
 		return new Promise(async (resolve, reject) => {			
 			const UNISWAP_REQUIRED = fromToken.name !== toToken.name
-			
+			console.log(fromChain, fromToken, toChain)
 			var routes = route.available_routes[fromChain.toString()][fromToken.name][toChain.toString()]
 
 			if(!routes) {
@@ -72,8 +76,15 @@ const useBridgeV2 = () => {
 					routes[i].uniswapFees = 0
 					routes[i].uniswapData = {
 						chainId: fromChain,
-						fromTokenAddress: swappedToken, 
-						toTokenAddress: toToken, 
+						fromTokenAddress: fromToken, 
+						toTokenAddress: swappedToken, 
+					}
+					routes[i].route = {
+						fromChain: fromChain,
+						toChain: toChain,
+						fromToken: swappedToken,
+						toToken: toToken,
+						amount: amount
 					}
 				}
 
@@ -101,10 +112,13 @@ const useBridgeV2 = () => {
 					routes[i].amountToGet = fees["amountToGet"]
 					routes[i].transferFee = fees["transferFee"]
 					routes[i].uniswapFees = 0
-					routes[i].uniswapData = {
-						chainId: fromChain,
-						fromTokenAddress: fromToken, 
-						toTokenAddress: toToken, 
+					routes[i].uniswapData = undefined
+					routes[i].route = {
+						fromChain: fromChain,
+						toChain: toChain,
+						fromToken: fromToken,
+						toToken: toToken,
+						amount: amount
 					}
 				}
 
@@ -123,7 +137,36 @@ const useBridgeV2 = () => {
 		})
 	}
 
-	return [chooseBridge]
+	const executeRoute = async (route, signer) => {
+		return new Promise(async (resolve, reject) => {
+			const address = await signer.getAddress()
+			const abi = [{"inputs":[{"internalType":"address","name":"_hyphen","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"receiver","type":"address"},{"indexed":false,"internalType":"uint256","name":"toChainId","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"},{"indexed":false,"internalType":"address","name":"tokenAddress","type":"address"}],"name":"ERC20FundsTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"receiver","type":"address"},{"indexed":false,"internalType":"uint256","name":"toChainId","type":"uint256"}],"name":"NativeFundsTransferred","type":"event"},{"inputs":[{"internalType":"uint256","name":"toChainId","type":"uint256"},{"internalType":"address","name":"tokenAddress","type":"address"},{"internalType":"address","name":"receiver","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"string","name":"tag","type":"string"}],"name":"transferERC20","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"address","name":"receiver","type":"address"},{"internalType":"uint256","name":"toChainId","type":"uint256"},{"internalType":"string","name":"tag","type":"string"}],"name":"transferNative","outputs":[],"stateMutability":"payable","type":"function"}]
+			if(route.uniswapData) {
+				// TODO: Implement erc20approve
+				// await erc20approve(route.route.fromToken.address, ethers.utils.parseUnits(route.route.amount, route.route.fromToken.decimals))
+				
+				await swapTokens(route.uniswapData.fromTokenAddress.address, route.uniswapData.toTokenAddress.address, ethers.utils.parseUnits(route.route.amount, route.route.fromToken.decimals), signer)
+				
+				const contract = new ethers.Contract(route.contractAddress, abi, signer)
+				await contract.transferERC20(route.route.fromChain, route.route.fromToken.address, address, ethers.utils.parseUnits(route.route.amount, route.route.fromToken.decimals), 'WAGPAY')
+				if(route.name == 'HYPHEN') {
+					await getFunds(ethereum, route.toToken.address, ethers.utils.parseUnits(route.route.amount, route.route.toToken.decimals), signer)
+				}
+				resolve()
+			} else {
+				// TODO: Implement erc20approve
+				// await erc20approve(route.route.fromToken.address, ethers.utils.parseUnits(route.route.amount, route.route.fromToken.decimals))
+				const contract = new ethers.Contract(route.contractAddress, abi, signer)
+				await contract.transferERC20(route.route.fromChain, route.route.fromToken.address, address , ethers.utils.parseUnits(route.route.amount, route.route.fromToken.decimals), 'WAGPAY')
+				if(route.name == 'HYPHEN') {
+					await getFunds(ethereum, route.toToken.address, ethers.utils.parseUnits(route.route.amount, route.route.toToken.decimals), signer)
+				}
+				resolve()
+			}
+		})
+	}
+
+	return [chooseBridge, executeRoute]
 }
 
 export default useBridgeV2

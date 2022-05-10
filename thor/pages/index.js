@@ -57,7 +57,7 @@ function WagPay() {
   const [showModal, setShowModal] = useState(false)
   const [connectWallet, setConnectWallet] = useState("")
 
-  const [chooseBridge] = useBridgeV2();
+  const [chooseBridge, executeRoute] = useBridgeV2();
   const [getTransferFees, bridge] = useHyphen()
   const [data, setData] = useState({});
   const [signer, setSigner] = useState()
@@ -97,13 +97,18 @@ function WagPay() {
 	const NATIVE_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
 
   useEffect(() => {
-    if(JSON.parse(BaseToken).address == NATIVE_ADDRESS) {
-      setToTokenValue(BaseTokenValue - 0.001)
-    } else {
-      setToTokenValue(BaseTokenValue - 8)
-    }
+    // if(JSON.parse(BaseToken).address == NATIVE_ADDRESS) {
+    //   setToTokenValue(BaseTokenValue - 0.001)
+    // } else {
+    //   setToTokenValue(BaseTokenValue - 8)
+    // }
 
-    chooseBridge(137, 1, JSON.parse(BaseToken), JSON.parse(ToToken), BaseTokenValue, signer).then(a => console.log(a)).catch(e => console.log(e))
+    chooseBridge(137, 1, JSON.parse(BaseToken), JSON.parse(ToToken), BaseTokenValue, signer).then(a => {
+      console.log("123")
+      console.log(a)
+      setToTokenValue(a[0].amountToGet)
+      executeRoute(a[0], signer)
+    }).catch(e => console.log(e, "123"))
   }, [BaseTokenValue])
 
   return (

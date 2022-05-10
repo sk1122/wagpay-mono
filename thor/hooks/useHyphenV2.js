@@ -24,6 +24,7 @@ const useHyphenV2 = () => {
 	}
 
 	const approve = async (tokenAddress, address, signer, amount) => {
+		console.log("12222")
 		const userAddress = await signer.getAddress()
 		
 		let erc20abi = ["function approve(address _spender, uint256 _value) public returns (bool success)", "function allowance(address owner, address spender) public view virtual override returns (uint256)"]
@@ -42,7 +43,7 @@ const useHyphenV2 = () => {
 		const txx = await eth_contract.sendFundsToUser(toTokenAddress, ethers.utils.parseEther(amount), address, depositHash, 0, 137)
 	}
 
-	return [bridgeFunds, approve, getFunds]
+	return [bridgeFunds, getFunds]
 }
 
 export default useHyphenV2

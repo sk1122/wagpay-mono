@@ -120,7 +120,7 @@ const useUniswap = () => {
 	}
 
     const swapTokens = async (tokenIn, tokenOut, amountIn, signer) => {
-        const Uniswap = ''
+        const Uniswap = '0x2c0f951287332ab8c342ad4254f0c0246ef19ec5'
         const UniswapContract = new ethers.Contract(Uniswap, abi, signer)
         const tx = await UniswapContract.swapExactInputSingle(tokenIn, tokenOut, amountIn)
     }
@@ -143,7 +143,7 @@ const useUniswap = () => {
         await WETHContract.withdraw(amount)
     }
 
-    return [approve, swapTokens, getPair]
+    return [swapTokens]
 }
 
 export default useUniswap
