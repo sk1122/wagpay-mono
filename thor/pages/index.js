@@ -18,6 +18,7 @@ import WalletConnectProvider from "@walletconnect/web3-provider";
 import Authereum from "authereum"
 import Web3Modal from "web3modal"
 import useBridgeV2 from "../hooks/useBridgeV2";
+import useUniswap from "../hooks/useUniswap";
 
 const chainIds = {
   'ETH': 1,
@@ -62,6 +63,7 @@ function WagPay() {
   const [data, setData] = useState({});
   const [signer, setSigner] = useState()
 
+  const [swapTokens, getAmountOut] = useUniswap()
   const [bridgeFunds] = useHyphenV2()
 
   const connectETH = async () => {
@@ -103,13 +105,17 @@ function WagPay() {
     //   setToTokenValue(BaseTokenValue - 8)
     // }
 
-    chooseBridge(137, 1, JSON.parse(BaseToken), JSON.parse(ToToken), BaseTokenValue, signer).then(a => {
-      console.log("123")
-      console.log(a)
-      setToTokenValue(a[0].amountToGet)
-      executeRoute(a[0], signer)
-    }).catch(e => console.log(e, "123"))
-  }, [BaseTokenValue])
+    getAmountOut(JSON.parse(BaseToken), JSON.parse(ToToken), Number(BaseTokenValue)).then(value => {
+      chooseBridge(137, 1, JSON.parse(BaseToken), JSON.parse(ToToken), value.toFixed(2).toString(), signer).then(a => {
+        console.log("123")
+        console.log(a)
+        setToTokenValue(a[0].amountToGet)
+        executeRoute(a[0], signer)
+      }).catch(e => console.log(e, "123"))
+    })
+    
+
+  }, [BaseTokenValue, BaseToken, ToToken])
 
   return (
     <div className="text-white  overflow-hidden relative w-full max-w-2xl bg-[#191926] px-4 py-6 h-[600px]" onClick={() => setShowModal(false)}>

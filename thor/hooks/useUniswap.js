@@ -112,6 +112,43 @@ const WETHabi = [{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"
 
 const useUniswap = () => {
 
+	const getAmountOut = async (fromToken, toToken, amount) => {
+		if(fromToken.name.startsWith('USD') && toToken.name.startsWith('USD') || fromToken.name === toToken.name) {
+			return amount
+		}
+		
+		const coingeckoName = {
+			'MATIC': 'matic-network',
+			'ETH': 'ethereum'
+		}
+		
+		var fromTokenPrice
+
+		if(fromToken.name === 'MATIC' || fromToken.name === 'ETH') {
+			fromTokenPrice = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${coingeckoName[fromToken.name]}&vs_currencies=usd`)
+			fromTokenPrice = await fromTokenPrice.json()
+			fromTokenPrice = fromTokenPrice[coingeckoName[fromToken.name]].usd
+			console.log(fromTokenPrice)
+		}
+		else fromTokenPrice = amount
+
+		if(toToken.name === 'MATIC') {
+			var toTokenPrice = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=usd`)
+			toTokenPrice = await toTokenPrice.json()
+			toTokenPrice = toTokenPrice[toToken.name].usd
+			
+			return (amount * Number(toTokenPrice)) - ((amount * Number(toTokenPrice)) * 0.003)
+		} else if (toToken.name === 'ETH') {
+			var toTokenPrice = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd`)
+			toTokenPrice = await toTokenPrice.json()
+			toTokenPrice = toTokenPrice[ethereum].usd
+
+			return (amount * Number(toTokenPrice)) - ((amount * Number(toTokenPrice)) * 0.003)
+		} else if (toToken.name.startsWith('USD')) {
+			return (amount * Number(fromTokenPrice)) - (Number(fromTokenPrice) * 0.003)
+		}
+	}
+
     const approve = async (tokenAddress, address, signer, amount) => {
 		const userAddress = await signer.getAddress()
 		
@@ -143,7 +180,7 @@ const useUniswap = () => {
         await WETHContract.withdraw(amount)
     }
 
-    return [swapTokens]
+    return [swapTokens, getAmountOut]
 }
 
 export default useUniswap
