@@ -59,7 +59,7 @@ const useBridgeV2 = () => {
 			}
 
 			if(UNISWAP_REQUIRED) {
-				console.log(fromChain, toToken.name)
+				console.log(fromChain, fromToken.name, toToken.name)
 				const swappedToken = token[fromChain.toString()][toToken.name]
 
 				for(let i = 0; i < routes.length; i++) {
@@ -103,6 +103,7 @@ const useBridgeV2 = () => {
 				for(let i = 0; i < routes.length; i++) {
 					var fees 
 					try {
+						console.log(fromChain, fromToken, toToken, amount)
 						fees = await getRouteFees(routes[i], fromChain, toChain, fromToken, toToken, ethers.utils.parseUnits(amount, fromToken.decimals), signer)
 					} catch(e) {
 						reject(e)
