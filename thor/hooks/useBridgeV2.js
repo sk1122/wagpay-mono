@@ -29,7 +29,7 @@ const chains = {
 
 const useBridgeV2 = () => {
 	const [getTransferFees, ] = useHyphen()
-	const [get] = useHop()
+	const [get, bridge] = useHop()
 	const [bridgeFunds, getFunds] = useHyphenV2()
 	const [swapTokens] = useUniswap()
 	
@@ -65,7 +65,7 @@ const useBridgeV2 = () => {
 				for(let i = 0; i < routes.length; i++) {
 					var fees;
 					try {
-						fees = await getRouteFees(routes[i], fromChain, toChain, swappedToken, toToken, ethers.utils.parseUnits(amount, fromToken.decimals), signer)
+						fees = await getRouteFees(routes[i], fromChain, toChain, swappedToken, toToken, ethers.utils.parseUnits(amount, swappedToken.decimals), signer)
 					} catch(e) {
 						reject(e)
 						return
@@ -137,13 +137,19 @@ const useBridgeV2 = () => {
 		})
 	}
 
+	const erc20approve = async (tokenAddress, addressToApprove, amount, signer) => {
+		const abi = ["function approve(address _spender, uint256 _value) public returns (bool success)"]
+		const erc20 = new ethers.Contract(tokenAddress, abi, signer)
+		await erc20.approve(addressToApprove, amount)
+	}
+
 	const executeRoute = async (route, signer) => {
 		return new Promise(async (resolve, reject) => {
 			const address = await signer.getAddress()
 			const abi = [{"inputs":[{"internalType":"address","name":"_hyphen","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"receiver","type":"address"},{"indexed":false,"internalType":"uint256","name":"toChainId","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"},{"indexed":false,"internalType":"address","name":"tokenAddress","type":"address"}],"name":"ERC20FundsTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"receiver","type":"address"},{"indexed":false,"internalType":"uint256","name":"toChainId","type":"uint256"}],"name":"NativeFundsTransferred","type":"event"},{"inputs":[{"internalType":"uint256","name":"toChainId","type":"uint256"},{"internalType":"address","name":"tokenAddress","type":"address"},{"internalType":"address","name":"receiver","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"string","name":"tag","type":"string"}],"name":"transferERC20","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"address","name":"receiver","type":"address"},{"internalType":"uint256","name":"toChainId","type":"uint256"},{"internalType":"string","name":"tag","type":"string"}],"name":"transferNative","outputs":[],"stateMutability":"payable","type":"function"}]
 			if(route.uniswapData) {
 				// TODO: Implement erc20approve
-				// await erc20approve(route.route.fromToken.address, ethers.utils.parseUnits(route.route.amount, route.route.fromToken.decimals))
+				await erc20approve(route.route.fromToken.address, route.contractAddress, ethers.utils.parseUnits(route.route.amount, route.route.fromToken.decimals), signer)
 				
 				await swapTokens(route.uniswapData.fromTokenAddress.address, route.uniswapData.toTokenAddress.address, ethers.utils.parseUnits(route.route.amount, route.route.fromToken.decimals), signer)
 				
@@ -151,15 +157,19 @@ const useBridgeV2 = () => {
 				await contract.transferERC20(route.route.fromChain, route.route.fromToken.address, address, ethers.utils.parseUnits(route.route.amount, route.route.fromToken.decimals), 'WAGPAY')
 				if(route.name == 'HYPHEN') {
 					await getFunds(ethereum, route.toToken.address, ethers.utils.parseUnits(route.route.amount, route.route.toToken.decimals), signer)
+				} else if(route.name == 'HOP') {
+					await bridge(route.route.fromChain, route.route.toChain, route.route.fromToken.address, ethers.utils.parseUnits(route.route.amount, route.route.fromToken.decimals), signer)
 				}
 				resolve()
 			} else {
 				// TODO: Implement erc20approve
-				// await erc20approve(route.route.fromToken.address, ethers.utils.parseUnits(route.route.amount, route.route.fromToken.decimals))
+				await erc20approve(route.route.fromToken.address, route.contractAddress, ethers.utils.parseUnits(route.route.amount, route.route.fromToken.decimals), signer)
 				const contract = new ethers.Contract(route.contractAddress, abi, signer)
 				await contract.transferERC20(route.route.fromChain, route.route.fromToken.address, address , ethers.utils.parseUnits(route.route.amount, route.route.fromToken.decimals), 'WAGPAY')
 				if(route.name == 'HYPHEN') {
 					await getFunds(ethereum, route.toToken.address, ethers.utils.parseUnits(route.route.amount, route.route.toToken.decimals), signer)
+				} else if(route.name == 'HOP') {
+					await bridge(route.route.fromChain, route.route.toChain, route.route.fromToken.address, ethers.utils.parseUnits(route.route.amount, route.route.fromToken.decimals), signer)
 				}
 				resolve()
 			}
