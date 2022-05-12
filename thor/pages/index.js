@@ -65,6 +65,7 @@ function WagPay() {
 
   const [swapTokens, getAmountOut] = useUniswap()
   const [bridgeFunds] = useHyphenV2()
+  const [routes, setRoutes] = useState([])
 
   const connectETH = async () => {
 		console.log('2')
@@ -105,18 +106,19 @@ function WagPay() {
     //   setToTokenValue(BaseTokenValue - 8)
     // }
 
-    chooseBridge(137, 1, JSON.parse(BaseToken), JSON.parse(ToToken), BaseTokenValue, signer).then(a => {
-      console.log("ROUTES -> ", a)
-      setToTokenValue(a[0].amountToGet)
-      // executeRoute(a[0], signer)
-    }).catch(e => console.log(e, "123"))
-    
-
+    if(BaseToken && ToToken && Number(BaseTokenValue) > 0) {
+      chooseBridge(137, 1, JSON.parse(BaseToken), JSON.parse(ToToken), BaseTokenValue, signer).then(a => {
+        console.log("ROUTES -> ", a)
+        setRoutes(a)
+        setToTokenValue(Number(a[0].amountToGet).toFixed(3))
+        // executeRoute(a[0], signer)
+      })
+    }
   }, [BaseTokenValue, BaseToken, ToToken])
 
   return (
-    <div className="text-white  overflow-hidden relative w-full max-w-2xl bg-[#191926] px-4 py-6 h-[600px]" onClick={() => setShowModal(false)}>
-      <div className=" w-full flex justify-center  mb-9  ">
+    <div className="text-white  overflow-hidden relative w-1/2 rounded-xl max-w-2xl bg-[#191926] px-12 py-8 h-[600px]" onClick={() => setShowModal(false)}>
+      <div className=" w-full flex justify-center  mb-9 ">
         <h1 className="font-bold text-4xl text-center">WagPay</h1>
       </div>
       <div>
@@ -130,6 +132,32 @@ function WagPay() {
           <div className="w-full text-black text-sm focus:outline-none p-1 bg-white flex items-center ">{ToTokenValue}</div>
           <SelectToken token={ToToken} setToken={setToToken} />
         </div>
+      </div>
+
+      <div className="w-full pt-8 space-y-5 flex flex-col justify-center items-center">
+        {routes.map(route => (
+          <div className="w-full px-2 flex flex-col space-y-2 justify-center items-center">
+            <>
+              <h3 className="font-bold">{route.name} -> {Number(route.amountToGet).toFixed(3)}</h3>
+              {route.uniswapData && 
+                <div className="w-full px-2 flex space-x-2 justify-center items-center">
+                  <p>{route.uniswapData.fromTokenAddress.name} ({route.uniswapData.fromTokenAddress.chainId})</p>
+                  <div className="w-20 border border-b-3"></div>
+                  <p>{route.uniswapData.toTokenAddress.name} ({route.uniswapData.toTokenAddress.chainId})</p>
+                  <div className="w-20 border border-b-3"></div>
+                  <p>{route.route.toToken.name} ({route.route.toToken.chainId})</p>
+                </div>
+              }
+              {!route.uniswapData && 
+                <div className="w-full px-2 flex space-x-2 justify-center items-center">
+                  <p>{route.route.fromToken.name} ({route.route.fromToken.chainId})</p>
+                  <div className="w-20 border border-b-3"></div>
+                  <p>{route.route.toToken.name} ({route.route.toToken.chainId})</p>
+                </div>
+              }
+            </>
+          </div>
+        ))}
       </div>
 
       <div className="w-full flex justify-center py-10 text-sm">
@@ -157,16 +185,16 @@ export default function Home() {
   const [nextScreen, setNextScreen] = useState(true);
 
   return (
-    <>
+    <div className="w-screen h-screen flex justify-center items-center">
 
-      {!nextScreen ? (
-        <Intro nextScreen={nextScreen} setNextScreen={setNextScreen} />
-      ) : (
+      <div className="w-1/2 h-screen flex justify-center items-center">
         <WagPay />
-      )
-      }
+      </div>
+      {/* <div className="w-1/2 h-screen flex justify-center items-center">
+        
+      </div> */}
 
 
-    </>
+    </div>
   );
 }

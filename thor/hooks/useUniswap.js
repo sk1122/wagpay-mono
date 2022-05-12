@@ -130,24 +130,24 @@ const useUniswap = () => {
 			fromTokenPrice = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${coingeckoName[fromToken.name]}&vs_currencies=usd`)
 			fromTokenPrice = await fromTokenPrice.json()
 			fromTokenPrice = fromTokenPrice[coingeckoName[fromToken.name]].usd
-			// console.log(fromTokenPrice)
+			fromTokenPrice = fromTokenPrice * amount
 		}
 		else fromTokenPrice = amount
 
 		if(toToken.name === 'MATIC') {
 			var toTokenPrice = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=usd`)
 			toTokenPrice = await toTokenPrice.json()
-			toTokenPrice = toTokenPrice[toToken.name].usd
+			toTokenPrice = toTokenPrice['matic'].usd
 			
 			console.log("Uniswap Fees -> ", (amount * Number(toTokenPrice)) - ((amount * Number(toTokenPrice)) * 0.003))
 			return (amount * Number(toTokenPrice)) - ((amount * Number(toTokenPrice)) * 0.003)
 		} else if (toToken.name === 'ETH') {
 			var toTokenPrice = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd`)
 			toTokenPrice = await toTokenPrice.json()
-			toTokenPrice = toTokenPrice[ethereum].usd
+			toTokenPrice = toTokenPrice['ethereum'].usd
 			
-			console.log("Uniswap Fees -> ", (amount * Number(toTokenPrice)) - ((amount * Number(toTokenPrice)) * 0.003))
-			return (amount * Number(toTokenPrice)) - ((amount * Number(toTokenPrice)) * 0.003)
+			console.log("Uniswap Feesx -> ", (fromTokenPrice / Number(toTokenPrice)))
+			return ((fromTokenPrice - ((Number(fromTokenPrice)) * 0.003)) / Number(toTokenPrice))
 		} else if (toToken.name.startsWith('USD')) {
 			console.log("Uniswap Fees -> ", (amount * Number(fromTokenPrice)) - (Number(fromTokenPrice) * 0.003))
 			return (amount * Number(fromTokenPrice)) - (Number(fromTokenPrice) * 0.003)
