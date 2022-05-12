@@ -106,7 +106,7 @@ function WagPay() {
     // }
 
     chooseBridge(137, 1, JSON.parse(BaseToken), JSON.parse(ToToken), BaseTokenValue, signer).then(a => {
-      console.log(a)
+      console.log("ROUTES -> ", a)
       setToTokenValue(a[0].amountToGet)
       // executeRoute(a[0], signer)
     }).catch(e => console.log(e, "123"))

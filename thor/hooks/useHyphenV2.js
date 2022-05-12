@@ -14,17 +14,17 @@ const useHyphenV2 = () => {
 
 		if(fromToken.address == NATIVE_ADDRESS) {
 			const funds = await bridgeContract.transferNative(ethers.utils.parseUnits(amount, fromToken.decimals), address, toChainId, "WAGPAY", { value: ethers.utils.parseUnits(amount, fromToken.decimals) })
-			console.log(funds, "NATIVE")
+			// console.log(funds, "NATIVE")
 			return funds.transaction_hash
 		} else {
 			const funds = await bridgeContract.transferERC20(toChainId, fromToken.address, address, ethers.utils.parseUnits(amount, fromToken.decimals), "WAGPAY")
-			console.log(funds, "ERC20")
+			// console.log(funds, "ERC20")
 			return funds.transaction_hash
 		}
 	}
 
 	const approve = async (tokenAddress, address, signer, amount) => {
-		console.log("12222")
+		// console.log("12222")
 		const userAddress = await signer.getAddress()
 		
 		let erc20abi = ["function approve(address _spender, uint256 _value) public returns (bool success)", "function allowance(address owner, address spender) public view virtual override returns (uint256)"]

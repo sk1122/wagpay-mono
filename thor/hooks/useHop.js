@@ -33,7 +33,7 @@ const useHop = () => {
 					}
 				}
 
-				console.log(sendData["estimatedReceived"], token)
+				// console.log(sendData["estimatedReceived"], token)
 
 				let fees = {
 					gas: 0,
@@ -41,7 +41,7 @@ const useHop = () => {
 					transferFee: ethers.utils.formatUnits(sendData["adjustedBonderFee"], token.decimals)
 				}
 
-				console.log(fees)
+				// console.log(fees)
 
 				resolve(fees)
 

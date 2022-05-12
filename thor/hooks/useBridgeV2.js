@@ -49,8 +49,9 @@ const useBridgeV2 = () => {
 	
 	const chooseBridge = async (fromChain, toChain, fromToken, toToken, amount, signer) => {
 		return new Promise(async (resolve, reject) => {			
+			console.log("Choosing Bridge...")
 			const UNISWAP_REQUIRED = fromToken.name !== toToken.name
-			console.log(fromChain, fromToken, toChain)
+			// console.log(fromChain, fromToken, toChain)
 			var routes = route.available_routes[fromChain.toString()][fromToken.name][toChain.toString()]
 
 			if(!routes) {
@@ -97,12 +98,13 @@ const useBridgeV2 = () => {
 						return -1
 					}
 				})
+
 				resolve(sorted)
 			} else {
 				for(let i = 0; i < routes.length; i++) {
 					var fees 
 					try {
-						console.log(fromChain, fromToken, toToken, amount)
+						// console.log(fromChain, fromToken, toToken, amount)
 						fees = await getRouteFees(routes[i], fromChain, toChain, fromToken, toToken, ethers.utils.parseUnits(amount, fromToken.decimals), signer)
 					} catch(e) {
 						reject(e)

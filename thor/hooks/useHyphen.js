@@ -19,7 +19,7 @@ const  useHyphen = () => {
 					transferFee: data["transferFee"],
 					transferFeePerc: data["transferFeePercentage"]
 				}
-				console.log(data, "DATA")
+				// console.log(data, "DATA")
 				resolve(fees)
 			} catch (e) {
 				reject(e)
@@ -41,7 +41,7 @@ const  useHyphen = () => {
 					const contract = new ethers.Contract('0x2C0F951287332AB8c342AD4254F0C0246ef19ec5', abi, signer)
 					const address = await signer.getAddress()
 					var tx;
-					console.log(tokenAddress, "31")
+					// console.log(tokenAddress, "31")
 					if(tokenAddress.toLowerCase() == NATIVE_ADDRESS.toLowerCase()) {
 						tx = await contract.transferNative(ethers.utils.parseEther(amount), address, toChainId, "s", { value: ethers.utils.parseEther(amount) })
 						await ethereum.request({
@@ -67,13 +67,13 @@ const  useHyphen = () => {
 
 
 
-					console.log(tx, txx)
-					console.log(accounts[0]);
+					// console.log(tx, txx)
+					// console.log(accounts[0]);
 				} else {
-					console.log("Do not have access");
+					// console.log("Do not have access");
 				}
 			} else {
-				console.log("Install Metamask");
+				// console.log("Install Metamask");
 			}
 		} catch (e) {
 			console.log(e);
