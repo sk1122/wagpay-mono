@@ -31,7 +31,7 @@ const useBridgeV2 = () => {
 	const [getTransferFees, ] = useHyphen()
 	const [get, bridge] = useHop()
 	const [bridgeFunds, getFunds] = useHyphenV2()
-	const [swapTokens] = useUniswap()
+	const [swapTokens, getAmountOut] = useUniswap()
 	
 	const getRouteFees = async (route, fromChain, toChain, fromToken, toToken, amount, signer) => {
 		if(route.name === 'HYPHEN') {
@@ -59,13 +59,13 @@ const useBridgeV2 = () => {
 			}
 
 			if(UNISWAP_REQUIRED) {
-				console.log(fromChain, fromToken.name, toToken.name)
+				const value = await getAmountOut(fromToken, toToken, Number(amount))
 				const swappedToken = token[fromChain.toString()][toToken.name]
 
 				for(let i = 0; i < routes.length; i++) {
 					var fees;
 					try {
-						fees = await getRouteFees(routes[i], fromChain, toChain, swappedToken, toToken, ethers.utils.parseUnits(amount, swappedToken.decimals), signer)
+						fees = await getRouteFees(routes[i], fromChain, toChain, swappedToken, toToken, ethers.utils.parseUnits(value.toFixed(2).toString(), swappedToken.decimals), signer)
 					} catch(e) {
 						reject(e)
 						return
@@ -84,7 +84,7 @@ const useBridgeV2 = () => {
 						toChain: toChain,
 						fromToken: swappedToken,
 						toToken: toToken,
-						amount: amount
+						amount: value
 					}
 				}
 
@@ -97,7 +97,6 @@ const useBridgeV2 = () => {
 						return -1
 					}
 				})
-
 				resolve(sorted)
 			} else {
 				for(let i = 0; i < routes.length; i++) {
@@ -150,9 +149,9 @@ const useBridgeV2 = () => {
 			const abi = [{"inputs":[{"internalType":"address","name":"_hyphen","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"receiver","type":"address"},{"indexed":false,"internalType":"uint256","name":"toChainId","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"},{"indexed":false,"internalType":"address","name":"tokenAddress","type":"address"}],"name":"ERC20FundsTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"receiver","type":"address"},{"indexed":false,"internalType":"uint256","name":"toChainId","type":"uint256"}],"name":"NativeFundsTransferred","type":"event"},{"inputs":[{"internalType":"uint256","name":"toChainId","type":"uint256"},{"internalType":"address","name":"tokenAddress","type":"address"},{"internalType":"address","name":"receiver","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"string","name":"tag","type":"string"}],"name":"transferERC20","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"address","name":"receiver","type":"address"},{"internalType":"uint256","name":"toChainId","type":"uint256"},{"internalType":"string","name":"tag","type":"string"}],"name":"transferNative","outputs":[],"stateMutability":"payable","type":"function"}]
 			if(route.uniswapData) {
 				// TODO: Implement erc20approve
-				await erc20approve(route.route.fromToken.address, route.contractAddress, ethers.utils.parseUnits(route.route.amount, route.route.fromToken.decimals), signer)
-				
 				await swapTokens(route.uniswapData.fromTokenAddress.address, route.uniswapData.toTokenAddress.address, ethers.utils.parseUnits(route.route.amount, route.route.fromToken.decimals), signer)
+				
+				await erc20approve(route.uniswapData.fromTokenAddress.address, route.contractAddress, ethers.utils.parseUnits(route.route.amount, route.route.fromToken.decimals), signer)
 				
 				const contract = new ethers.Contract(route.contractAddress, abi, signer)
 				await contract.transferERC20(route.route.fromChain, route.route.fromToken.address, address, ethers.utils.parseUnits(route.route.amount, route.route.fromToken.decimals), 'WAGPAY')

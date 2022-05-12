@@ -105,19 +105,11 @@ function WagPay() {
     //   setToTokenValue(BaseTokenValue - 8)
     // }
 
-    getAmountOut(JSON.parse(BaseToken), JSON.parse(ToToken), Number(BaseTokenValue)).then(value => {
-      chooseBridge(137, 1, {
-        name: "USDT",
-        chainId: 137,
-        decimals: 6,
-        address: '0xc2132D05D31c914a87C6611C10748AEb04B58e8F'
-      }, JSON.parse(ToToken), value.toFixed(2).toString(), signer).then(a => {
-        console.log("123")
-        console.log(a)
-        setToTokenValue(a[0].amountToGet)
-        // executeRoute(a[0], signer)
-      }).catch(e => console.log(e, "123"))
-    })
+    chooseBridge(137, 1, JSON.parse(BaseToken), JSON.parse(ToToken), BaseTokenValue, signer).then(a => {
+      console.log(a)
+      setToTokenValue(a[0].amountToGet)
+      // executeRoute(a[0], signer)
+    }).catch(e => console.log(e, "123"))
     
 
   }, [BaseTokenValue, BaseToken, ToToken])
