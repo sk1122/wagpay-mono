@@ -135,10 +135,18 @@ function WagPay() {
       </div>
 
       <div className="w-full pt-8 space-y-5 flex flex-col justify-center items-center">
+        <div className="w-full flex justify-between items-center">
+          <h2>Routes</h2>
+          <select name="" id="" className="text-black">
+            <option value="">Gas Fees</option>
+            <option value="">Bridge Fees</option>
+            <option value="">Time</option>
+          </select>
+        </div>
         {routes.map(route => (
           <div className="w-full px-2 flex flex-col space-y-2 justify-center items-center">
             <>
-              <h3 className="font-bold">{route.name} -> {Number(route.amountToGet).toFixed(3)}</h3>
+              <h3 className="font-bold">{route.name} -> {Number(route.amountToGet).toFixed(3)} ~{route.bridgeTime}</h3>
               {route.uniswapData && 
                 <div className="w-full px-2 flex space-x-2 justify-center items-center">
                   <p>{route.uniswapData.fromTokenAddress.name} ({route.uniswapData.fromTokenAddress.chainId})</p>

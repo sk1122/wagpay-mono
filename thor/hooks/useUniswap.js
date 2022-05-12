@@ -149,8 +149,8 @@ const useUniswap = () => {
 			console.log("Uniswap Feesx -> ", (fromTokenPrice / Number(toTokenPrice)))
 			return ((fromTokenPrice - ((Number(fromTokenPrice)) * 0.003)) / Number(toTokenPrice))
 		} else if (toToken.name.startsWith('USD')) {
-			console.log("Uniswap Fees -> ", (amount * Number(fromTokenPrice)) - (Number(fromTokenPrice) * 0.003))
-			return (amount * Number(fromTokenPrice)) - (Number(fromTokenPrice) * 0.003)
+			console.log("Uniswap Fees -> ", (Number(fromTokenPrice)) - (Number(fromTokenPrice) * 0.003))
+			return (Number(fromTokenPrice)) - (Number(fromTokenPrice) * 0.003)
 		}
 	}
 

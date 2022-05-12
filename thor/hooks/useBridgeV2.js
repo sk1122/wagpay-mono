@@ -65,6 +65,7 @@ const useBridgeV2 = () => {
 
 				for(let i = 0; i < routes.length; i++) {
 					var fees;
+					console.log("free -> ", value, ethers.utils.parseUnits(value.toFixed(3).toString(), swappedToken.decimals))
 					try {
 						fees = await getRouteFees(routes[i], fromChain, toChain, swappedToken, toToken, ethers.utils.parseUnits(value.toFixed(3).toString(), swappedToken.decimals), signer)
 					} catch(e) {

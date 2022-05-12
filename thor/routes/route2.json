@@ -5,6 +5,7 @@
 				"137": [
 					{
 						"name": "HYPHEN",
+						"bridgeTime": "2m",
 						"contractAddress": "0x2c0f951287332ab8c342ad4254f0c0246ef19ec5",
 						"gasFees": "",
 						"amountToGet": "",
@@ -14,6 +15,7 @@
 					},
 					{
 						"name": "HOP",
+						"bridgeTime": "5m",
 						"contractAddress": "0x2c0f951287332ab8c342ad4254f0c0246ef19ec5",
 						"gasFees": "",
 						"amountToGet": "",
@@ -27,6 +29,7 @@
 				"137": [
 					{
 						"name": "HYPHEN",
+						"bridgeTime": "2m",
 						"contractAddress": "0x2c0f951287332ab8c342ad4254f0c0246ef19ec5",
 						"gasFees": "",
 						"amountToGet": "",
@@ -36,6 +39,7 @@
 					},
 					{
 						"name": "HOP",
+						"bridgeTime": "5m",
 						"contractAddress": "0x2c0f951287332ab8c342ad4254f0c0246ef19ec5",
 						"gasFees": "",
 						"amountToGet": "",
@@ -49,6 +53,7 @@
 				"137": [
 					{
 						"name": "HYPHEN",
+						"bridgeTime": "2m",
 						"contractAddress": "0x2c0f951287332ab8c342ad4254f0c0246ef19ec5",
 						"gasFees": "",
 						"amountToGet": "",
@@ -58,6 +63,7 @@
 					},
 					{
 						"name": "HOP",
+						"bridgeTime": "5m",
 						"contractAddress": "0x2c0f951287332ab8c342ad4254f0c0246ef19ec5",
 						"gasFees": "",
 						"amountToGet": "",
@@ -73,6 +79,7 @@
 				"1": [
 					{
 						"name": "HYPHEN",
+						"bridgeTime": "2m",
 						"contractAddress": "0x2c0f951287332ab8c342ad4254f0c0246ef19ec5",
 						"gasFees": "",
 						"amountToGet": "",
@@ -82,6 +89,7 @@
 					},
 					{
 						"name": "HOP",
+						"bridgeTime": "5m",
 						"contractAddress": "0x2c0f951287332ab8c342ad4254f0c0246ef19ec5",
 						"gasFees": "",
 						"amountToGet": "",
@@ -95,6 +103,7 @@
 				"1": [
 					{
 						"name": "HYPHEN",
+						"bridgeTime": "2m",
 						"contractAddress": "0x2c0f951287332ab8c342ad4254f0c0246ef19ec5",
 						"gasFees": "",
 						"amountToGet": "",
@@ -104,6 +113,7 @@
 					},
 					{
 						"name": "HOP",
+						"bridgeTime": "5m",
 						"contractAddress": "0x2c0f951287332ab8c342ad4254f0c0246ef19ec5",
 						"gasFees": "",
 						"amountToGet": "",
@@ -117,6 +127,7 @@
 				"1": [
 					{
 						"name": "HYPHEN",
+						"bridgeTime": "2m",
 						"contractAddress": "0x2c0f951287332ab8c342ad4254f0c0246ef19ec5",
 						"gasFees": "",
 						"amountToGet": "",
@@ -126,6 +137,7 @@
 					},
 					{
 						"name": "HOP",
+						"bridgeTime": "5m",
 						"contractAddress": "0x2c0f951287332ab8c342ad4254f0c0246ef19ec5",
 						"gasFees": "",
 						"amountToGet": "",
