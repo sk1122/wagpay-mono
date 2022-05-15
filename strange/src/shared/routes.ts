@@ -72,6 +72,30 @@ const route: any = {
 						"tokenAddress": ["0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"]
 					}
 				]
+			},
+			"MATIC": {
+				"137": [
+					{
+						"name": "HYPHEN",
+						"bridgeTime": "2m",
+						"contractAddress": "0x2c0f951287332ab8c342ad4254f0c0246ef19ec5",
+						"gasFees": "",
+						"amountToGet": "",
+						"transferFee": "",
+						"uniswapFees": "",
+						"tokenAddress": ["0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"]
+					},
+					{
+						"name": "HOP",
+						"bridgeTime": "5m",
+						"contractAddress": "0x2c0f951287332ab8c342ad4254f0c0246ef19ec5",
+						"gasFees": "",
+						"amountToGet": "",
+						"transferFee": "",
+						"uniswapFees": "",
+						"tokenAddress": ["0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"]
+					}
+				]
 			}
 		},
 		"137": {

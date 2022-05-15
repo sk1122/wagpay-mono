@@ -11,7 +11,8 @@ const tokens: any = {
 		'USDC': {name:'USDC',address:'0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',decimals:6,chainId:1},
 		'0xdac17f958d2ee523a2206206994597c13d831ec7': {name:'USDT',address:'0xdac17f958d2ee523a2206206994597c13d831ec7',decimals:6,chainId:1},
 		'USDT': {name:'USDT',address:'0xdac17f958d2ee523a2206206994597c13d831ec7',decimals:6,chainId:1},
-		'MATIC': {name:'MATIC',address:'',decimals:18,chainId:1}
+		'MATIC': {name:'MATIC',address:'0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0',decimals:18,chainId:1},
+		'0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0': {name:'MATIC',address:'0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0',decimals:18,chainId:1}
 	},
 	"137": {
 		'0x7ceb23fd6bc0add59e62ac25578270cff1b9f619': {name:'ETH',address:'0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',decimals:18,chainId:137},
