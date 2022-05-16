@@ -24,6 +24,7 @@ class BridgeController {
 			const routes = await bridges.bestBridge(fromChainId.toString(), toChainId.toString(), fromTokenAddress.toString(), toTokenAddress.toString(), amount.toString())
 			res.status(200).send(routes)
 		} catch(e) {
+			console.log(e)
 			res.status(400).send(e)
 		}
 	}
