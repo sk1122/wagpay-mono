@@ -4,14 +4,12 @@ import { UniswapData } from "@shared/types/UniswapData"
 import fetch from "cross-fetch"
 
 class UniswapProvider {
-	getUniswapRoute = async (fromToken: Token, toToken: Token, amount: number): Promise<UniswapData> => {		
-		const swappedToken = tokens[fromToken.chainId][toToken.name]
-
+	_getUniswapRoute = async (fromToken: Token, toToken: Token, amount: number): Promise<UniswapData> => {
 		let uniswapData: UniswapData = {
 			fees: 0,
 			chainId: fromToken.chainId,
 			fromToken: fromToken, 
-			toToken: swappedToken, 
+			toToken: toToken, 
 			amountToGet: amount
 		}
 
@@ -54,6 +52,12 @@ class UniswapProvider {
 			uniswapData.fees = (Number(fromTokenPrice) * 0.003)
 		}
 		return uniswapData
+	}
+	
+	getUniswapRoute = async (fromToken: Token, toToken: Token, amount: number): Promise<UniswapData> => {		
+		const swappedToken = tokens[fromToken.chainId][toToken.name]
+
+		return this._getUniswapRoute(fromToken, swappedToken, amount)
 	}
 }
 

@@ -7,6 +7,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import StatusCodes from 'http-status-codes';
 import 'express-async-errors';
 import { bridgeRouter } from './api/BridgeService/route';
+import { dexRouter } from './api/DexService/route';
 
 
 // Constants
@@ -32,7 +33,8 @@ if (process.env.NODE_ENV === 'production') {
     app.use(helmet());
 }
 
-app.use('/api', bridgeRouter)
+app.use('/api/bridge/', bridgeRouter)
+app.use('/api/dex/', dexRouter)
 
 
 /***********************************************************************************
