@@ -1,0 +1,32 @@
+{
+  "name": "wagpay",
+  "version": "0.0.1",
+  "description": "Cross Chain Asset Transfer",
+  "main": "src/index.js",
+  "author": "wagpay",
+  "license": "MIT",
+  "scripts": {
+    "build": "./node_modules/.bin/ts-node build.ts",
+    "lint": "eslint . --ext .ts",
+    "start": "node -r module-alias/register ./dist --env=production",
+    "start:dev": "nodemon"
+  },
+  "nodemonConfig": {
+    "watch": [
+      "src"
+    ],
+    "ext": "ts, html",
+    "ignore": [
+      "src/public"
+    ],
+    "exec": "./node_modules/.bin/ts-node -r tsconfig-paths/register ./src"
+  },
+  "dependencies": {
+    "axios": "^0.27.2"
+  },
+  "devDependencies": {
+    "ts-node": "^10.7.0",
+    "tsconfig-paths": "^4.0.0",
+    "nodemon": "^2.0.16"
+  }
+}

@@ -1,3 +1,4 @@
+import { AllowDenyPrefer } from "@shared/allowdenyprefer"
 import route from "@shared/routes"
 import tokens, { chainsSupported } from "@shared/tokens"
 import { Token } from "@shared/types/Token"
@@ -42,7 +43,7 @@ class Bridges {
 		}
 	}
 	
-	bestBridge = async (fromChainId: string, toChainId: string, fromTokenAddress: string, toTokenAddress: string, amount: string): Promise<Array<any>> => {
+	bestBridge = async (fromChainId: string, toChainId: string, fromTokenAddress: string, toTokenAddress: string, amount: string, bridge?: AllowDenyPrefer, dex?: AllowDenyPrefer): Promise<Array<any>> => {
 		return new Promise(async (resolve, reject) => {
 			const fromChain = fromChainId as chainsSupported
 			const toChain = toChainId as chainsSupported
@@ -79,7 +80,7 @@ class Bridges {
 					}
 				}
 	
-				const sorted = routes.sort((x: any, y: any) => {
+				let sorted: Array<any> = routes.slice().sort((x: any, y: any) => {
 					if(Number(x.amountToGet) < Number(y.amountToGet)) {
 						return 1
 					} else if(Number(x.gasFees) < Number(y.gasFees)) {
@@ -88,6 +89,21 @@ class Bridges {
 						return -1
 					}
 				})
+
+				const length = sorted.length
+
+				if(bridge) {
+					for(let i = 0; i < length; i++) {
+						console.log(sorted.length, routes.length)
+						if(bridge?.prefer?.includes(sorted[i].name.toLowerCase())) {
+							const sort = sorted[i]
+							sorted.splice(i, 1)
+							sorted.unshift(sort)
+						} else if (bridge?.deny?.includes(sorted[i].name.toLowerCase())) {
+							sorted.splice(i, 1)
+						}
+					}
+				}
 	
 				resolve(sorted)
 			} else {
