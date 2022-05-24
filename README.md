@@ -2,13 +2,13 @@
 
 ## Services and their descriptions
 
-antman - frontend for payment gateway
-captain - contracts for bridge aggregator
-hawkeye - backend for payment gateway
-spiderman - contracts for interoperable cross chain payment id
-strange - backend for calculating best possible route between chains
-thor - frontend for bridge aggregator
-wanda - sdk for bridge aggregator
+- antman - frontend for payment gateway
+- captain - contracts for bridge aggregator
+- hawkeye - backend for payment gateway
+- spiderman - contracts for interoperable cross chain payment id
+- strange - backend for calculating best possible route between chains
+- thor - frontend for bridge aggregator
+- wanda - sdk for bridge aggregator
 
 ## Updates
 
