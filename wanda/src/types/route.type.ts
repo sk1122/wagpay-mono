@@ -12,6 +12,16 @@ export enum Dexes {
 	"0inch" = "0inch"
 }
 
+export interface ExecuteRouteData {
+	name: string
+	bridgeTime: string
+	contractAddress: string
+	amountToGet: string
+	transferFee: string
+	uniswapData: UniswapData
+	route: RouteResponse
+}
+
 export interface AllowDenyPrefer {
 	allow?: string[]
 	deny?: string[]
@@ -44,6 +54,7 @@ export interface RouteResponse {
 }
 
 export interface UniswapData {
+	dex: string,
 	fees: number,
 	chainId: number,
 	fromToken: Token,

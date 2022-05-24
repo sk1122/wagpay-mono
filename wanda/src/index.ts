@@ -1,13 +1,16 @@
 import { Chain } from "./types/chain/chain.type";
 import { Coin } from "./types/coin/coin.type";
 import { _getRoutes } from "./services";
-import { RouteData, Routes, Token } from "./types";
+import { ExecuteRouteData, RouteData, Routes, Token } from "./types";
 import { ethers } from "ethers";
-import { ApproveERC20, _checkApprove } from "./services/contract/evm/ERC20";
+import { ApproveERC20, _checkApprove, _approve } from "./services/contract/evm/ERC20";
 import { CoinKey } from "./types/coin/coin.enum";
+import axios from "axios";
 
 class WagPay {
 	
+	NATIVE_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
+
 	getRoutes = async (route: RouteData): Promise<Routes[]> => {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -28,6 +31,43 @@ class WagPay {
 				reject(e)
 			}
 		})
+	}
+
+	erc20Approve = async (token: Token, spender: string, amount: string, signer: ethers.Signer): Promise<boolean> => {
+		return new Promise(async (resolve, reject) => {
+			try {
+				await _approve(token, spender, amount, signer)
+				resolve(true)
+			} catch(e) {
+				resolve(false)
+			}
+		})
+	}
+
+	executeRoute = async (route: ExecuteRouteData, signer: ethers.Signer) => {
+		const address = await signer.getAddress()
+		const contract = new ethers.Contract(route.contractAddress, abi, signer)
+
+		const routeData = {
+			receiver: address,
+			bridge: route.contractAddress,
+			toChain: Number(route.route.toChain),
+			fromToken: route.route.fromToken.address,
+			amount: route.route.amount,
+			dexRequired: route.uniswapData ? true : false,
+			dex: {
+				dex: route.uniswapData.dex,
+				fees: route.uniswapData.fees,
+				chainId: route.uniswapData.chainId,
+				fromToken: route.uniswapData.fromToken.address,
+				toToken: route.uniswapData.toToken.address,
+				amountToGet: route.uniswapData.amountToGet
+			}
+		}
+
+		const amount = route.route.fromToken.address === this.NATIVE_ADDRESS.toLowerCase() ? route.route.amount : '0'
+
+		await contract.transfer(routeData, { value: ethers.utils.parseEther(amount) })
 	}
 
 }

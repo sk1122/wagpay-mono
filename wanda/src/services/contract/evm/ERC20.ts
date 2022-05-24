@@ -29,3 +29,16 @@ export const _checkApprove = async (token: Token, spender: string, amount: strin
 		}
 	}
 }
+
+export const _approve = async (token: Token, spender: string, amount: string, signer: ethers.Signer): Promise<boolean> => {
+	return new Promise(async (resolve, reject) => {
+		const ERC20abi = ["function approve(address _spender, uint256 _value) public returns (bool success)"]
+		const erc20 = new ethers.Contract(token.address, ERC20abi, signer)
+		try {
+			await erc20.approve(spender, ethers.utils.parseUnits(amount, token.decimals))
+			resolve(true)
+		} catch(e) {
+			reject(false)
+		}
+	})
+}
