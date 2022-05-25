@@ -14,16 +14,13 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
-  const Hyphen = await hre.ethers.getContractFactory("HyphenProvider");
-  const hyphen = await Hyphen.deploy("0x2A5c2568b10A0E826BfA892Cf21BA7218310180b");
+  const Hyphen = await hre.ethers.getContractFactory("WagpayBridge");
+  const hyphen = await Hyphen.deploy();
 
   await hyphen.deployed();
 
   console.log("HyphenProvider deployed to:", hyphen.address);
 
-    const [addr1, addr2] = await ethers.getSigners();
-    
-  await hyphen.transferNative(addr1.address, addr1.address,1, "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", ethers.utils.parseEther('1'), {value: ethers.utils.parseEther('1')})
 }
 
 // We recommend this pattern to be able to use async/await everywhere
