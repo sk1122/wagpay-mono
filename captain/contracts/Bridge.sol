@@ -4,7 +4,6 @@ pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-// THIS FILE DOESN'T WORK AT THE MOMENT, WIP
 
 interface params {
 
@@ -31,9 +30,14 @@ interface params {
 
 interface IDex is params{
 
-    function swapExactInputSingle(address _tokenIn, address _tokenOut, uint256 amountIn) external payable;
+   function swapExactInputERC20(address _tokenIn, address _tokenOut, uint256 amountIn) external;
 
-    // function swapExactOutputSingle(DexData memory dex) external;
+   function swapExactOutputERC20(address _tokenIn, address _tokenOut, uint256 amountOut, uint256 amountInMaximum) external;
+
+   function swapExactEthToERC20(address _tokenOut) external payable;
+
+   function swapEthToExactERC20(address _tokenOut,uint256 tokenOutAmount) external payable;
+
 }
 
 interface IBridge {
@@ -58,10 +62,10 @@ contract WagpayBridge is params{
             
             // Dex
             if(_route.dex.fromToken == NATIVE_TOKEN_ADDRESS) {
-                idex.swapExactInputSingle{value: _route.amount}(_route.dex.fromToken, _route.dex.toToken,);
+                idex.swapExactEthToERC20{value: _route.amount}(_route.dex.toToken);
             } else {
                 IERC20(_route.dex.fromToken).approve(_route.dex.dex, _route.amount);
-                idex.swapExactInputSingle(_route.dex);
+                idex.swapExactInputERC20(_route.dex.fromToken, _route.dex.toToken, _route.dex.amountToGet);
             }
 
             // Bridge
