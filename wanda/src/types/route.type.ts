@@ -50,7 +50,7 @@ export interface RouteResponse {
 	toChain: string
 	fromToken: Token
 	toToken: Token
-	amount: string
+	amount: number
 }
 
 export interface UniswapData {

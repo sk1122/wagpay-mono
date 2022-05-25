@@ -44,59 +44,83 @@ class WagPay {
 		})
 	}
 
-	executeRoute = async (route: ExecuteRouteData, signer: ethers.Signer) => {
-		const address = await signer.getAddress()
-		const contract = new ethers.Contract(route.contractAddress, abi, signer)
+	executeRoute = async (route: ExecuteRouteData, signer: ethers.Signer): Promise<boolean | Error> => {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const abi = [{"inputs":[{"components":[{"internalType":"address","name":"receiver","type":"address"},{"internalType":"address","name":"bridge","type":"address"},{"internalType":"uint256","name":"toChain","type":"uint256"},{"internalType":"address","name":"fromToken","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"bool","name":"dexRequired","type":"bool"},{"components":[{"internalType":"address","name":"dex","type":"address"},{"internalType":"uint256","name":"amountIn","type":"uint256"},{"internalType":"uint256","name":"fees","type":"uint256"},{"internalType":"uint256","name":"chainId","type":"uint256"},{"internalType":"address","name":"fromToken","type":"address"},{"internalType":"address","name":"toToken","type":"address"}],"internalType":"struct WagpayBridge.DexData","name":"dex","type":"tuple"}],"internalType":"struct WagpayBridge.RouteData","name":"_route","type":"tuple"}],"name":"transfer","outputs":[],"stateMutability":"payable","type":"function"}]
+				const address = await signer.getAddress()
+				const contract = new ethers.Contract('0xc39863a88857fffc88695f2426Dd2157685e8F16', abi, signer)
+		
+				const routeData = {
+					receiver: address,
+					bridge: route.contractAddress,
+					toChain: Number(route.route.toChain),
+					fromToken: route.route.fromToken.address,
+					amount: route.route.amount,
+					dexRequired: route.uniswapData ? true : false,
+					dex: {
+						dex: route.uniswapData.dex,
+						fees: route.uniswapData.fees,
+						chainId: route.uniswapData.chainId,
+						fromToken: route.uniswapData.fromToken.address,
+						toToken: route.uniswapData.toToken.address,
+						amountToGet: route.uniswapData.amountToGet
+					}
+				}
+		
+				const routeDataArr = [
+					address,
+					route.contractAddress,
+					Number(route.route.toChain),
+					route.route.fromToken.address,
+					route.route.amount.toFixed(0),
+					route.uniswapData ? true : false,
+					[
+						route.uniswapData.dex,
+						ethers.utils.parseUnits(route.route.amount.toFixed(0), route.uniswapData.fromToken.decimals),
+						ethers.utils.parseUnits(route.uniswapData.fees.toFixed(0), route.uniswapData.fromToken.decimals),
+						route.uniswapData.chainId,
+						route.uniswapData.fromToken.address,
+						route.uniswapData.toToken.address
+					]
+				]
+				const amount = route.route.fromToken.address === this.NATIVE_ADDRESS.toLowerCase() ? route.route.amount : 0
+				console.log(routeDataArr, amount.toFixed(0))
+		
+				await contract.transfer(routeDataArr, { value: ethers.utils.parseEther(amount.toFixed(0)) })
 
-		const routeData = {
-			receiver: address,
-			bridge: route.contractAddress,
-			toChain: Number(route.route.toChain),
-			fromToken: route.route.fromToken.address,
-			amount: route.route.amount,
-			dexRequired: route.uniswapData ? true : false,
-			dex: {
-				dex: route.uniswapData.dex,
-				fees: route.uniswapData.fees,
-				chainId: route.uniswapData.chainId,
-				fromToken: route.uniswapData.fromToken.address,
-				toToken: route.uniswapData.toToken.address,
-				amountToGet: route.uniswapData.amountToGet
+				resolve(true)
+			} catch (e) {
+				reject(e)
 			}
-		}
-
-		const amount = route.route.fromToken.address === this.NATIVE_ADDRESS.toLowerCase() ? route.route.amount : '0'
-
-		await contract.transfer(routeData, { value: ethers.utils.parseEther(amount) })
+		})
 	}
 
 }
 
-// export default WagPay
+export default WagPay
 
-(async () => {
-	const wag = new WagPay()
+// (async () => {
+// 	const wag = new WagPay()
 
-	// wag.getRoutes({
-	// 	fromChainId: 1,
-	// 	toChainId: 137,
-	// 	fromTokenAddress: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-	// 	toTokenAddress: '0xc2132D05D31c914a87C6611C10748AEb04B58e8F',
-	// 	amount: '1000000000000000000'
-	// }).then(x => console.log(x)).catch(e => console.log(e))
+// 	const route = await wag.getRoutes({
+// 		fromChainId: 1,
+// 		toChainId: 137,
+// 		fromTokenAddress: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+// 		toTokenAddress: '0xc2132D05D31c914a87C6611C10748AEb04B58e8F',
+// 		amount: '1000000000000000000'
+// 	})
 
-	const token: Token = {
-		address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-		chainId: 1,
-		name: CoinKey.USDC,
-		decimals: 6
-	}
-
-	const provider = new ethers.providers.JsonRpcProvider('https://eth-mainnet.alchemyapi.io/v2/y141okG6TC3PecBM1mL0BfST9f4WQmLx')
-	let signer = ethers.Wallet.createRandom()
-	signer = signer.connect(provider)
-
-	const a = await wag.erc20ApproveNeeded(token, '0x2801a71605b5e25816235c7f3cb779f4c9dd60ee', '1000000', signer)
-
-	console.log(a, "a")
-})()
+// 	const token: Token = {
+// 		address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+// 		chainId: 1,
+// 		name: CoinKey.USDC,
+// 		decimals: 6
+// 	}
+// 	console.log(route)
+// 	const provider = new ethers.providers.JsonRpcProvider('https://eth-mainnet.alchemyapi.io/v2/y141okG6TC3PecBM1mL0BfST9f4WQmLx')
+// 	let signer = ethers.Wallet.createRandom()
+// 	signer = signer.connect(provider)
+	
+// 	wag.executeRoute(route[0], signer)
+// })()
