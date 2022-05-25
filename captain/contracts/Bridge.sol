@@ -1,25 +1,13 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.13;
+pragma solidity ^0.8.13;
+pragma experimental ABIEncoderV2;
+
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 // THIS FILE DOESN'T WORK AT THE MOMENT, WIP
 
-interface IDex {
-    function transfer(DexData calldata dex) external;
-}
+interface params {
 
-interface IBridge {
-    function transferNative(uint amount, address receiver, uint256 toChainId, string calldata tag) external payable;
-    function transferERC20(uint256 toChainId,
-        address tokenAddress,
-        address receiver,
-        uint256 amount,
-        string calldata tag ) external;
-
-}
-
-contract WagpayBridge {
-	address private constant NATIVE_TOKEN_ADDRESS = address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE);
-    
     struct DexData {
         address dex;
         uint amountToGet;
@@ -39,17 +27,41 @@ contract WagpayBridge {
         DexData dex;
     }
 
-    function transfer(RouteData calldata _route) external payable {
+}
+
+interface IDex is params{
+
+    function swapExactInputSingle(address _tokenIn, address _tokenOut, uint256 amountIn) external payable;
+
+    // function swapExactOutputSingle(DexData memory dex) external;
+}
+
+interface IBridge {
+    function transferNative(uint amount, address receiver, uint256 toChainId, string calldata tag) external payable;
+    function transferERC20(uint256 toChainId,
+        address tokenAddress,
+        address receiver,
+        uint256 amount,
+        string calldata tag ) external;
+
+}
+
+contract WagpayBridge is params{
+	address private constant NATIVE_TOKEN_ADDRESS = address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE);
+
+    function transfer(RouteData memory _route) external payable {
+
+        IDex idex = IDex(_route.dex.dex);
+        IBridge bridge = IBridge(_route.bridge);
+
         if(_route.dexRequired) {
-            IDex dex = IDex(_route.dex.dex);
-            IBridge bridge = IBridge(_route.bridge);
             
             // Dex
             if(_route.dex.fromToken == NATIVE_TOKEN_ADDRESS) {
-                dex.transfer{value: _route.amount}(_route.dex);
+                idex.swapExactInputSingle{value: _route.amount}(_route.dex.fromToken, _route.dex.toToken,);
             } else {
                 IERC20(_route.dex.fromToken).approve(_route.dex.dex, _route.amount);
-                dex.transferERC20(_route.dex);
+                idex.swapExactInputSingle(_route.dex);
             }
 
             // Bridge
