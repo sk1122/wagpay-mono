@@ -5,30 +5,7 @@ pragma experimental ABIEncoderV2;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 
-interface params {
-
-    struct DexData {
-        address dex;
-        uint amountToGet;
-        uint fees;
-        uint chainId;
-        address fromToken;
-        address toToken;
-    }
-
-    struct RouteData {
-        address receiver;
-        address bridge;
-        uint toChain;
-        address fromToken;
-        uint amount;
-        bool dexRequired;
-        DexData dex;
-    }
-
-}
-
-interface IDex is params{
+interface IDex {
 
    function swapExactInputERC20(address _tokenIn, address _tokenOut, uint256 amountIn) external;
 
@@ -50,8 +27,27 @@ interface IBridge {
 
 }
 
-contract WagpayBridge is params{
+contract WagpayBridge {
 	address private constant NATIVE_TOKEN_ADDRESS = address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE);
+
+    struct DexData {
+        address dex;
+        uint amountToGet;
+        uint fees;
+        uint chainId;
+        address fromToken;
+        address toToken;
+    }
+
+    struct RouteData {
+        address receiver;
+        address bridge;
+        uint toChain;
+        address fromToken;
+        uint amount;
+        bool dexRequired;
+        DexData dex;
+    }
 
     function transfer(RouteData memory _route) external payable {
 
