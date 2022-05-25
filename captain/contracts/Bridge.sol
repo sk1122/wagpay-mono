@@ -32,7 +32,7 @@ contract WagpayBridge {
 
     struct DexData {
         address dex;
-        uint amountToGet;
+        uint amountIn;
         uint fees;
         uint chainId;
         address fromToken;
@@ -61,15 +61,15 @@ contract WagpayBridge {
                 idex.swapExactEthToERC20{value: _route.amount}(_route.dex.toToken);
             } else {
                 IERC20(_route.dex.fromToken).approve(_route.dex.dex, _route.amount);
-                idex.swapExactInputERC20(_route.dex.fromToken, _route.dex.toToken, _route.dex.amountToGet);
+                idex.swapExactInputERC20(_route.dex.fromToken, _route.dex.toToken, _route.dex.amountIn);
             }
 
             // Bridge
             if(_route.fromToken == NATIVE_TOKEN_ADDRESS) {
-                bridge.transferNative{value: _route.dex.amountToGet}(_route.dex.amountToGet, _route.receiver, _route.toChain, "WagPay");
+                bridge.transferNative{value: _route.dex.amountIn}(_route.dex.amountIn, _route.receiver, _route.toChain, "WagPay");
             } else {
-                IERC20(_route.fromToken).approve(_route.bridge, _route.dex.amountToGet);
-                bridge.transferERC20(_route.toChain, _route.fromToken, _route.receiver, _route.dex.amountToGet, "WagPay");
+                IERC20(_route.fromToken).approve(_route.bridge, _route.dex.amountIn);
+                bridge.transferERC20(_route.toChain, _route.fromToken, _route.receiver, _route.dex.amountIn, "WagPay");
             }
         } else {
             // Bridge
