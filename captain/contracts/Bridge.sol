@@ -1,10 +1,20 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.13;
+pragma solidity ^0.8.13;
+pragma experimental ABIEncoderV2;
 
-// THIS FILE DOESN'T WORK AT THE MOMENT, WIP
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+
 
 interface IDex {
-    function transfer(DexData calldata dex) external;
+
+   function swapExactInputERC20(address _tokenIn, address _tokenOut, uint256 amountIn) external;
+
+   function swapExactOutputERC20(address _tokenIn, address _tokenOut, uint256 amountOut, uint256 amountInMaximum) external;
+
+   function swapExactEthToERC20(address _tokenOut) external payable;
+
+   function swapEthToExactERC20(address _tokenOut,uint256 tokenOutAmount) external payable;
+
 }
 
 interface IBridge {
@@ -19,10 +29,10 @@ interface IBridge {
 
 contract WagpayBridge {
 	address private constant NATIVE_TOKEN_ADDRESS = address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE);
-    
+
     struct DexData {
         address dex;
-        uint amountToGet;
+        uint amountIn;
         uint fees;
         uint chainId;
         address fromToken;
@@ -39,25 +49,27 @@ contract WagpayBridge {
         DexData dex;
     }
 
-    function transfer(RouteData calldata _route) external payable {
+    function transfer(RouteData memory _route) external payable {
+
+        IDex idex = IDex(_route.dex.dex);
+        IBridge bridge = IBridge(_route.bridge);
+
         if(_route.dexRequired) {
-            IDex dex = IDex(_route.dex.dex);
-            IBridge bridge = IBridge(_route.bridge);
             
             // Dex
             if(_route.dex.fromToken == NATIVE_TOKEN_ADDRESS) {
-                dex.transfer{value: _route.amount}(_route.dex);
+                idex.swapExactEthToERC20{value: _route.amount}(_route.dex.toToken);
             } else {
                 IERC20(_route.dex.fromToken).approve(_route.dex.dex, _route.amount);
-                dex.transferERC20(_route.dex);
+                idex.swapExactInputERC20(_route.dex.fromToken, _route.dex.toToken, _route.dex.amountIn);
             }
 
             // Bridge
             if(_route.fromToken == NATIVE_TOKEN_ADDRESS) {
-                bridge.transferNative{value: _route.dex.amountToGet}(_route.dex.amountToGet, _route.receiver, _route.toChain, "WagPay");
+                bridge.transferNative{value: _route.dex.amountIn}(_route.dex.amountIn, _route.receiver, _route.toChain, "WagPay");
             } else {
-                IERC20(_route.fromToken).approve(_route.bridge, _route.dex.amountToGet);
-                bridge.transferERC20(_route.toChain, _route.fromToken, _route.receiver, _route.dex.amountToGet, "WagPay");
+                IERC20(_route.fromToken).approve(_route.bridge, _route.dex.amountIn);
+                bridge.transferERC20(_route.toChain, _route.fromToken, _route.receiver, _route.dex.amountIn, "WagPay");
             }
         } else {
             // Bridge
