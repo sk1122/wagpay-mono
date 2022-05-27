@@ -106,7 +106,7 @@ class WagPay {
 
 }
 
-// export default WagPay
+export default WagPay
 
 // (async () => {
 // 	const wag = new WagPay()
