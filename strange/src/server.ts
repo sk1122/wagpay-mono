@@ -8,6 +8,7 @@ import StatusCodes from 'http-status-codes';
 import 'express-async-errors';
 import { bridgeRouter } from './api/BridgeService/route';
 import { dexRouter } from './api/DexService/route';
+import cors from "cors"
 
 
 // Constants
@@ -22,6 +23,9 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
+app.use(cors({
+    origin: ['http://localhost:3000']
+}))
 
 // Show routes called in console during development
 if (process.env.NODE_ENV === 'development') {
