@@ -1,6 +1,6 @@
 {
   "name": "@wagpay/sdk",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Cross Chain Asset Transfer",
   "keywords": [
     "cross-chain",
@@ -16,7 +16,8 @@
     "build": "tsc",
     "lint": "eslint . --ext .ts",
     "start": "node -r module-alias/register ./dist --env=production",
-    "start:dev": "nodemon"
+    "start:dev": "nodemon",
+    "publish:npm": "yarn build && npm publish"
   },
   "nodemonConfig": {
     "watch": [

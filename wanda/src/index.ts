@@ -37,7 +37,7 @@ class WagPay {
 				await _approve(token, spender, amount, signer)
 				resolve(true)
 			} catch(e) {
-				resolve(false)
+				reject(false)
 			}
 		})
 	}
