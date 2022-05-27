@@ -42,5 +42,5 @@ contract HyphenProvider is ReentrancyGuard {
 			hyphenLiquidityPool.depositErc20(toChainId, tokenAddress, receiver, amount, tag);
 		
 			emit ERC20FundsTransferred(receiver, toChainId, amount, tokenAddress);
-		}
+	}
 }
