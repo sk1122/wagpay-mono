@@ -29,10 +29,10 @@ export interface AllowDenyPrefer {
 }
 
 export interface RouteData {
-	fromChainId: number
-	toChainId: number
-	fromTokenAddress: string
-	toTokenAddress: string
+	fromChain: ChainId
+	toChain: ChainId
+	fromToken: CoinKey
+	toToken: CoinKey
 	amount: string
 	bridge?: AllowDenyPrefer
 	dex?: AllowDenyPrefer

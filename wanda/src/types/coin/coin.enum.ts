@@ -47,4 +47,4 @@ export enum CoinKey {
 	MCB = 'MCB',
 	CELR = 'CELR',
 	IF = 'IF',
-  }
+}

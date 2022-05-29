@@ -52,7 +52,7 @@ class Bridges {
 	
 			const fromToken: Token = tokens[fromChain][fromTokenA]
 			const toToken: Token = tokens[toChain][toTokenA]
-	
+			console.log(fromToken, toToken, fromChain, fromTokenA, toChain, toTokenA)
 			const UNISWAP_REQUIRED = fromToken.name !== toToken.name
 	
 			const routes = this.getRoutes(fromChain, fromToken, toChain)
