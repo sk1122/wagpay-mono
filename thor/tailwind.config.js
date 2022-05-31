@@ -1,11 +1,18 @@
-
 module.exports = {
-  content: [
-    "./pages/**/*.{js,ts,jsx,tsx}",
-    "./components/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ['./src/**/*.{js,ts,jsx,tsx}'],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'wagpay-dark': '#191919',
+        'wagpay-primary': '#FF633B',
+      },
+      screens: {
+        mobile: '415px',
+      },
+    },
   },
-  plugins: [],
-}
+  plugins: [
+    // eslint-disable-next-line global-require
+    require('@tailwindcss/forms'),
+  ],
+};
