@@ -1,3 +1,4 @@
+import type { Coin } from '@wagpay/sdk/dist/types/coin/coin.type';
 import React from 'react';
 
 interface ISelectProps {
@@ -7,6 +8,7 @@ interface ISelectProps {
   selectName: string;
   value: string;
   setValue: Function;
+  supportedCoins: Coin[];
 }
 
 // function classNames(...classes: any) {
@@ -20,6 +22,7 @@ const CoinSelect = ({
   selectName,
   value,
   setValue,
+  supportedCoins,
 }: ISelectProps) => {
   return (
     <>
@@ -35,30 +38,11 @@ const CoinSelect = ({
         onChange={(e) => setValue(e.target.value)}
         className={`common-select ${classes}`}
       >
-        <option
-          value="0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
-          className="bg-wagpay-dark"
-        >
-          MATIC
-        </option>
-        <option
-          value="0x7ceb23fd6bc0add59e62ac25578270cff1b9f619"
-          className="bg-wagpay-dark"
-        >
-          ETH
-        </option>
-        <option
-          value="0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
-          className="bg-wagpay-dark"
-        >
-          USDC
-        </option>
-        <option
-          value="0xc2132D05D31c914a87C6611C10748AEb04B58e8F"
-          className="bg-wagpay-dark"
-        >
-          USDT
-        </option>
+        {supportedCoins?.map((coin, index) => (
+          <option key={index} value={coin.coinKey} className="bg-wagpay-dark">
+            {coin.coinName}
+          </option>
+        ))}
       </select>
     </>
   );

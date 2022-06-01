@@ -1,8 +1,6 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import WagPay from '@wagpay/sdk';
 import type { Routes } from '@wagpay/sdk/dist/types';
-import { ChainId } from '@wagpay/sdk/dist/types/chain/chain.enum';
-import { CoinKey } from '@wagpay/sdk/dist/types/coin/coin.enum';
 import { ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
 
@@ -21,47 +19,50 @@ const Swap = () => {
   const [toCoin, setToCoin] = useState('');
   const [amount, setAmount] = useState('0');
 
+  // eslint-disable-next-line unused-imports/no-unused-vars
   const [routes, setRoutes] = useState<Routes[]>();
 
   const wagpay = new WagPay();
 
-  const getRoutes = async (
+  useEffect(() => {
+    console.log(fromChain);
+  }, [fromChain]);
+
+  const getRoutesLocal = async (
     fromChainId: number,
     toChainId: number,
     fromTokenAddress: string,
     toTokenAddress: string,
     _amount: string
   ): Promise<void> => {
-    console.log(fromChainId, toChainId, fromTokenAddress, toTokenAddress);
-    const availableRoutes = await wagpay.getRoutes({
-      fromChain: ChainId.POL,
-      toChain: ChainId.ETH,
-      fromToken: CoinKey.USDT,
-      toToken: CoinKey.USDC,
-      amount: _amount,
-    });
+    console.log(
+      fromChainId,
+      toChainId,
+      fromTokenAddress,
+      toTokenAddress,
+      _amount
+    );
+    // const availableRoutes = await wagpay.getRoutes({
+    //   fromChain: ChainId.POL,
+    //   toChain: ChainId.ETH,
+    //   fromToken: CoinKey.USDT,
+    //   toToken: CoinKey.USDC,
+    //   amount: _amount,
+    // });
 
-    setRoutes(availableRoutes);
+    // setRoutes(availableRoutes);
   };
 
   useEffect(() => {
-    console.log(fromChain, toChain);
-  }, [fromChain, toChain]);
-
-  useEffect(() => {
-    console.log(Number(fromChain), Number(toChain), fromCoin, toCoin, amount);
-    getRoutes(
+    // console.log(Number(fromChain), Number(toChain), fromCoin, toCoin, amount);
+    getRoutesLocal(
       Number(fromChain),
       Number(toChain),
       fromCoin,
       toCoin,
       ethers.utils.parseUnits(amount, 6).toString()
     );
-  }, [fromChain, toChain, fromCoin, toCoin, amount]);
-
-  useEffect(() => {
-    console.log(routes);
-  }, [routes]);
+  }, [fromCoin, toCoin, amount]);
 
   return (
     <Main
@@ -93,6 +94,7 @@ const Swap = () => {
                   selectName="from"
                   value={fromChain}
                   setValue={setFromChain}
+                  supportedChains={wagpay.getSupportedChains()}
                 />
               </div>
               <div className="col-span-1 mt-8  place-self-center sm:block">
@@ -125,6 +127,7 @@ const Swap = () => {
                   selectName="to"
                   value={toChain}
                   setValue={setToChain}
+                  supportedChains={wagpay.getSupportedChains()}
                 />
               </div>
               {/* you send section */}
@@ -154,6 +157,7 @@ const Swap = () => {
                     selectName="send"
                     value={fromCoin}
                     setValue={setFromCoin}
+                    supportedCoins={wagpay.getSupportedCoins()}
                   />
                 </div>
               </div>
@@ -170,6 +174,7 @@ const Swap = () => {
                     <input
                       type="number"
                       placeholder="0.00"
+                      disabled
                       className="mt-2 block w-full rounded-l-md border border-r-0 border-gray-200 bg-gray-700 p-2 text-white shadow-sm focus:outline-none sm:text-sm"
                     />
                     <div className="pointer-events-none absolute inset-y-0 right-0 mt-1 flex items-center pr-3">
@@ -182,6 +187,7 @@ const Swap = () => {
                     selectName="receive"
                     value={toCoin}
                     setValue={setToCoin}
+                    supportedCoins={wagpay.getSupportedCoins()}
                   />
                 </div>
               </div>
