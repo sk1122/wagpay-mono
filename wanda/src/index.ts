@@ -104,6 +104,24 @@ class WagPay {
 		})
 	}
 
+	getSupportedChains = () => {
+		return [
+			ChainId.ETH,
+			ChainId.POL,
+			ChainId.BSC,
+			ChainId.AVA
+		]
+	}
+
+	getSupportedCoins = () => {
+		return [
+			CoinKey.USDC,
+			CoinKey.USDT,
+			CoinKey.ETH,
+			CoinKey.AVAX,
+			CoinKey.BNB
+		]
+	}
 }
 
 export default WagPay
