@@ -1,5 +1,5 @@
-import { ChainId } from "./chain/chain.enum"
-import { CoinKey } from "./coin/coin.enum"
+import { ChainId } from "../chain"
+import { CoinKey, Token } from "../coin"
 
 export enum Bridges {
 	"hop" = "HOP",
@@ -36,13 +36,6 @@ export interface RouteData {
 	amount: string
 	bridge?: AllowDenyPrefer
 	dex?: AllowDenyPrefer
-}
-
-export interface Token {
-	name: CoinKey,
-	address: string,
-	decimals: number,
-	chainId: ChainId
 }
 
 export interface RouteResponse {

@@ -1,9 +1,18 @@
 import { _getRoutes } from "./services";
-import { ExecuteRouteData, RouteData, Routes, Token } from "./types";
 import { ethers } from "ethers";
 import { ApproveERC20, _checkApprove, _approve } from "./services/contract/evm/ERC20";
-import { ChainId } from "./types/chain/chain.enum";
-import { CoinKey } from "./types/coin/coin.enum";
+import {
+	CoinKey,
+	ChainId,
+	Chain,
+	Coin,
+	ExecuteRouteData,
+	RouteData,
+	Routes,
+	Token,
+	Chains,
+	ChainType
+} from "@wagpay/types";
 
 class WagPay {
 	
@@ -58,30 +67,20 @@ class WagPay {
 
 				const abi = [{"inputs":[{"components":[{"internalType":"address","name":"receiver","type":"address"},{"internalType":"address","name":"bridge","type":"address"},{"internalType":"uint256","name":"toChain","type":"uint256"},{"internalType":"address","name":"fromToken","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"bool","name":"dexRequired","type":"bool"},{"components":[{"internalType":"address","name":"dex","type":"address"},{"internalType":"uint256","name":"amountIn","type":"uint256"},{"internalType":"uint256","name":"fees","type":"uint256"},{"internalType":"uint256","name":"chainId","type":"uint256"},{"internalType":"address","name":"fromToken","type":"address"},{"internalType":"address","name":"toToken","type":"address"}],"internalType":"struct WagpayBridge.DexData","name":"dex","type":"tuple"}],"internalType":"struct WagpayBridge.RouteData","name":"_route","type":"tuple"}],"name":"transfer","outputs":[],"stateMutability":"payable","type":"function"}]
 				const contract = new ethers.Contract('0xc39863a88857fffc88695f2426Dd2157685e8F16', abi, signer)
-		
-				const routeData = {
-					receiver: address,
-					bridge: route.contractAddress,
-					toChain: Number(route.route.toChain),
-					fromToken: route.route.fromToken.address,
-					amount: route.route.amount,
-					dexRequired: route.uniswapData ? true : false,
-					dex: {
-						dex: route.uniswapData.dex,
-						fees: route.uniswapData.fees,
-						chainId: route.uniswapData.chainId,
-						fromToken: route.uniswapData.fromToken.address,
-						toToken: route.uniswapData.toToken.address,
-						amountToGet: route.uniswapData.amountToGet
-					}
+
+				const bridgeId: any = {
+					'HYPHEN': 1,
+					'HOP': 2,
+					'CELER': 3
 				}
 		
 				const routeDataArr = [
 					address,
-					route.contractAddress,
+					bridgeId[route.name],
 					Number(route.route.toChain),
 					route.route.fromToken.address,
 					route.route.amount.toFixed(0),
+					'0x00',
 					route.uniswapData ? true : false,
 					[
 						route.uniswapData.dex,
@@ -89,12 +88,11 @@ class WagPay {
 						ethers.utils.parseUnits(route.uniswapData.fees.toFixed(0), route.uniswapData.fromToken.decimals),
 						route.uniswapData.chainId,
 						route.uniswapData.fromToken.address,
-						route.uniswapData.toToken.address
+						route.uniswapData.toToken.address,
+						'0x00'
 					]
 				]
 				const amount = route.route.fromToken.address === this.NATIVE_ADDRESS.toLowerCase() ? route.route.amount : 0
-				console.log(routeDataArr, amount.toFixed(0))
-		
 				await contract.transfer(routeDataArr, { value: ethers.utils.parseEther(amount.toFixed(0)) })
 
 				resolve(true)
@@ -105,22 +103,107 @@ class WagPay {
 	}
 
 	getSupportedChains = () => {
-		return [
-			ChainId.ETH,
-			ChainId.POL,
-			ChainId.BSC,
-			ChainId.AVA
-		]
+		const chains: Chain[] = [
+			{
+				chain: Chains.ETH,
+				type: ChainType.EVM,
+				coinSupported: [
+					CoinKey.USDC,
+					CoinKey.USDT,
+					CoinKey.ETH,
+					CoinKey.AVAX,
+					CoinKey.BNB,
+					CoinKey.MATIC
+				],
+				logoUri: '',
+				id: ChainId.ETH,
+				chainName: 'ethereum'
+			},
+			{
+				chain: Chains.POL,
+				type: ChainType.EVM,
+				coinSupported: [
+					CoinKey.USDC,
+					CoinKey.USDT,
+					CoinKey.ETH,
+					CoinKey.AVAX,
+					CoinKey.BNB,
+					CoinKey.MATIC
+				],
+				logoUri: '',
+				id: ChainId.POL,
+				chainName: 'polygon'
+			},
+			{
+				chain: Chains.AVA,
+				type: ChainType.EVM,
+				coinSupported: [
+					CoinKey.USDC,
+					CoinKey.USDT,
+					CoinKey.ETH,
+					CoinKey.AVAX,
+					CoinKey.BNB,
+					CoinKey.MATIC
+				],
+				logoUri: '',
+				id: ChainId.AVA,
+				chainName: 'avalanche'
+			},
+			{
+				chain: Chains.BSC,
+				type: ChainType.EVM,
+				coinSupported: [
+					CoinKey.USDC,
+					CoinKey.USDT,
+					CoinKey.ETH,
+					CoinKey.AVAX,
+					CoinKey.BNB,
+					CoinKey.MATIC
+				],
+				logoUri: '',
+				id: ChainId.BSC,
+				chainName: 'BSC'
+			},
+		] 
+
+		return chains
 	}
 
 	getSupportedCoins = () => {
-		return [
-			CoinKey.USDC,
-			CoinKey.USDT,
-			CoinKey.ETH,
-			CoinKey.AVAX,
-			CoinKey.BNB
+		const coins: Coin[] = [
+			{
+				logoUri: '',
+				coinKey: CoinKey.USDC,
+				coinName: 'USDC'
+			},
+			{
+				logoUri: '',
+				coinKey: CoinKey.USDT,
+				coinName: 'USDT'
+			},
+			{
+				logoUri: '',
+				coinKey: CoinKey.ETH,
+				coinName: 'ETH'
+			},
+			{
+				logoUri: '',
+				coinKey: CoinKey.AVAX,
+				coinName: 'AVAX'
+			},
+			{
+				logoUri: '',
+				coinKey: CoinKey.BNB,
+				coinName: 'BNB'
+			},
+			{
+				logoUri: '',
+				coinKey: CoinKey.MATIC,
+				coinName: 'MATIC'
+			}
 		]
+		
+		return coins
 	}
 }
 

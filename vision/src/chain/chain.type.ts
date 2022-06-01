@@ -8,4 +8,5 @@ export interface Chain {
 	coinSupported: CoinKey[]
 	logoUri: string
 	id: ChainId
+	chainName: string
 }
