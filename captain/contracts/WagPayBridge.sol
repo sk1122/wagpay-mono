@@ -27,7 +27,7 @@ contract WagPayBridge is Ownable {
 
     struct RouteData {
         address receiver;
-        address bridge;
+        uint bridgeId;
         uint64 toChain;
         address fromToken;
         uint amount;
@@ -38,8 +38,10 @@ contract WagPayBridge is Ownable {
 
     function transfer(RouteData memory route) external payable {
 
+        require(bridges[route.bridgeId] != address(0), "WagPay: Bridge doesn't exist");        
+
         IDex idex = IDex(route.dex.dex);
-        IBridge bridge = IBridge(route.bridge);
+        IBridge bridge = IBridge(bridges[route.bridgeId]);
 
         if(route.dexRequired) {
             // Dex
@@ -54,7 +56,7 @@ contract WagPayBridge is Ownable {
             if(route.fromToken == NATIVE_TOKEN_ADDRESS) {
                 bridge.transferNative{value: route.dex.amountIn}(route.dex.amountIn, route.receiver, route.toChain, route.extraData);
             } else {
-                IERC20(route.fromToken).approve(route.bridge, route.dex.amountIn);
+                IERC20(route.fromToken).approve(bridges[route.bridgeId], route.dex.amountIn);
                 bridge.transferERC20(route.toChain, route.fromToken, route.receiver, route.dex.amountIn, route.extraData);
             }
 
@@ -63,17 +65,23 @@ contract WagPayBridge is Ownable {
             if(route.fromToken == NATIVE_TOKEN_ADDRESS) {
                 bridge.transferNative{value: route.amount}(route.amount, route.receiver, route.toChain, route.extraData);
             } else {
-                IERC20(route.fromToken).approve(route.bridge, route.amount);
+                IERC20(route.fromToken).approve(bridges[route.bridgeId], route.amount);
                 bridge.transferERC20(route.toChain, route.fromToken, route.receiver, route.amount, route.extraData);
             }
         }
     }
 
     function addBridge(address newBridge) external onlyOwner returns (uint) {
+        require(newBridge != address(0), "WagPay: Cannot be a address(0)");
         _bridgeIds.increment();
         uint bridgeId = _bridgeIds.current();
         bridges[bridgeId] = newBridge;
         return bridgeId;
+    }
+
+    function removeBridge(uint bridgeId) external onlyOwner {
+        require(bridges[bridgeId] != address(0), "WagPay: Bridge doesn't exist");
+        bridges[bridgeId] = address(0);
     }
 
     function getBridge(uint _bridgeId) external view returns (address) {
