@@ -1,6 +1,9 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import WagPay from '@wagpay/sdk';
 import type { Routes } from '@wagpay/sdk/dist/types';
+import { ChainId } from '@wagpay/sdk/dist/types/chain/chain.enum';
+import type { Chain } from '@wagpay/sdk/dist/types/chain/chain.type';
+import { CoinKey } from '@wagpay/sdk/dist/types/coin/coin.enum';
 import { ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
 
@@ -13,56 +16,104 @@ import { Main } from '@/templates/Main';
 
 const Swap = () => {
   const [toggle, setToggle] = useState(false);
-  const [fromChain, setFromChain] = useState('');
-  const [toChain, setToChain] = useState('');
+  const [fromChain, setFromChain] = useState(137);
+  const [toChain, setToChain] = useState(1);
   const [fromCoin, setFromCoin] = useState('');
   const [toCoin, setToCoin] = useState('');
   const [amount, setAmount] = useState('0');
 
-  // eslint-disable-next-line unused-imports/no-unused-vars
   const [routes, setRoutes] = useState<Routes[]>();
 
   const wagpay = new WagPay();
 
-  useEffect(() => {
-    console.log(fromChain);
-  }, [fromChain]);
+  const enumDict: { [key: string]: CoinKey } = {
+    ETH: CoinKey.ETH,
+  };
 
-  const getRoutesLocal = async (
+  console.log(enumDict);
+
+  const getRoutes = async (
     fromChainId: number,
     toChainId: number,
     fromTokenAddress: string,
     toTokenAddress: string,
     _amount: string
   ): Promise<void> => {
-    console.log(
-      fromChainId,
-      toChainId,
-      fromTokenAddress,
-      toTokenAddress,
-      _amount
-    );
-    // const availableRoutes = await wagpay.getRoutes({
-    //   fromChain: ChainId.POL,
-    //   toChain: ChainId.ETH,
-    //   fromToken: CoinKey.USDT,
-    //   toToken: CoinKey.USDC,
-    //   amount: _amount,
-    // });
+    console.log(fromChainId, toChainId, fromTokenAddress, toTokenAddress);
+    const availableRoutes = await wagpay.getRoutes({
+      fromChain: ChainId.POL,
+      toChain: ChainId.ETH,
+      fromToken: CoinKey.USDT,
+      toToken: CoinKey.USDC,
+      amount: '20',
+    });
 
-    // setRoutes(availableRoutes);
+    setRoutes(availableRoutes);
   };
 
   useEffect(() => {
-    // console.log(Number(fromChain), Number(toChain), fromCoin, toCoin, amount);
-    getRoutesLocal(
+    console.log(fromChain, toChain);
+  }, [fromChain, toChain]);
+
+  useEffect(() => {
+    console.log(Number(fromChain), Number(toChain), fromCoin, toCoin, amount);
+    getRoutes(
       Number(fromChain),
       Number(toChain),
       fromCoin,
       toCoin,
       ethers.utils.parseUnits(amount, 6).toString()
     );
-  }, [fromCoin, toCoin, amount]);
+  }, [fromChain, toChain, fromCoin, toCoin, amount]);
+
+  // const getRoutesLocal = async (
+  //   fromChainId: number,
+  //   toChainId: number,
+  //   fromTokenId: string,
+  //   toTokenId: string,
+  //   _amount: string
+  // ): Promise<void> => {
+  //   const availableRoutes = await wagpay.getRoutes({
+  //     fromChain: ChainId[fromChainId] as ChainId,
+  //     toChain: ChainId[toChainId] as ChainId,
+  //     fromToken: enumDict.ETH as CoinKey,
+  //     toToken: enumDict.ETH as CoinKey,
+  //     amount: _amount,
+  //   });
+  //   setRoutes(availableRoutes);
+  // };
+
+  // if (fromChain && toChain && fromCoin && toCoin && amount) {
+  //   getRoutesLocal(
+  //     fromChain,
+  //     toChain,
+  //     fromCoin,
+  //     toCoin,
+  //     ethers.utils.parseUnits(amount, 6).toString()
+  //   );
+  // }
+
+  const [filteredFromChains, setFilteredFromChains] = useState<Chain[]>([]);
+  const [filteredToChains, setFilteredToChains] = useState<Chain[]>([]);
+
+  useEffect(() => {
+    const filteredChains = wagpay.getSupportedChains().filter((chain) => {
+      return chain.id !== toChain;
+    });
+    setFilteredFromChains([...filteredChains]);
+  }, [toChain]);
+
+  useEffect(() => {
+    const filteredChains = wagpay.getSupportedChains().filter((chain) => {
+      return chain.id !== fromChain;
+    });
+    setFilteredToChains([...filteredChains]);
+  }, [fromChain]);
+
+  const setAmountToSwap = (e) => {
+    e.preventDefault();
+    setAmount(e.target.value);
+  };
 
   return (
     <Main
@@ -89,15 +140,12 @@ const Swap = () => {
               <div className="col-span-3">
                 <ChainSelect
                   label="From"
-                  classes="w-full rounded-md"
-                  selectId="from"
-                  selectName="from"
                   value={fromChain}
                   setValue={setFromChain}
-                  supportedChains={wagpay.getSupportedChains()}
+                  supportedChains={filteredFromChains}
                 />
               </div>
-              <div className="col-span-1 mt-8  place-self-center sm:block">
+              <div className="col-span-1 mt-8 place-self-center sm:block">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   xmlnsXlink="http://www.w3.org/1999/xlink"
@@ -122,39 +170,33 @@ const Swap = () => {
               <div className="col-span-3">
                 <ChainSelect
                   label="To"
-                  classes="w-full rounded-md"
-                  selectId="to"
-                  selectName="to"
                   value={toChain}
                   setValue={setToChain}
-                  supportedChains={wagpay.getSupportedChains()}
+                  supportedChains={filteredToChains}
                 />
               </div>
               {/* you send section */}
               <div className="col-span-7 mt-4 sm:mt-7">
                 <label
                   htmlFor="sender"
-                  className="block text-sm font-medium text-white"
+                  className="mb-2 block text-sm font-medium text-white"
                 >
                   You Send
                 </label>
                 <div className="flex w-full">
-                  <div className="relative w-3/4 rounded-md shadow-sm">
+                  <div className="relative h-12 w-3/5 rounded-md shadow-sm">
                     <input
                       value={amount}
-                      onChange={(e) => setAmount(e.target.value)}
+                      onChange={setAmountToSwap}
                       type="number"
                       placeholder="0.00"
-                      className="mt-2 block w-full rounded-l-md border border-r-0 border-gray-200 bg-gray-700 p-2 text-white shadow-sm focus:outline-none sm:text-sm"
+                      className="block h-12 w-full rounded-l-md border-none bg-gray-700 px-3 text-white shadow-sm outline-none focus:border-none focus:outline-none active:outline-none sm:text-sm"
                     />
-                    <div className="pointer-events-none absolute inset-y-0 right-0 mt-1 flex items-center pr-3">
+                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                       <span className="text-xs text-gray-300">MAX</span>
                     </div>
                   </div>
                   <CoinSelect
-                    classes="w-1/4 rounded-r-md"
-                    selectId="send"
-                    selectName="send"
                     value={fromCoin}
                     setValue={setFromCoin}
                     supportedCoins={wagpay.getSupportedCoins()}
@@ -165,26 +207,23 @@ const Swap = () => {
               <div className="col-span-7 mt-0 sm:mt-5">
                 <label
                   htmlFor="receive"
-                  className="block text-sm font-medium text-white"
+                  className="mb-2 block text-sm font-medium text-white"
                 >
                   You Receive
                 </label>
                 <div className="flex w-full">
-                  <div className="relative w-3/4 rounded-md shadow-sm">
+                  <div className="relative w-3/5 rounded-md shadow-sm">
                     <input
                       type="number"
                       placeholder="0.00"
                       disabled
-                      className="mt-2 block w-full rounded-l-md border border-r-0 border-gray-200 bg-gray-700 p-2 text-white shadow-sm focus:outline-none sm:text-sm"
+                      className="block h-12 w-full rounded-l-md border-r border-none border-blue-400 bg-gray-700 px-3 text-white shadow-sm outline-none focus:outline-none sm:text-sm"
                     />
                     <div className="pointer-events-none absolute inset-y-0 right-0 mt-1 flex items-center pr-3">
                       <span className="text-xs text-gray-300">MAX</span>
                     </div>
                   </div>
                   <CoinSelect
-                    classes="w-1/4 rounded-r-md"
-                    selectId="receive"
-                    selectName="receive"
                     value={toCoin}
                     setValue={setToCoin}
                     supportedCoins={wagpay.getSupportedCoins()}
@@ -257,7 +296,7 @@ const Swap = () => {
                 {({
                   account,
                   chain,
-                  openAccountModal,
+                  // openAccountModal,
                   openChainModal,
                   openConnectModal,
                   mounted,
@@ -301,11 +340,12 @@ const Swap = () => {
                         return (
                           <div className="flex w-full flex-col space-y-2 sm:flex-row sm:space-x-2 sm:space-y-0 md:space-x-4 lg:space-x-6">
                             <button
-                              onClick={openAccountModal}
+                              // onClick={openAccountModal}
                               type="button"
                               className="col-span-7 w-full rounded-full border border-transparent bg-white px-1 py-2 text-base text-wagpay-dark hover:bg-indigo-50"
                             >
-                              {account.displayName}
+                              See Bridges
+                              {/* {account.displayName} */}
                             </button>
                           </div>
                         );
@@ -343,17 +383,6 @@ const Swap = () => {
                   </div>
                 </>
               )}
-              {/* <BridgeBar
-                  bridgeName="Hyphen"
-                  fromToken="Polygon"
-                  toToken="Eth"
-                />
-                <BridgeBar
-                  bridgeName="Hyphen"
-                  fromToken="Polygon"
-                  toToken="Eth"
-                /> */}
-              {/* single option end */}
             </div>
           </div>
         )}
