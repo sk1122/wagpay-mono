@@ -1,0 +1,46 @@
+{
+  "name": "@wagpay/types",
+  "version": "0.0.1",
+  "description": "Cross Chain Asset Transfer",
+  "keywords": [
+    "cross-chain",
+    "cryptocurrency",
+    "blockchain"
+  ],
+  "homepage": "https://wagpay.xyz/developers",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "author": "wagpay",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint . --ext .ts",
+    "start": "node -r module-alias/register ./dist --env=production",
+    "start:dev": "nodemon",
+    "publish:npm": "yarn build && npm publish"
+  },
+  "nodemonConfig": {
+    "watch": [
+      "src"
+    ],
+    "ext": "ts, html",
+    "ignore": [
+      "src/public"
+    ],
+    "exec": "./node_modules/.bin/ts-node -r tsconfig-paths/register ./src"
+  },
+  "files": [
+    "dist"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "nodemon": "^2.0.16",
+    "ts-node": "^10.7.0",
+    "tsconfig-paths": "^4.0.0",
+    "typescript": "^4.7.2"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}
