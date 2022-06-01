@@ -19,7 +19,7 @@ export interface Tokens {
 	[key: number]: ChainTokens
 }
 
-const tokens: Tokens = {
+export const tokens: Tokens = {
 	1: {
 		"ETH": {name:CoinKey.ETH,address:'0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',decimals:18,chainId:ChainId.ETH},
 		'WETH': {name:CoinKey.WETH,address:'0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',decimals:18,chainId:ChainId.ETH},
@@ -35,4 +35,5 @@ const tokens: Tokens = {
 	}
 }
 
-export default tokens
+export * from "./coin.enum"
+export * from "./coin.type"
