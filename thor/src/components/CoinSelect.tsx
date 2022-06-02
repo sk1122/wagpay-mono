@@ -1,65 +1,69 @@
-import React from 'react';
+import type { Coin } from '@wagpay/sdk/dist/types/coin/coin.type';
+import React, { useState } from 'react';
 
 interface ISelectProps {
-  label?: string;
-  classes: string;
-  selectId: string;
-  selectName: string;
   value: string;
   setValue: Function;
+  supportedCoins: Coin[];
 }
 
-// function classNames(...classes: any) {
-//   return classes.filter(Boolean).join(' ');
-// }
+const CoinSelect = ({ supportedCoins, value, setValue }: ISelectProps) => {
+  const [isDropDownOpen, setIsDropDownOpen] = useState(false);
 
-const CoinSelect = ({
-  label,
-  classes,
-  selectId,
-  selectName,
-  value,
-  setValue,
-}: ISelectProps) => {
+  const selectedCoin = (coin: Coin) => {
+    setValue(coin.coinKey);
+    setIsDropDownOpen(!isDropDownOpen);
+  };
+
   return (
     <>
-      {label && (
-        <label htmlFor="from" className="block text-sm font-medium text-white">
-          {label}
-        </label>
-      )}
-      <select
-        id={selectId}
-        name={selectName}
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        className={`common-select ${classes}`}
-      >
-        <option
-          value="0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
-          className="bg-wagpay-dark"
+      <div className="relative w-2/5">
+        <div
+          className="flex flex-row overflow-hidden rounded-r-md"
+          onClick={() => setIsDropDownOpen(!isDropDownOpen)}
         >
-          MATIC
-        </option>
-        <option
-          value="0x7ceb23fd6bc0add59e62ac25578270cff1b9f619"
-          className="bg-wagpay-dark"
-        >
-          ETH
-        </option>
-        <option
-          value="0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
-          className="bg-wagpay-dark"
-        >
-          USDC
-        </option>
-        <option
-          value="0xc2132D05D31c914a87C6611C10748AEb04B58e8F"
-          className="bg-wagpay-dark"
-        >
-          USDT
-        </option>
-      </select>
+          <div className="flex h-12 w-full cursor-pointer select-none flex-row justify-between bg-gray-700 px-1 text-white">
+            <div className="flex flex-row items-center">
+              <img
+                className="mr-2.5 rounded-md bg-gray-300 object-cover"
+                src="https://movricons.s3.ap-south-1.amazonaws.com/Ether.svg"
+                alt="chain_icon"
+              />
+              <span className="leading-6">{value}</span>
+            </div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              className="w-7 transition duration-200 ease-in-out"
+            >
+              <path
+                fill="#D0D0D0"
+                d="M17 9.17a1 1 0 00-1.41 0L12 12.71 8.46 9.17a1 1 0 00-1.41 0 1 1 0 000 1.42l4.24 4.24a1 1 0 001.42 0L17 10.59a1 1 0 000-1.42z"
+              ></path>
+            </svg>
+          </div>
+        </div>
+        {isDropDownOpen && (
+          <div className="absolute top-12 left-0 z-10 w-full overflow-hidden rounded-b-md bg-gray-700 text-white shadow">
+            {supportedCoins.map((coin: Coin) => (
+              <div
+                key={coin.coinKey}
+                className="flex h-11 w-full cursor-pointer select-none flex-row justify-between bg-gray-700 py-2.5 pl-3 pr-2 text-white hover:bg-gray-900"
+                onClick={() => selectedCoin(coin)}
+              >
+                <div className="flex flex-row items-center">
+                  <img
+                    className="mr-2.5 h-6 w-6 rounded-md bg-gray-300 object-cover"
+                    src="https://movricons.s3.ap-south-1.amazonaws.com/Ether.svg"
+                    alt="chain_icon"
+                  />
+                  <span className="leading-6">{coin.coinName}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </>
   );
 };

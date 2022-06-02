@@ -3,6 +3,7 @@
 @tailwind base;
 @tailwind components;
 @import "toggle.css";
+@import "loader.css";
 @tailwind utilities;
 
 @font-face {
