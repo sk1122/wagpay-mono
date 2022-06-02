@@ -15,8 +15,8 @@ export const _getRoutes = async (route: RouteData): Promise<Routes[]> => {
 			let requestData = {
 				fromChainId: route.fromChain,
 				toChainId: route.toChain,
-				fromTokenAddress: tokens[route.fromChain as number][route.fromToken].address,
-				toTokenAddress: tokens[route.toChain as number][route.toToken].address,
+				fromToken: route.fromToken,
+				toToken: route.toToken,
 				amount: route.amount,
 				bridge: route.bridge,
 				dex: route.dex,
