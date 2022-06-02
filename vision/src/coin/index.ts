@@ -37,3 +37,4 @@ export const tokens: Tokens = {
 
 export * from "./coin.enum"
 export * from "./coin.type"
+export * from "./coin.obj"
