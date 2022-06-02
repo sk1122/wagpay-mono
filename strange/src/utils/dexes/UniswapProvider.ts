@@ -1,6 +1,5 @@
 import tokens from "@shared/tokens"
-import { Token } from "@shared/types/Token"
-import { UniswapData } from "@shared/types/UniswapData"
+import { Token, UniswapData } from "@wagpay/types"
 import fetch from "cross-fetch"
 
 class UniswapProvider {
@@ -8,7 +7,7 @@ class UniswapProvider {
 		let uniswapData: UniswapData = {
 			dex: '0xd81662a019fA9C5ab19248a5ac73570Ad2a1b7cc',
 			fees: 0,
-			chainId: fromToken.chainId,
+			chainId: Number(fromToken.chainId.toString()),
 			fromToken: fromToken, 
 			toToken: toToken, 
 			amountToGet: amount

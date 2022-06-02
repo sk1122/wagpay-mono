@@ -7,4 +7,4 @@ const bridgeController = new BridgeController()
 
 bridgeRouter.get("/best-route", (req: Request, res: Response) => bridgeController.bestBridge(req, res))
 bridgeRouter.get("/execute-best-route", (req: Request, res: Response) => bridgeController.executeBridge(req, res))
-bridgeRouter.get("/test", (req: Request, res: Response) => bridgeController.test(req, res))
+bridgeRouter.get("/test", (req: Request, res: Response) => bridgeController.bestBridgeV2(req, res))

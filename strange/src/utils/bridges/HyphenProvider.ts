@@ -1,4 +1,4 @@
-import { Token } from "@shared/types/Token"
+import { Token } from "@wagpay/types"
 import fetch from "cross-fetch"
 
 class HyphenProvider {

@@ -1,10 +1,11 @@
 import express, { Request, Response } from "express"
-import tokens, { chainsSupported, tokensSupported } from "@shared/tokens"
 import route from "@shared/routes"
-import { Token } from "@shared/types/Token"
+import { Token, chainsSupported, tokensSupported, tokens, coinEnum, chainEnum } from "@wagpay/types"
 import { ethers } from "ethers"
 import fetch from "cross-fetch"
 import Bridges from "src/utils/bridges"
+import { ChainId } from "@wagpay/sdk/dist/types/chain/chain.enum"
+import { CoinKey } from "@wagpay/sdk/dist/types/coin/coin.enum"
 
 const bridges = new Bridges()
 
@@ -62,16 +63,14 @@ class BridgeController {
 	}
 
 	bestBridge = async (req: Request, res: Response) => {
-		const { fromChainId, toChainId, fromTokenAddress, toTokenAddress, amount, ...data } = req.query
+		const { fromChainId, toChainId, fromToken, toToken, amount, ...data } = req.query
 		
 		let { bridge, dex } = data
 
 		if(bridge) bridge = JSON.parse(bridge.toString())
 		if(dex) dex = JSON.parse(dex.toString())
 
-		console.log(bridge, dex)
-
-		if(!fromChainId || !toChainId || !fromTokenAddress || !toTokenAddress || !amount) {
+		if(!fromChainId || !toChainId || !fromToken || !toToken || !amount) {
 			res.status(400).send({
 				error: "Send fromChain, toChain, fromTokenAddress, toTokenAddress",
 				status: 400
@@ -79,20 +78,21 @@ class BridgeController {
 			return
 		}
 
+		var token = tokens[Number(fromChainId.toString())][fromToken.toString()]
+
 		try {
-			var routes
-			if(bridge) {
-				// @ts-ignore
-				routes = await bridges.bestBridge(fromChainId.toString(), toChainId.toString(), fromTokenAddress.toString(), toTokenAddress.toString(), amount.toString(), bridge)
-			} else {
-				routes = await bridges.bestBridge(fromChainId.toString(), toChainId.toString(), fromTokenAddress.toString(), toTokenAddress.toString(), amount.toString())
-				console.log(routes)
-			}
+			var routes = await bridges.bestBridgeV2(chainEnum[Number(fromChainId)], chainEnum[Number(toChainId)], coinEnum[fromToken.toString()], coinEnum[toToken.toString()], amount.toString())
 			res.status(200).send(routes)
 		} catch(e) {
 			console.log(e)
 			res.status(400).send(e)
 		}
+	}
+
+	bestBridgeV2 = async (req: Request, res: Response) => {
+		console.log(ChainId.POL, ChainId.ETH, CoinKey.USDC, CoinKey.USDT, ethers.utils.parseUnits('1', 6).toString())
+		const routes = await bridges.bestBridgeV2(ChainId.POL, ChainId.ETH, CoinKey.USDC, CoinKey.USDC, ethers.utils.parseUnits('100', 6).toString())
+		res.status(200).send(routes)
 	}
 }
 

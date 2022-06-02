@@ -1,9 +1,19 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import WagPay from '@wagpay/sdk';
-import type { Routes } from '@wagpay/sdk/dist/types';
-import { ChainId } from '@wagpay/sdk/dist/types/chain/chain.enum';
-import type { Chain } from '@wagpay/sdk/dist/types/chain/chain.type';
-import { CoinKey } from '@wagpay/sdk/dist/types/coin/coin.enum';
+// import type { Routes } from '@wagpay/sdk/dist/types';
+// import { ChainId } from '@wagpay/sdk/dist/types/chain/chain.enum';
+// import type { Chain } from '@wagpay/sdk/dist/types/chain/chain.type';
+// import { CoinKey } from '@wagpay/sdk/dist/types/coin/coin.enum';
+import { 
+  CoinKey,
+  Chain,
+  ChainId,
+  Routes,
+  tokensSupported,
+  tokens,
+  coinEnum,
+  chainEnum
+} from '@wagpay/types'
 import { ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
 
@@ -26,27 +36,27 @@ const Swap = () => {
 
   const wagpay = new WagPay();
 
-  const enumDict: { [key: string]: CoinKey } = {
-    ETH: CoinKey.ETH,
-  };
-
-  console.log(enumDict);
-
   const getRoutes = async (
     fromChainId: number,
     toChainId: number,
-    fromTokenAddress: string,
-    toTokenAddress: string,
+    fromToken: string,
+    toToken: string,
     _amount: string
   ): Promise<void> => {
-    console.log(fromChainId, toChainId, fromTokenAddress, toTokenAddress);
+    console.log(fromChainId, toChainId, fromToken, coinEnum[toToken] as CoinKey);
+    console.log(tokens, (ChainId[fromChainId] as ChainId) as number, ChainId.POL, chainEnum[fromChainId])
+    // @ts-ignore
+    console.log(tokens[chainEnum[fromChainId]][fromCoin])
+    
     const availableRoutes = await wagpay.getRoutes({
-      fromChain: ChainId.POL,
-      toChain: ChainId.ETH,
-      fromToken: CoinKey.USDT,
-      toToken: CoinKey.USDC,
-      amount: '20',
+      fromChain: chainEnum[fromChainId] as ChainId,
+      toChain: chainEnum[toChainId]  as ChainId,
+      fromToken: coinEnum[fromToken] as CoinKey,
+      toToken: coinEnum[toToken] as CoinKey,
+      amount: _amount,
     });
+
+    console.log(availableRoutes, "availableRoutes")
 
     setRoutes(availableRoutes);
   };
@@ -56,14 +66,17 @@ const Swap = () => {
   }, [fromChain, toChain]);
 
   useEffect(() => {
-    console.log(Number(fromChain), Number(toChain), fromCoin, toCoin, amount);
-    getRoutes(
-      Number(fromChain),
-      Number(toChain),
-      fromCoin,
-      toCoin,
-      ethers.utils.parseUnits(amount, 6).toString()
-    );
+    console.log(Number(fromChain), Number(toChain), fromCoin, toCoin, amount, ethers.utils.parseUnits(amount, tokens[Number(fromChain)][fromCoin.toString()]?.decimals).toString());
+    if(fromChain && Number(fromChain) && toChain && fromCoin && toCoin && amount) {
+      getRoutes(
+        Number(fromChain),
+        Number(toChain),
+        fromCoin,
+        toCoin,
+        // @ts-ignore
+        ethers.utils.parseUnits(amount, tokens[Number(fromChain)][fromCoin.toString()]?.decimals).toString()
+      );
+    }
   }, [fromChain, toChain, fromCoin, toCoin, amount]);
 
   // const getRoutesLocal = async (
@@ -110,7 +123,7 @@ const Swap = () => {
     setFilteredToChains([...filteredChains]);
   }, [fromChain]);
 
-  const setAmountToSwap = (e) => {
+  const setAmountToSwap = (e: any) => {
     e.preventDefault();
     setAmount(e.target.value);
   };

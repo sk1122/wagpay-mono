@@ -1,12 +1,10 @@
-import { AllowDenyPrefer } from "@shared/allowdenyprefer"
 import route from "@shared/routes"
-import tokens, { chainsSupported } from "@shared/tokens"
-import { Token } from "@shared/types/Token"
-import { UniswapData } from "@shared/types/UniswapData"
+import { Token, AllowDenyPrefer, ChainId, tokens, chainsSupported, UniswapData, RouteResponse, Routes, CoinKey, coinEnum } from "@wagpay/types"
 import { ethers } from "ethers"
 import HopProvider from "./bridges/HopProvider"
 import HyphenProvider from "./bridges/HyphenProvider"
 import UniswapProvider from "./dexes/UniswapProvider"
+import { bridges, Dex, dexes } from "@shared/config"
 
 const hyphen = new HyphenProvider()
 const uniswap = new UniswapProvider()
@@ -41,6 +39,56 @@ class Bridges {
 			// }
 			// return fees
 		}
+	}
+
+	bestBridgeV2 = async (fromChain: ChainId, toChain: ChainId, fromToken: CoinKey, toToken: CoinKey, amount: string, bridge?: AllowDenyPrefer, dex?: AllowDenyPrefer) => {
+		const supported_bridges = bridges.filter(bridge => ((bridge.supported_chains.includes(fromChain) && bridge.supported_chains.includes(toChain)) && (bridge.supported_coins.includes(fromToken) && bridge.supported_coins.includes(toToken))))
+		const supported_dexes = dexes.filter(dex => ((dex.supported_chains.includes(fromChain) && dex.supported_chains.includes(toChain)) && (dex.supported_coins.includes(fromToken) && dex.supported_coins.includes(toToken))))
+
+		const uniswapRequired = fromToken !== toToken
+
+		const routes: Routes[] = []
+		
+		for(let i = 0; i < supported_bridges.length; i++) {
+			const bridge = supported_bridges[i]
+			let route: Routes = {
+				name: bridge.name,
+				bridgeTime: '',
+				contractAddress: bridge.contract,
+				amountToGet: '',
+				transferFee: '',
+				uniswapData: {} as UniswapData,
+				route: {} as RouteResponse	
+			}
+
+			if(uniswapRequired) {
+				for(let j = 0; j < supported_dexes.length; j++) {
+					console.log(amount, tokens[fromChain as number][fromToken.toString()].decimals)
+					const uniswapRoute = await uniswap.getUniswapRoute(tokens[fromChain as number][fromToken.toString()], tokens[fromChain as number][toToken.toString()], Number(ethers.utils.formatUnits(amount, tokens[fromChain as number][fromToken.toString()].decimals).toString()))
+					route.uniswapData = uniswapRoute
+				}
+			}
+
+			route.route = {
+				fromChain: fromChain.toString(),
+				toChain: toChain.toString(),
+				fromToken: tokens[fromChain as number][fromToken.toString()],
+				toToken: tokens[toChain as number][toToken.toString()],
+				amount: Number(amount)
+			}
+
+			const toToken2 = uniswapRequired ? toToken : fromToken
+			const toTToken2 = tokens[Number(fromChain)][toToken2]
+
+			const fees =  await bridge.getTransferFees(fromChain, toChain, toToken2, uniswapRequired ? ethers.utils.parseUnits(route.uniswapData.amountToGet.toString(), toTToken2.decimals).toString() : amount)
+			route.amountToGet = fees.amountToGet
+			// route.gasFees = fees.gasFees
+			route.transferFee = fees.transferFee
+
+			routes.push(route)
+		}
+
+		return routes
 	}
 	
 	bestBridge = async (fromChainId: string, toChainId: string, fromTokenAddress: string, toTokenAddress: string, amount: string, bridge?: AllowDenyPrefer, dex?: AllowDenyPrefer): Promise<Array<any>> => {
