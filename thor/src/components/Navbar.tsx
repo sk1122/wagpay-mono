@@ -2,7 +2,7 @@ import Link from 'next/link';
 import React from 'react';
 
 const navigation = [
-  { name: 'Developers', href: '#' },
+  { name: 'Developers', href: '/DevPage' },
   { name: 'Docs', href: '#' },
   { name: 'Contact Us', href: '#' },
 ];
@@ -19,12 +19,12 @@ const Navbar = () => {
                 <h2 className="text-3xl font-bold text-white">Wagpay.</h2>
               </a>
             </Link>
-            <div className="ml-10 hidden space-x-8 md:block">
+            <div className="ml-10 hidden space-x-12 md:block">
               {navigation.map((item) => (
                 <a
                   key={item.name}
                   href={item.href}
-                  className="text-base font-medium text-white hover:text-indigo-50"
+                  className="relative inline-block text-base font-medium text-white hover:text-indigo-50"
                 >
                   {item.name}
                 </a>
