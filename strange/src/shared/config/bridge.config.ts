@@ -21,6 +21,7 @@ export interface FeesInterface {
 	gasFees: string
 	amountToGet: string
 	transferFee: string
+	bridgeTime: string
 }
 
 export interface Bridge {
@@ -51,7 +52,8 @@ export const bridges: Bridge[] = [
 			let fees: FeesInterface = {
 				gasFees: '',
 				amountToGet: '',
-				transferFee: ''
+				transferFee: '',
+				bridgeTime: ''
 			}
 
 			const fromTokenAddress = tokens[fromChain as number][fromToken]
@@ -66,13 +68,15 @@ export const bridges: Bridge[] = [
 					fees = {
 						gasFees: data["gasFee"],
 						amountToGet: data["amountToGet"],
-						transferFee: data["transferFee"]
+						transferFee: data["transferFee"],
+						bridgeTime: '2'
 					}
 				} catch(e) {
 					fees = {
 						gasFees: '0',
 						amountToGet: '0',
-						transferFee: '0'
+						transferFee: '0',
+						bridgeTime: '2'
 					}
 				}
 				
@@ -92,7 +96,8 @@ export const bridges: Bridge[] = [
 			let fees: FeesInterface = {
 				gasFees: '',
 				amountToGet: '',
-				transferFee: ''
+				transferFee: '',
+				bridgeTime: ''
 			}
 			
 			const signer = ethers.Wallet.createRandom();
@@ -123,13 +128,15 @@ export const bridges: Bridge[] = [
 					fees = {
 						gasFees: '0',
 						amountToGet: ethers.utils.formatUnits(sendData["estimatedReceived"], token.decimals),
-						transferFee: ethers.utils.formatUnits(sendData["adjustedBonderFee"], token.decimals)
+						transferFee: ethers.utils.formatUnits(sendData["adjustedBonderFee"], token.decimals),
+						bridgeTime: '10'
 					}
 				} catch(e) {
 					fees = {
 						gasFees: '0',
 						amountToGet: '0',
-						transferFee: '0'
+						transferFee: '0',
+						bridgeTime: '10'
 					}
 				}
 
@@ -152,7 +159,8 @@ export const bridges: Bridge[] = [
 			let fees: FeesInterface = {
 				gasFees: '',
 				amountToGet: '',
-				transferFee: ''
+				transferFee: '',
+				bridgeTime: ''
 			}
 
 			const fromTokenAddress = tokens[fromChain as number][fromToken]
@@ -168,13 +176,15 @@ export const bridges: Bridge[] = [
 					fees = {
 						gasFees: ethers.utils.formatUnits(data["drop_gas_amt"], fromTokenAddress.decimals),
 						amountToGet: ethers.utils.formatUnits(data["estimated_receive_amt"], fromTokenAddress.decimals),
-						transferFee: ethers.utils.formatUnits(data['base_fee'], fromTokenAddress.decimals)
+						transferFee: ethers.utils.formatUnits(data['base_fee'], fromTokenAddress.decimals),
+						bridgeTime: '15'
 					}
 				} catch (e) {
 					fees = {
 						gasFees: '0',
 						amountToGet: '0',
-						transferFee: '0'
+						transferFee: '0',
+						bridgeTime: '15'
 					}
 				}
 				

@@ -10,6 +10,12 @@ const hyphen = new HyphenProvider()
 const uniswap = new UniswapProvider()
 const hop = new HopProvider()
 
+interface AlgoOptimize {
+	gas?: boolean
+	time?: boolean
+	return?: boolean
+}
+
 class Bridges {
 	getRoutes = (fromChain: string, fromToken: Token, toChain: string): any => {
 		const routes = route.available_routes[fromChain][fromToken.name][toChain]
@@ -41,7 +47,7 @@ class Bridges {
 		}
 	}
 
-	bestBridgeV2 = async (fromChain: ChainId, toChain: ChainId, fromToken: CoinKey, toToken: CoinKey, amount: string, bridge?: AllowDenyPrefer, dex?: AllowDenyPrefer) => {
+	bestBridgeV2 = async (fromChain: ChainId, toChain: ChainId, fromToken: CoinKey, toToken: CoinKey, amount: string, bridge?: AllowDenyPrefer, dex?: AllowDenyPrefer, optimize?: AlgoOptimize) => {
 		const supported_bridges = bridges.filter(bridge => ((bridge.supported_chains.includes(fromChain) && bridge.supported_chains.includes(toChain)) && (bridge.supported_coins.includes(fromToken) && bridge.supported_coins.includes(toToken))))
 		const supported_dexes = dexes.filter(dex => ((dex.supported_chains.includes(fromChain) && dex.supported_chains.includes(toChain)) && (dex.supported_coins.includes(fromToken) && dex.supported_coins.includes(toToken))))
 
@@ -81,6 +87,7 @@ class Bridges {
 			const toTToken2 = tokens[Number(fromChain)][toToken2]
 
 			const fees =  await bridge.getTransferFees(fromChain, toChain, toToken2, uniswapRequired ? ethers.utils.parseUnits(route.uniswapData.amountToGet.toString(), toTToken2.decimals).toString() : amount)
+			console.log(fees, "dsadsa")
 			route.amountToGet = fees.amountToGet
 			// route.gasFees = fees.gasFees
 			route.transferFee = fees.transferFee
@@ -88,7 +95,50 @@ class Bridges {
 			routes.push(route)
 		}
 
-		return routes
+		if(optimize) {
+			let sorted: Array<Routes> = routes.slice().sort((x: any, y: any) => {
+				if(optimize.return && Number(x.amountToGet) < Number(y.amountToGet)) {
+					return 1
+				} else if(optimize.gas && Number(x.gasFees) < Number(y.gasFees)) {
+					return 1
+				} else if(optimize.time && Number(x.bridgeTime) < Number(y.bridgeTime)) {
+					return 1
+				} else {
+					return -1
+				}
+			})
+
+			sorted = sorted.filter((x: Routes, index: number) => {
+				if(!x.amountToGet || Number(x.amountToGet) <= 0) {
+					return false
+				} else {
+					return true
+				}
+			})
+			
+			return sorted
+		} else {
+			let sorted: Array<any> = routes.slice().sort((x: any, y: any) => {
+				if(Number(x.amountToGet) < Number(y.amountToGet)) {
+					return 1
+				} else if(Number(x.gasFees) < Number(y.gasFees)) {
+					return 1
+				} else {
+					return -1
+				}
+			})
+
+			sorted = sorted.filter((x: Routes, index: number) => {
+				console.log(x.name, !x.amountToGet || Number(x.amountToGet) <= 0)
+				if(!x.amountToGet || Number(x.amountToGet) <= 0) {
+					return false
+				} else {
+					return true
+				}
+			})
+			
+			return sorted
+		}
 	}
 	
 	bestBridge = async (fromChainId: string, toChainId: string, fromTokenAddress: string, toTokenAddress: string, amount: string, bridge?: AllowDenyPrefer, dex?: AllowDenyPrefer): Promise<Array<any>> => {
