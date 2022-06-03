@@ -2,7 +2,7 @@ import Link from 'next/link';
 import React from 'react';
 
 const navigation = [
-  { name: 'Developers', href: '#' },
+  { name: 'Developers', href: '/DevPage' },
   { name: 'Docs', href: '#' },
   { name: 'Contact Us', href: '#' },
 ];

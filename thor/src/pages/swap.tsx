@@ -4,16 +4,8 @@ import WagPay from '@wagpay/sdk';
 // import { ChainId } from '@wagpay/sdk/dist/types/chain/chain.enum';
 // import type { Chain } from '@wagpay/sdk/dist/types/chain/chain.type';
 // import { CoinKey } from '@wagpay/sdk/dist/types/coin/coin.enum';
-import { 
-  CoinKey,
-  Chain,
-  ChainId,
-  Routes,
-  tokensSupported,
-  tokens,
-  coinEnum,
-  chainEnum
-} from '@wagpay/types'
+import type { Chain, CoinKey, Routes } from '@wagpay/types';
+import { chainEnum, ChainId, coinEnum, tokens } from '@wagpay/types';
 import { ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
 
@@ -43,20 +35,30 @@ const Swap = () => {
     toToken: string,
     _amount: string
   ): Promise<void> => {
-    console.log(fromChainId, toChainId, fromToken, coinEnum[toToken] as CoinKey);
-    console.log(tokens, (ChainId[fromChainId] as ChainId) as number, ChainId.POL, chainEnum[fromChainId])
+    console.log(
+      fromChainId,
+      toChainId,
+      fromToken,
+      coinEnum[toToken] as CoinKey
+    );
+    console.log(
+      tokens,
+      ChainId[fromChainId] as ChainId as number,
+      ChainId.POL,
+      chainEnum[fromChainId]
+    );
     // @ts-ignore
-    console.log(tokens[chainEnum[fromChainId]][fromCoin])
-    
+    console.log(tokens[chainEnum[fromChainId]][fromCoin]);
+
     const availableRoutes = await wagpay.getRoutes({
       fromChain: chainEnum[fromChainId] as ChainId,
-      toChain: chainEnum[toChainId]  as ChainId,
+      toChain: chainEnum[toChainId] as ChainId,
       fromToken: coinEnum[fromToken] as CoinKey,
       toToken: coinEnum[toToken] as CoinKey,
       amount: _amount,
     });
 
-    console.log(availableRoutes, "availableRoutes")
+    console.log(availableRoutes, 'availableRoutes');
 
     setRoutes(availableRoutes);
   };
@@ -66,15 +68,39 @@ const Swap = () => {
   }, [fromChain, toChain]);
 
   useEffect(() => {
-    console.log(Number(fromChain), Number(toChain), fromCoin, toCoin, amount, ethers.utils.parseUnits(amount, tokens[Number(fromChain)][fromCoin.toString()]?.decimals).toString());
-    if(fromChain && Number(fromChain) && toChain && fromCoin && toCoin && amount) {
+    console.log(
+      Number(fromChain),
+      Number(toChain),
+      fromCoin,
+      toCoin,
+      amount,
+      ethers.utils
+        .parseUnits(
+          amount,
+          tokens[Number(fromChain)][fromCoin.toString()]?.decimals
+        )
+        .toString()
+    );
+    if (
+      fromChain &&
+      Number(fromChain) &&
+      toChain &&
+      fromCoin &&
+      toCoin &&
+      amount
+    ) {
       getRoutes(
         Number(fromChain),
         Number(toChain),
         fromCoin,
         toCoin,
         // @ts-ignore
-        ethers.utils.parseUnits(amount, tokens[Number(fromChain)][fromCoin.toString()]?.decimals).toString()
+        ethers.utils
+          .parseUnits(
+            amount,
+            tokens[Number(fromChain)][fromCoin.toString()]?.decimals
+          )
+          .toString()
       );
     }
   }, [fromChain, toChain, fromCoin, toCoin, amount]);
