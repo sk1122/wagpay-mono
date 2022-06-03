@@ -54,6 +54,7 @@ class Bridges {
 		const uniswapRequired = fromToken !== toToken
 
 		const routes: Routes[] = []
+		const promises: any[] = []
 		
 		for(let i = 0; i < supported_bridges.length; i++) {
 			const bridge = supported_bridges[i]
@@ -86,14 +87,26 @@ class Bridges {
 			const toToken2 = uniswapRequired ? toToken : fromToken
 			const toTToken2 = tokens[Number(fromChain)][toToken2]
 
-			const fees =  await bridge.getTransferFees(fromChain, toChain, toToken2, uniswapRequired ? ethers.utils.parseUnits(route.uniswapData.amountToGet.toString(), toTToken2.decimals).toString() : amount)
-			console.log(fees, "dsadsa")
-			route.amountToGet = fees.amountToGet
-			// route.gasFees = fees.gasFees
-			route.transferFee = fees.transferFee
+			// const fees =  await bridge.getTransferFees(fromChain, toChain, toToken2, uniswapRequired ? ethers.utils.parseUnits(route.uniswapData.amountToGet.toString(), toTToken2.decimals).toString() : amount)
+			// console.log(fees, "dsadsa")
+			// route.amountToGet = fees.amountToGet
+			// // route.gasFees = fees.gasFees
+			// route.transferFee = fees.transferFee
 
-			routes.push(route)
+			promises.push(
+				bridge.getTransferFees(fromChain, toChain, toToken2, uniswapRequired ? ethers.utils.parseUnits(route.uniswapData.amountToGet.toString(), toTToken2.decimals).toString() : amount)
+				.then(fees => {
+					route.amountToGet = fees.amountToGet
+					route.transferFee = fees.transferFee
+
+					routes.push(route)
+				})
+			)
+
+			// routes.push(route)
 		}
+
+		await Promise.all(promises)
 
 		if(optimize) {
 			let sorted: Array<Routes> = routes.slice().sort((x: any, y: any) => {
