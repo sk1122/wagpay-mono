@@ -1,4 +1,5 @@
 import type { Routes } from '@wagpay/sdk/dist/types';
+import { ethers } from 'ethers';
 import React from 'react';
 
 interface IBridgeBarProps {
@@ -17,7 +18,10 @@ const BridgeBar = ({ bridge }: IBridgeBarProps) => {
             </div>
             <div className="flex flex-col space-y-1 text-center">
               <span className="text-center text-sm text-white md:text-xl">
-                {bridge.route.amount} {bridge.route.fromToken.name}
+                {ethers.utils.formatUnits(
+                  bridge.route.amount,
+                  bridge.route.fromToken.decimals
+                )}{' '}
               </span>
               <span className="text-center text-xs text-white">
                 on {bridge.route.fromToken.name}
@@ -40,7 +44,7 @@ const BridgeBar = ({ bridge }: IBridgeBarProps) => {
             </div>
             <div className="flex flex-col space-y-1 text-center">
               <span className="text-center text-sm text-white md:text-xl">
-                {bridge.amountToGet} {bridge.route.toToken.name}
+                {Number(bridge.amountToGet).toFixed(2)}
               </span>
               <span className="text-center text-xs text-white">
                 on {bridge.route.toToken.name}
