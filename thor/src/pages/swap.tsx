@@ -117,6 +117,10 @@ const Swap = () => {
     return () => clearTimeout(delayReaction);
   }, [amount]);
 
+
+
+  setInterval(getRoutes, 60000);
+
   // const getRoutesLocal = async (
   //   fromChainId: number,
   //   toChainId: number,
