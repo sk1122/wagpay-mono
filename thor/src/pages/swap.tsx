@@ -63,11 +63,7 @@ const Swap = () => {
     setRoutes(availableRoutes);
   };
 
-  useEffect(() => {
-    console.log(fromChain, toChain);
-  }, [fromChain, toChain]);
-
-  useEffect(() => {
+  const FetcAvalabaleRoutes = () => {
     console.log(
       Number(fromChain),
       Number(toChain),
@@ -103,7 +99,23 @@ const Swap = () => {
           .toString()
       );
     }
-  }, [fromChain, toChain, fromCoin, toCoin, amount]);
+  };
+
+  useEffect(() => {
+    console.log(fromChain, toChain);
+  }, [fromChain, toChain]);
+
+  useEffect(() => {
+    FetcAvalabaleRoutes();
+  }, [fromChain, toChain, fromCoin, toCoin]);
+
+  useEffect(() => {
+    const delayReaction = setTimeout(() => {
+      FetcAvalabaleRoutes();
+    }, 1000);
+
+    return () => clearTimeout(delayReaction);
+  }, [amount]);
 
   // const getRoutesLocal = async (
   //   fromChainId: number,

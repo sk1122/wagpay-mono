@@ -16,7 +16,6 @@ const DevPage = () => {
         <div className="mx-auto w-full text-white lg:w-[80%]">
           <Support />
         </div>
-
         <Footer />
       </div>
     </>
