@@ -45,7 +45,7 @@ export const bridges: Bridge[] = [
 	{
 		logoUri: '',
 		name: BridgeId.Hyphen,
-		contract: '',
+		contract: '0xcf50EEe948De7F54AE2680DDcaeD0a2EBeDdE609',
 		supported_chains: [ChainId.ETH, ChainId.AVA, ChainId.BSC, ChainId.POL],
 		supported_coins: [CoinKey.AVAX, CoinKey.MATIC, CoinKey.ETH, CoinKey.USDC, CoinKey.USDT, CoinKey.BNB],
 		getTransferFees: async (fromChain: ChainId, toChain: ChainId, fromToken: CoinKey, amount: string): Promise<FeesInterface> => {
@@ -152,7 +152,7 @@ export const bridges: Bridge[] = [
 	{
 		logoUri: '',
 		name: BridgeId.Celer,
-		contract: '',
+		contract: '0x43B0B312269896D8bdF46D28F7bdf71aEa4c4362',
 		supported_chains: [ChainId.ETH, ChainId.AVA, ChainId.BSC, ChainId.POL],
 		supported_coins: [CoinKey.AVAX, CoinKey.MATIC, CoinKey.ETH, CoinKey.USDC, CoinKey.USDT, CoinKey.BNB],
 		getTransferFees: async (fromChain: ChainId, toChain: ChainId, fromToken: CoinKey, amount: string): Promise<FeesInterface> => {
@@ -200,7 +200,7 @@ export const dexes: Dex[] = [
 	{
 		logoUri: '',
 		name: DexId.Uniswap,
-		contract: '',
+		contract: '0xf9Eb876d23DEA670f984c9F2A52c8B51De67157d',
 		supported_chains: [ChainId.ETH, ChainId.AVA, ChainId.BSC, ChainId.POL],
 		supported_coins: [CoinKey.AVAX, CoinKey.MATIC, CoinKey.ETH, CoinKey.USDC, CoinKey.USDT, CoinKey.BNB]
 	}
