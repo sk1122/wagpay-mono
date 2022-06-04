@@ -73,6 +73,7 @@ const Swap = () => {
       ethers.utils
         .parseUnits(
           amount,
+          // @ts-ignore
           tokens[Number(fromChain)][fromCoin.toString()]?.decimals
         )
         .toString()
@@ -94,6 +95,7 @@ const Swap = () => {
         ethers.utils
           .parseUnits(
             amount,
+            // @ts-ignore
             tokens[Number(fromChain)][fromCoin.toString()]?.decimals
           )
           .toString()
@@ -117,9 +119,10 @@ const Swap = () => {
     return () => clearTimeout(delayReaction);
   }, [amount]);
 
-
-
-  setInterval(getRoutes, 60000);
+  useEffect(() => {
+    const interval = setInterval(getRoutes, 60000);
+    return () => clearInterval(interval);
+  }, []);
 
   // const getRoutesLocal = async (
   //   fromChainId: number,
