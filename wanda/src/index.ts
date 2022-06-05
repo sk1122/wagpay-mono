@@ -58,10 +58,10 @@ class WagPay {
 				
 				// @note - get erc20 approval
 				if(route.route.fromToken.address !== this.NATIVE_ADDRESS) {
-					const needed = await this.erc20ApproveNeeded(route.route.fromToken, address, route.route.amount.toString(), signer)
+					const needed = await this.erc20ApproveNeeded(route.route.fromToken, '0x01Dea7159eF981e7556f30Ad481FcE0A1a3D3Fb1', route.route.amount.toString(), signer)
 					// console.log(needed)
 					if(needed) {
-						await this.erc20Approve(route.route.fromToken, address, route.route.amount.toString(), signer)
+						await this.erc20Approve(route.route.fromToken, '0x01Dea7159eF981e7556f30Ad481FcE0A1a3D3Fb1', route.route.amount.toString(), signer)
 					}
 				}
 
@@ -111,12 +111,12 @@ class WagPay {
 					bridgeId[route.name],
 					Number(route.route.toChain),
 					route.route.fromToken.address,
-					ethers.utils.parseUnits(route.route.amount.toFixed(0), route.route.fromToken.decimals),
+					ethers.utils.parseUnits(route.route.amount, route.route.fromToken.decimals),
 					params,
 					route.uniswapData ? true : false,
 					[
 						route.uniswapData.dex,
-						ethers.utils.parseUnits(route.route.amount.toFixed(0), route.uniswapData.fromToken.decimals),
+						ethers.utils.parseUnits(route.route.amount, route.uniswapData.fromToken.decimals),
 						ethers.utils.parseUnits(route.uniswapData.fees.toFixed(0), route.uniswapData.fromToken.decimals),
 						route.uniswapData.chainId,
 						route.uniswapData.fromToken.address,
@@ -124,8 +124,8 @@ class WagPay {
 						dexParams
 					]
 				]
-				const amount = route.route.fromToken.address === this.NATIVE_ADDRESS.toLowerCase() ? route.route.amount : 0
-				await contract.transfer(routeDataArr, { value: ethers.utils.parseEther(amount.toFixed(0)) })
+				const amount = route.route.fromToken.address === this.NATIVE_ADDRESS.toLowerCase() ? route.route.amount : '0'
+				await contract.transfer(routeDataArr, { value: ethers.utils.parseEther(amount) })
 
 				resolve(true)
 			} catch (e) {
