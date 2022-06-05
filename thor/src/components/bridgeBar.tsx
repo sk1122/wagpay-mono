@@ -30,12 +30,15 @@ const BridgeBar = ({ bridge }: IBridgeBarProps) => {
             </div>
           </div>
           {/* center part */}
-          {bridge.uniswapData && 
+          {bridge.uniswapData && (
             <div className="col-span-1 flex items-center space-x-3">
               <div className="h-[1px] w-1/3 border border-dashed border-gray-500" />
-              <div className="flex w-full items-center justify-center space-x-2 rounded-full bg-gray-700 py-1 px-4 text-xs text-white sm:w-1/3">
+              <div className="flex w-full items-center justify-center space-x-2 rounded-full  py-1 px-4 text-xs text-white sm:w-1/3">
                 <img src="/images/bridgeBadge.png" alt="bridge" />
-                <span>Uniswap {Number(bridge.uniswapData.amountToGet).toFixed(2)} on {bridge.uniswapData.toToken.name}</span>
+                <span>
+                  Uniswap {Number(bridge.uniswapData.amountToGet).toFixed(2)} on{' '}
+                  {bridge.uniswapData.toToken.name}
+                </span>
                 {/* <div className="flex flex-col space-y-1 text-center">
                   <span className="text-center text-sm text-white md:text-xl">
                     {Number(bridge.uniswapData.amountToGet).toFixed(2)}
@@ -47,10 +50,10 @@ const BridgeBar = ({ bridge }: IBridgeBarProps) => {
               </div>
               <div className="h-[1px] w-1/3 border border-dashed border-gray-500" />
             </div>
-          }
+          )}
           <div className="col-span-2 flex items-center space-x-3">
             <div className="h-[1px] w-1/3 border border-dashed border-gray-500" />
-            <div className="flex w-fit items-center justify-center space-x-2 rounded-full bg-gray-700 py-1 px-4 text-xs text-white sm:w-1/3">
+            <div className="flex w-fit items-center justify-center space-x-2 rounded-full  py-1 px-4 text-xs text-white sm:w-1/3">
               <img src="/images/bridgeBadge.png" alt="bridge" />
               <span>{bridge.name}</span>
             </div>
