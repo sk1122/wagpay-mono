@@ -37,8 +37,8 @@ class UniswapProvider {
 			toTokenPrice = await toTokenPrice.json()
 			toTokenPrice = toTokenPrice['matic-network'].usd
 			
-			uniswapData.amountToGet = (amount * Number(toTokenPrice)) - ((amount * Number(toTokenPrice)) * 0.003)
-			uniswapData.fees = ((amount * Number(toTokenPrice)) * 0.003)
+			uniswapData.amountToGet = fromTokenPrice / toTokenPrice
+			uniswapData.fees = ((uniswapData.amountToGet * Number(toTokenPrice)) * 0.003)
 		} else if (toToken.name === 'ETH') {
 			let toTokenPrice: any = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd`)
 			toTokenPrice = await toTokenPrice.json()

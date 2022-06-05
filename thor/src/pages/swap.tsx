@@ -18,8 +18,8 @@ import { Main } from '@/templates/Main';
 
 const Swap = () => {
   const [toggle, setToggle] = useState(false);
-  const [fromChain, setFromChain] = useState(137);
-  const [toChain, setToChain] = useState(1);
+  const [fromChain, setFromChain] = useState(1);
+  const [toChain, setToChain] = useState(137);
   const [fromCoin, setFromCoin] = useState('');
   const [toCoin, setToCoin] = useState('');
   const [amount, setAmount] = useState('0');

@@ -112,7 +112,7 @@ class WagPay {
 					Number(route.route.toChain),
 					route.route.fromToken.address,
 					ethers.utils.parseUnits(route.route.amount.toFixed(0), route.route.fromToken.decimals),
-					'0x00',
+					params,
 					route.uniswapData ? true : false,
 					[
 						route.uniswapData.dex,
@@ -240,29 +240,29 @@ class WagPay {
 	}
 }
 
-// export default WagPay
+export default WagPay
 
-(async () => {
-	const wag = new WagPay()
+// (async () => {
+// 	const wag = new WagPay()
 
-	const route = await wag.getRoutes({
-		fromChain: ChainId.POL,
-		toChain: ChainId.ETH,
-		fromToken: CoinKey.USDC,
-		toToken: CoinKey.USDT,
-		amount: '100000000'
-	})
-	// console.log(route)
-	const token: Token = {
-		address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-		chainId: 1,
-		name: CoinKey.USDC,
-		decimals: 6
-	}
-	console.log(route)
-	const provider = new ethers.providers.JsonRpcProvider('https://eth-mainnet.alchemyapi.io/v2/y141okG6TC3PecBM1mL0BfST9f4WQmLx')
-	let signer = ethers.Wallet.createRandom()
-	signer = signer.connect(provider)
+// 	const route = await wag.getRoutes({
+// 		fromChain: ChainId.POL,
+// 		toChain: ChainId.ETH,
+// 		fromToken: CoinKey.USDC,
+// 		toToken: CoinKey.USDT,
+// 		amount: '100000000'
+// 	})
+// 	// console.log(route)
+// 	const token: Token = {
+// 		address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+// 		chainId: 1,
+// 		name: CoinKey.USDC,
+// 		decimals: 6
+// 	}
+// 	console.log(route)
+// 	const provider = new ethers.providers.JsonRpcProvider('https://eth-mainnet.alchemyapi.io/v2/y141okG6TC3PecBM1mL0BfST9f4WQmLx')
+// 	let signer = ethers.Wallet.createRandom()
+// 	signer = signer.connect(provider)
 	
-	wag.executeRoute(route[0], signer)
-})()
+// 	wag.executeRoute(route[0], signer)
+// })()

@@ -81,7 +81,7 @@ class Bridges {
 				toChain: toChain.toString(),
 				fromToken: tokens[fromChain as number][fromToken.toString()],
 				toToken: tokens[toChain as number][toToken.toString()],
-				amount: Number(amount)
+				amount: amount
 			}
 
 			const toToken2 = uniswapRequired ? toToken : fromToken
