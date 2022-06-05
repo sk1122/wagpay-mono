@@ -9,7 +9,7 @@ interface IUniswapRouter is ISwapRouter {
     function refundETH() external payable;
 }
 
-contract Swaps is IDex{
+contract UniV3Provider is IDex{
 
     IUniswapRouter public constant swapRouter = IUniswapRouter(0xE592427A0AEce92De3Edee1F18E0157C05861564);
     address private constant WMATIC = 0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270;

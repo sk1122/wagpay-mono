@@ -5,7 +5,7 @@ pragma solidity >=0.8.0;
 @title HopAMM
 @notice responsible for calling the HOP L2 Impl functions.
  */
-interface L2AMMSwapHop {
+interface IHop {
     function calculateSwap(
         uint8 tokenIndexFrom,
         uint8 tokenIndexTo,
