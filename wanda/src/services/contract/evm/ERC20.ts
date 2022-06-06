@@ -24,7 +24,7 @@ export const _checkApprove = async (token: Token, spender: string, amount: strin
 		}
 	} else {
 		return {
-			amount: ethers.utils.parseUnits((amountNumber - allowanceNumber).toString(), token.decimals).toString(),
+			amount: (amountNumber - allowanceNumber).toString(),
 			required: true
 		}
 	}

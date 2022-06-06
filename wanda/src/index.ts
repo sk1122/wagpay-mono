@@ -55,13 +55,13 @@ class WagPay {
 		return new Promise(async (resolve, reject) => {
 			try {
 				const address = await signer.getAddress()
-				
+				console.log(route.route.amount, "AMOUNT")
 				// @note - get erc20 approval
 				if(route.route.fromToken.address !== this.NATIVE_ADDRESS) {
 					const needed = await this.erc20ApproveNeeded(route.route.fromToken, '0x01Dea7159eF981e7556f30Ad481FcE0A1a3D3Fb1', route.route.amount.toString(), signer)
 					// console.log(needed)
-					if(needed) {
-						await this.erc20Approve(route.route.fromToken, '0x01Dea7159eF981e7556f30Ad481FcE0A1a3D3Fb1', route.route.amount.toString(), signer)
+					if(needed.required) {
+						await this.erc20Approve(route.route.fromToken, '0x01Dea7159eF981e7556f30Ad481FcE0A1a3D3Fb1', needed.amount, signer)
 					}
 				}
 
@@ -111,21 +111,25 @@ class WagPay {
 					bridgeId[route.name],
 					Number(route.route.toChain),
 					route.route.fromToken.address,
-					ethers.utils.parseUnits(route.route.amount, route.route.fromToken.decimals),
+					route.route.amount,
 					params,
 					route.uniswapData ? true : false,
 					[
 						route.uniswapData.dex,
-						ethers.utils.parseUnits(route.route.amount, route.uniswapData.fromToken.decimals),
-						ethers.utils.parseUnits(route.uniswapData.fees.toFixed(0), route.uniswapData.fromToken.decimals),
+						route.route.amount,
+						route.uniswapData.fees.toFixed(0),
 						route.uniswapData.chainId,
 						route.uniswapData.fromToken.address,
 						route.uniswapData.toToken.address,
 						dexParams
 					]
 				]
+
+				console.log(routeDataArr, "routeDataArr")
+
 				const amount = route.route.fromToken.address === this.NATIVE_ADDRESS.toLowerCase() ? route.route.amount : '0'
-				await contract.transfer(routeDataArr, { value: ethers.utils.parseEther(amount) })
+				const a = await contract.transfer(routeDataArr, { value: ethers.utils.parseEther(amount) })
+				console.log(a)
 
 				resolve(true)
 			} catch (e) {
@@ -249,7 +253,7 @@ export default WagPay
 // 		fromChain: ChainId.POL,
 // 		toChain: ChainId.ETH,
 // 		fromToken: CoinKey.USDC,
-// 		toToken: CoinKey.USDT,
+// 		toToken: CoinKey.ETH,
 // 		amount: '100000000'
 // 	})
 // 	// console.log(route)
@@ -259,10 +263,10 @@ export default WagPay
 // 		name: CoinKey.USDC,
 // 		decimals: 6
 // 	}
-// 	console.log(route)
-// 	const provider = new ethers.providers.JsonRpcProvider('https://eth-mainnet.alchemyapi.io/v2/y141okG6TC3PecBM1mL0BfST9f4WQmLx')
-// 	let signer = ethers.Wallet.createRandom()
+// 	console.log(route[0])
+// 	const provider = new ethers.providers.JsonRpcProvider('https://polygon-mumbai.g.alchemy.com/v2/oD--2OO92oeHck5VCVI4hKEnYNCQ8F1d')
+// 	let signer = new ethers.Wallet('0deeb28bb0125df571c3817760ded64965ed18374ac8e9b3637ebc3c4401fa3d', provider)
 // 	signer = signer.connect(provider)
 	
-// 	wag.executeRoute(route[0], signer)
+// 	await wag.executeRoute(route[0], signer)
 // })()
