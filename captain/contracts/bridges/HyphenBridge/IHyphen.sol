@@ -2,8 +2,8 @@
 pragma solidity >=0.8.0;
 
 interface ILiquidityPool {
-    function depositErc20(
-        uint256 toChainId,
+    
+    function depositErc20(uint chainId,
         address tokenAddress,
         address receiver,
         uint256 amount,

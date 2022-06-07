@@ -12,7 +12,8 @@ interface IBridge {
         uint64 toChainId, 
         bytes memory extraData) external payable;
 
-    function transferERC20(uint64 toChainId,
+    function transferERC20(
+        uint64 toChainId,
         address tokenAddress,
         address receiver,
         uint256 amount,

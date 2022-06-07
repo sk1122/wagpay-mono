@@ -3,14 +3,16 @@ pragma solidity ^0.8.10;
 
 import '@uniswap/v3-periphery/contracts/libraries/TransferHelper.sol';
 import '@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol';
+import "@openzeppelin/contracts/access/Ownable.sol";
 import '../interface/IDex.sol';
 
 interface IUniswapRouter is ISwapRouter {
     function refundETH() external payable;
 }
 
-contract UniV3Provider is IDex{
+contract UniV3Provider is IDex, Ownable{
 
+    address private constant NATIVE_TOKEN_ADDRESS = address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE);
     IUniswapRouter public constant swapRouter = IUniswapRouter(0xE592427A0AEce92De3Edee1F18E0157C05861564);
     address private constant WMATIC = 0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270;
 
@@ -72,6 +74,15 @@ contract UniV3Provider is IDex{
             require(success, "refund failed");
 
             emit NativeFundsSwapped(_tokenOut, amountIn, amountOut);
+    }
+
+    function rescueFunds(address tokenAddr, uint amount) external onlyOwner {
+        if (tokenAddr == NATIVE_TOKEN_ADDRESS) {
+            uint balance = address(this).balance;
+            payable(msg.sender).transfer(balance);
+        } else {
+            IERC20(tokenAddr).transferFrom(address(this), msg.sender, amount);
+        }
     }
 
 }
