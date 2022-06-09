@@ -18,6 +18,7 @@ contract WagPayBridge is Ownable {
     struct DexData {
         address dex;
         uint amountIn;
+        uint amountOut;
         uint fees;
         uint64 chainId;
         address fromToken;
@@ -48,16 +49,17 @@ contract WagPayBridge is Ownable {
             if(route.dex.fromToken == NATIVE_TOKEN_ADDRESS) {
                 idex.swapNative{value: route.amount}(route.dex.toToken, route.dex.extraData);
             } else {
+                IERC20(route.fromToken).transferFrom(msg.sender, address(this), route.amount);
                 IERC20(route.dex.fromToken).approve(route.dex.dex, route.amount);
                 idex.swapERC20(route.dex.fromToken, route.dex.toToken, route.dex.amountIn,  route.dex.extraData);
             }
 
             // Bridge
-            if(route.fromToken == NATIVE_TOKEN_ADDRESS) {
+            if(route.dex.toToken == NATIVE_TOKEN_ADDRESS) {
                 bridge.transferNative{value: route.dex.amountIn}(route.dex.amountIn, route.receiver, route.toChain, route.extraData);
             } else {
-                IERC20(route.fromToken).approve(bridges[route.bridgeId], route.dex.amountIn);
-                bridge.transferERC20(route.toChain, route.fromToken, route.receiver, route.dex.amountIn, route.extraData);
+                IERC20(route.dex.toToken).approve(bridges[route.bridgeId], route.dex.amountOut);
+                bridge.transferERC20(route.toChain, route.dex.toToken, route.receiver, route.dex.amountOut, route.extraData);
             }
 
         } else {
@@ -65,6 +67,7 @@ contract WagPayBridge is Ownable {
             if(route.fromToken == NATIVE_TOKEN_ADDRESS) {
                 bridge.transferNative{value: route.amount}(route.amount, route.receiver, route.toChain, route.extraData);
             } else {
+                IERC20(route.fromToken).transferFrom(msg.sender, address(this), route.amount);
                 IERC20(route.fromToken).approve(bridges[route.bridgeId], route.amount);
                 bridge.transferERC20(route.toChain, route.fromToken, route.receiver, route.amount, route.extraData);
             }
@@ -86,5 +89,13 @@ contract WagPayBridge is Ownable {
 
     function getBridge(uint _bridgeId) external view returns (address) {
         return bridges[_bridgeId];
+    }
+
+    function rescueFunds(address tokenAddr, uint amount) external onlyOwner {
+        if (tokenAddr == NATIVE_TOKEN_ADDRESS) {
+            payable(msg.sender).transfer(amount);
+        } else {
+            IERC20(tokenAddr).transferFrom(address(this), msg.sender, amount);
+        }
     }
 }

@@ -14,7 +14,7 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
-  const Hyphen = await hre.ethers.getContractFactory("WagpayBridge");
+  const Hyphen = await hre.ethers.getContractFactory("WagPayBridge");
   const hyphen = await Hyphen.deploy();
 
   await hyphen.deployed();

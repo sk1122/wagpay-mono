@@ -10,7 +10,8 @@ interface IDex {
     function swapNative(address _tokenOut,
         bytes memory extraData) external payable returns (uint amountOut);
     
-    function swapERC20(address _tokenIn,
+    function swapERC20(
+        address _tokenIn,
         address _tokenOut,
         uint amountIn,
         bytes memory extraData) external returns (uint amountOut);

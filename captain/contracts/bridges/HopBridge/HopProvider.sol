@@ -5,6 +5,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "./IHop.sol";
 import "../../interface/IBridge.sol";
 
@@ -25,7 +26,8 @@ contract HopProvider is IBridge, Ownable, ReentrancyGuard {
 			emit NativeFundsTransferred(receiver, toChainId, amount);
 	}
 
-	function transferERC20(uint64 toChainId,
+	function transferERC20(
+		uint64 toChainId,
         address tokenAddress,
         address receiver,
         uint256 amount,
@@ -41,4 +43,13 @@ contract HopProvider is IBridge, Ownable, ReentrancyGuard {
 
 			emit ERC20FundsTransferred(receiver, toChainId, amount, tokenAddress);
 	}
+
+	function rescueFunds(address tokenAddr, uint amount) external onlyOwner {
+        if (tokenAddr == NATIVE_TOKEN_ADDRESS) {
+            uint balance = address(this).balance;
+            payable(msg.sender).transfer(balance);
+        } else {
+            IERC20(tokenAddr).transferFrom(address(this), msg.sender, amount);
+        }
+    }
 }
