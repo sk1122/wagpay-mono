@@ -5,7 +5,7 @@ import fetch from "cross-fetch"
 class UniswapProvider {
 	_getUniswapRoute = async (fromToken: Token, toToken: Token, amount: number): Promise<UniswapData> => {
 		let uniswapData: UniswapData = {
-			dex: '0xd81662a019fA9C5ab19248a5ac73570Ad2a1b7cc',
+			dex: '0x7cBBc355A50e19A58C2D8C24Be46Eef03093EDf7',
 			fees: 0,
 			chainId: Number(fromToken.chainId.toString()),
 			fromToken: fromToken, 
