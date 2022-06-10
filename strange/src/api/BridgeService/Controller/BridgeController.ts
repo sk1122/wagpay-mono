@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express"
 import route from "@shared/routes"
-import { Token, chainsSupported, tokensSupported, tokens, coinEnum, chainEnum } from "@wagpay/types"
+import { Token, chainsSupported, tokensSupported, tokens, coinEnum, chainEnum, AllowDenyPrefer } from "@wagpay/types"
 import { ethers } from "ethers"
 import fetch from "cross-fetch"
 import Bridges from "src/utils/bridges"
@@ -65,10 +65,29 @@ class BridgeController {
 	bestBridge = async (req: Request, res: Response) => {
 		const { fromChainId, toChainId, fromToken, toToken, amount, ...data } = req.query
 		
-		let { bridge, dex } = data
+		let { bridgeString, dexString, optimizeString } = data
 
-		if(bridge) bridge = JSON.parse(bridge.toString())
-		if(dex) dex = JSON.parse(dex.toString())
+		let bridge: AllowDenyPrefer = {}
+		let dex: AllowDenyPrefer = {}
+		let optimize = {}
+
+		if(bridgeString) {
+			bridge = JSON.parse(bridge.toString()) as AllowDenyPrefer
+		} else {
+			bridge = {} 
+		}
+
+		if(dexString) {
+			dex = JSON.parse(dex.toString()) as AllowDenyPrefer
+		} else {
+			dex = {}
+		}
+
+		if(optimizeString) {
+			optimize = JSON.parse(optimizeString.toString())
+		} else {
+			optimize = {}
+		}
 
 		if(!fromChainId || !toChainId || !fromToken || !toToken || !amount) {
 			res.status(400).send({
@@ -78,10 +97,8 @@ class BridgeController {
 			return
 		}
 
-		var token = tokens[Number(fromChainId.toString())][fromToken.toString()]
-
 		try {
-			var routes = await bridges.bestBridgeV2(chainEnum[Number(fromChainId)], chainEnum[Number(toChainId)], coinEnum[fromToken.toString()], coinEnum[toToken.toString()], amount.toString())
+			var routes = await bridges.bestBridgeV2(chainEnum[Number(fromChainId)], chainEnum[Number(toChainId)], coinEnum[fromToken.toString()], coinEnum[toToken.toString()], amount.toString(), bridge, dex, optimize)
 			res.status(200).send(routes)
 		} catch(e) {
 			console.log(e)

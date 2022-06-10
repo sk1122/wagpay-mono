@@ -112,7 +112,7 @@ class Bridges {
 			let sorted: Array<Routes> = routes.slice().sort((x: any, y: any) => {
 				if(optimize.return && Number(x.amountToGet) < Number(y.amountToGet)) {
 					return 1
-				} else if(optimize.gas && Number(x.gasFees) < Number(y.gasFees)) {
+				} else if(optimize.gas && Number(x.transferFee) < Number(y.transferFee)) {
 					return 1
 				} else if(optimize.time && Number(x.bridgeTime) < Number(y.bridgeTime)) {
 					return 1
@@ -128,6 +128,19 @@ class Bridges {
 					return true
 				}
 			})
+
+			if(bridge) {
+				for(let i = 0; i < sorted.length; i++) {
+					console.log(sorted.length, routes.length)
+					if(bridge?.prefer?.includes(sorted[i].name.toLowerCase())) {
+						const sort = sorted[i]
+						sorted.splice(i, 1)
+						sorted.unshift(sort)
+					} else if (bridge?.deny?.includes(sorted[i].name.toLowerCase())) {
+						sorted.splice(i, 1)
+					}
+				}
+			}
 			
 			return sorted
 		} else {
@@ -142,13 +155,25 @@ class Bridges {
 			})
 
 			sorted = sorted.filter((x: Routes, index: number) => {
-				console.log(x.name, !x.amountToGet || Number(x.amountToGet) <= 0)
 				if(!x.amountToGet || Number(x.amountToGet) <= 0) {
 					return false
 				} else {
 					return true
 				}
 			})
+
+			if(bridge) {
+				for(let i = 0; i < sorted.length; i++) {
+					console.log(sorted.length, routes.length)
+					if(bridge?.prefer?.includes(sorted[i].name.toLowerCase())) {
+						const sort = sorted[i]
+						sorted.splice(i, 1)
+						sorted.unshift(sort)
+					} else if (bridge?.deny?.includes(sorted[i].name.toLowerCase())) {
+						sorted.splice(i, 1)
+					}
+				}
+			}
 			
 			return sorted
 		}
