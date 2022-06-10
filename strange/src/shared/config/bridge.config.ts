@@ -45,7 +45,7 @@ export const bridges: Bridge[] = [
 	{
 		logoUri: '',
 		name: BridgeId.Hyphen,
-		contract: '0xcf50EEe948De7F54AE2680DDcaeD0a2EBeDdE609',
+		contract: '0xf0AdF157c4E7b92FfeAb045816560F41ff930DD2',
 		supported_chains: [ChainId.ETH, ChainId.AVA, ChainId.BSC, ChainId.POL],
 		supported_coins: [CoinKey.AVAX, CoinKey.MATIC, CoinKey.ETH, CoinKey.USDC, CoinKey.USDT, CoinKey.BNB],
 		getTransferFees: async (fromChain: ChainId, toChain: ChainId, fromToken: CoinKey, amount: string): Promise<FeesInterface> => {
@@ -89,7 +89,7 @@ export const bridges: Bridge[] = [
 	{
 		logoUri: '',
 		name: BridgeId.Hop,
-		contract: '',
+		contract: '0xcC5a4A7d908CB869a890051aA7Ba12E9719F2AFb',
 		supported_chains: [ChainId.ETH, ChainId.AVA, ChainId.BSC, ChainId.POL],
 		supported_coins: [CoinKey.AVAX, CoinKey.MATIC, CoinKey.ETH, CoinKey.USDC, CoinKey.USDT, CoinKey.BNB],
 		getTransferFees: async (fromChain: ChainId, toChain: ChainId, fromToken: CoinKey, amount: string): Promise<FeesInterface> => {
@@ -152,7 +152,7 @@ export const bridges: Bridge[] = [
 	{
 		logoUri: '',
 		name: BridgeId.Celer,
-		contract: '0x43B0B312269896D8bdF46D28F7bdf71aEa4c4362',
+		contract: '0x138C20AAc0e1602a92eCd2BF4634098b1d5765f1',
 		supported_chains: [ChainId.ETH, ChainId.AVA, ChainId.BSC, ChainId.POL],
 		supported_coins: [CoinKey.AVAX, CoinKey.MATIC, CoinKey.ETH, CoinKey.USDC, CoinKey.USDT, CoinKey.BNB],
 		getTransferFees: async (fromChain: ChainId, toChain: ChainId, fromToken: CoinKey, amount: string): Promise<FeesInterface> => {
