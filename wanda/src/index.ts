@@ -58,10 +58,10 @@ class WagPay {
 				console.log(route.route.amount, "AMOUNT")
 				// @note - get erc20 approval
 				if(route.route.fromToken.address !== this.NATIVE_ADDRESS) {
-					const needed = await this.erc20ApproveNeeded(route.route.fromToken, '0x12BADe998f31F5003377c4008d7907D26234E4A8', route.route.amount.toString(), signer)
+					const needed = await this.erc20ApproveNeeded(route.route.fromToken, '0xB8f0B05516B7675632f5BeecCf9320aEf2C90982', route.route.amount.toString(), signer)
 					// console.log(needed)
 					if(needed.required) {
-						await this.erc20Approve(route.route.fromToken, '0x12BADe998f31F5003377c4008d7907D26234E4A8', needed.amount, signer)
+						await this.erc20Approve(route.route.fromToken, '0xB8f0B05516B7675632f5BeecCf9320aEf2C90982', needed.amount, signer)
 					}
 				}
 
@@ -80,8 +80,8 @@ class WagPay {
 					}
 				}
 
-				const abi = [{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"inputs":[{"internalType":"address","name":"newBridge","type":"address"}],"name":"addBridge","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_bridgeId","type":"uint256"}],"name":"getBridge","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"bridgeId","type":"uint256"}],"name":"removeBridge","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"components":[{"internalType":"address","name":"receiver","type":"address"},{"internalType":"uint256","name":"bridgeId","type":"uint256"},{"internalType":"uint64","name":"toChain","type":"uint64"},{"internalType":"address","name":"fromToken","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"bytes","name":"extraData","type":"bytes"},{"internalType":"bool","name":"dexRequired","type":"bool"},{"components":[{"internalType":"address","name":"dex","type":"address"},{"internalType":"uint256","name":"amountIn","type":"uint256"},{"internalType":"uint256","name":"fees","type":"uint256"},{"internalType":"uint64","name":"chainId","type":"uint64"},{"internalType":"address","name":"fromToken","type":"address"},{"internalType":"address","name":"toToken","type":"address"},{"internalType":"bytes","name":"extraData","type":"bytes"}],"internalType":"struct WagPayBridge.DexData","name":"dex","type":"tuple"}],"internalType":"struct WagPayBridge.RouteData","name":"route","type":"tuple"}],"name":"transfer","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"}]
-				const contract = new ethers.Contract('0x12BADe998f31F5003377c4008d7907D26234E4A8', abi, signer)
+				const abi = [{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"inputs":[{"internalType":"address","name":"newBridge","type":"address"}],"name":"addBridge","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_bridgeId","type":"uint256"}],"name":"getBridge","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"bridgeId","type":"uint256"}],"name":"removeBridge","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"tokenAddr","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"rescueFunds","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"components":[{"internalType":"address","name":"receiver","type":"address"},{"internalType":"uint256","name":"bridgeId","type":"uint256"},{"internalType":"uint64","name":"toChain","type":"uint64"},{"internalType":"address","name":"fromToken","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"bytes","name":"extraData","type":"bytes"},{"internalType":"bool","name":"dexRequired","type":"bool"},{"components":[{"internalType":"address","name":"dex","type":"address"},{"internalType":"uint256","name":"amountIn","type":"uint256"},{"internalType":"uint256","name":"amountOut","type":"uint256"},{"internalType":"uint256","name":"fees","type":"uint256"},{"internalType":"uint64","name":"chainId","type":"uint64"},{"internalType":"address","name":"fromToken","type":"address"},{"internalType":"address","name":"toToken","type":"address"},{"internalType":"bytes","name":"extraData","type":"bytes"}],"internalType":"struct WagPayBridge.DexData","name":"dex","type":"tuple"}],"internalType":"struct WagPayBridge.RouteData","name":"route","type":"tuple"}],"name":"transfer","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"}]
+				const contract = new ethers.Contract('0xB8f0B05516B7675632f5BeecCf9320aEf2C90982', abi, signer)
 
 				const bridgeId: any = {
 					'Hyphen': 1,
@@ -112,7 +112,7 @@ class WagPay {
 					Number(route.route.toChain),
 					route.route.fromToken.address,
 					Number(route.route.amount),
-					'0x12BADe998f31F5003377c4008d7907D26234E4A8',
+					'0xB8f0B05516B7675632f5BeecCf9320aEf2C90982',
 					route.uniswapData ? true : false,
 					[
 						route.uniswapData.dex,
@@ -122,7 +122,7 @@ class WagPay {
 						Number(route.uniswapData.chainId),
 						route.uniswapData.fromToken.address,
 						route.uniswapData.toToken.address,
-						'0x12BADe998f31F5003377c4008d7907D26234E4A8'
+						'0xB8f0B05516B7675632f5BeecCf9320aEf2C90982'
 					]
 				]
 
