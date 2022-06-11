@@ -1,4 +1,3 @@
-import { ConnectButton } from '@rainbow-me/rainbowkit';
 import WagPay from '@wagpay/sdk';
 // import type { Routes } from '@wagpay/sdk/dist/types';
 // import { ChainId } from '@wagpay/sdk/dist/types/chain/chain.enum';
@@ -24,10 +23,11 @@ const Swap = () => {
   const [toCoin, setToCoin] = useState('');
   const [amount, setAmount] = useState('0');
   const [routes, setRoutes] = useState<Routes[]>();
+  const [ammountToGet, setAmmountToGet] = useState<any>();
 
-  const [account, setAccount] = useState<string | undefined>('')
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [signer, setSigner] = useState<ethers.Signer>()
+  const [account, setAccount] = useState<string | undefined>('');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [signer, setSigner] = useState<ethers.Signer>();
 
   const wagpay = new WagPay();
 
@@ -36,24 +36,24 @@ const Swap = () => {
       const { ethereum } = window;
 
       if (ethereum) {
-        const accounts = await ethereum.request({ method: "eth_accounts" });
+        const accounts = await ethereum.request({ method: 'eth_accounts' });
 
         if (accounts.length !== 0) {
           setAccount(accounts[0]);
           setIsAuthenticated(true);
 
           // @ts-ignore
-          const provider = new ethers.providers.Web3Provider(window.ethereum)
-          const signer = await provider.getSigner()
+          const provider = new ethers.providers.Web3Provider(window.ethereum);
+          const signer = await provider.getSigner();
 
-          setSigner(signer)
+          setSigner(signer);
 
           console.log(accounts[0]);
         } else {
-          console.log("Do not have access");
+          console.log('Do not have access');
         }
       } else {
-        console.log("Install Metamask");
+        console.log('Install Metamask');
       }
     } catch (e) {
       console.log(e);
@@ -66,18 +66,18 @@ const Swap = () => {
 
       if (ethereum) {
         const accounts = await ethereum.request({
-          method: "eth_requestAccounts",
+          method: 'eth_requestAccounts',
         });
 
         if (accounts.length !== 0) {
           setAccount(accounts[0]);
           setIsAuthenticated(true);
-          console.log("Found");
+          console.log('Found');
         } else {
-          console.log("Not Found");
+          console.log('Not Found');
         }
       } else {
-        console.log("Install Metamask");
+        console.log('Install Metamask');
       }
     } catch (e) {
       console.log(e);
@@ -85,9 +85,8 @@ const Swap = () => {
   };
 
   useEffect(() => {
-    checkWalletIsConnected()
-  }, [])
-
+    checkWalletIsConnected();
+  }, []);
 
   const getRoutes = async (
     fromChainId: number,
@@ -165,11 +164,11 @@ const Swap = () => {
   };
 
   const swap = async () => {
-    if(routes && routes[0] && signer) {
-      await wagpay.executeRoute(routes[0], signer)
-      alert('Swapping done successfully')
+    if (routes && routes[0] && signer) {
+      await wagpay.executeRoute(routes[0], signer);
+      alert('Swapping done successfully');
     }
-  }
+  };
 
   useEffect(() => {
     console.log(fromChain, toChain);
@@ -182,10 +181,12 @@ const Swap = () => {
   useEffect(() => {
     const delayReaction = setTimeout(() => {
       FetcAvalabaleRoutes();
+      if (routes && undefined) {
+        setAmmountToGet(routes[0]?.amountToGet);
+      }
     }, 1000);
-
     return () => clearTimeout(delayReaction);
-  }, [amount]);
+  }, [amount, routes]);
 
   useEffect(() => {
     const interval = setInterval(getRoutes, 60000);
@@ -271,7 +272,13 @@ const Swap = () => {
                   supportedChains={filteredFromChains}
                 />
               </div>
-              <div className="col-span-1 mt-8 place-self-center sm:block">
+              <div
+                className="col-span-1 mt-8 cursor-pointer place-self-center sm:block"
+                onClick={() => {
+                  setFromChain(toChain);
+                  setToChain(fromChain);
+                }}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   xmlnsXlink="http://www.w3.org/1999/xlink"
@@ -343,6 +350,7 @@ const Swap = () => {
                       type="number"
                       placeholder="0.00"
                       disabled
+                      value={ammountToGet}
                       className="block h-12 w-full rounded-l-md border-r border-none border-blue-400 bg-gray-700 px-3 text-white shadow-sm outline-none focus:outline-none sm:text-sm"
                     />
                     <div className="pointer-events-none absolute inset-y-0 right-0 mt-1 flex items-center pr-3">
@@ -418,24 +426,24 @@ const Swap = () => {
               )}
               {/* priority end */}
               {/* connect wallet button */}
-              {!isAuthenticated && 
+              {!isAuthenticated && (
                 <button
                   onClick={() => login()}
                   type="button"
-                  className="mt-5 col-span-7 w-full rounded-full border border-transparent bg-white py-2 px-4 text-base font-medium text-wagpay-dark hover:bg-indigo-50"
+                  className="col-span-7 mt-5 w-full rounded-full border border-transparent bg-white py-2 px-4 text-base font-medium text-wagpay-dark hover:bg-indigo-50"
                 >
                   Connect Wallet
                 </button>
-              }
-              {isAuthenticated && 
+              )}
+              {isAuthenticated && (
                 <button
                   onClick={() => swap()}
                   type="button"
-                  className="mt-5 col-span-7 w-full rounded-full border border-transparent bg-white py-2 px-4 text-base font-medium text-wagpay-dark hover:bg-indigo-50"
+                  className="col-span-7 mt-5 w-full rounded-full border border-transparent bg-white py-2 px-4 text-base font-medium text-wagpay-dark hover:bg-indigo-50"
                 >
                   Swap
                 </button>
-              }
+              )}
             </div>
           </div>
         </div>
