@@ -109,6 +109,7 @@ class Bridges {
 		await Promise.all(promises)
 
 		if(optimize) {
+			console.log("Dsadsaasd", optimize, routes.map(route => [route.name, route.amountToGet]))
 			let sorted: Array<Routes> = routes.slice().sort((x: any, y: any) => {
 				if(optimize.return && Number(x.amountToGet) < Number(y.amountToGet)) {
 					return 1
@@ -120,6 +121,7 @@ class Bridges {
 					return -1
 				}
 			})
+			console.log("Dsadsaasd", sorted.map(route => [route.name, route.amountToGet]))
 
 			sorted = sorted.filter((x: Routes, index: number) => {
 				if(!x.amountToGet || Number(x.amountToGet) <= 0) {
@@ -146,8 +148,6 @@ class Bridges {
 		} else {
 			let sorted: Array<any> = routes.slice().sort((x: any, y: any) => {
 				if(Number(x.amountToGet) < Number(y.amountToGet)) {
-					return 1
-				} else if(Number(x.gasFees) < Number(y.gasFees)) {
 					return 1
 				} else {
 					return -1

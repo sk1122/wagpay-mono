@@ -63,11 +63,11 @@ class BridgeController {
 	bestBridge = async (req: Request, res: Response) => {
 		const { fromChainId, toChainId, fromToken, toToken, amount, ...data } = req.query
 		
-		let { bridgeString, dexString, optimizeString } = data
+		let { bridge: bridgeString, dex: dexString, optimize: optimizeString } = data
 
 		let bridge: AllowDenyPrefer = {}
 		let dex: AllowDenyPrefer = {}
-		let optimize = {}
+		let optimize: any = {}
 
 		if(bridgeString) {
 			bridge = JSON.parse(bridge.toString()) as AllowDenyPrefer
@@ -80,11 +80,11 @@ class BridgeController {
 		} else {
 			dex = {}
 		}
-
+		console.log(optimizeString)
 		if(optimizeString) {
 			optimize = JSON.parse(optimizeString.toString())
 		} else {
-			optimize = {}
+			optimize = undefined
 		}
 
 		if(!fromChainId || !toChainId || !fromToken || !toToken || !amount) {

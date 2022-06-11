@@ -156,6 +156,8 @@ export const bridges: Bridge[] = [
 		supported_chains: [ChainId.ETH, ChainId.AVA, ChainId.BSC, ChainId.POL],
 		supported_coins: [CoinKey.AVAX, CoinKey.MATIC, CoinKey.ETH, CoinKey.USDC, CoinKey.USDT, CoinKey.BNB],
 		getTransferFees: async (fromChain: ChainId, toChain: ChainId, fromToken: CoinKey, amount: string): Promise<FeesInterface> => {
+			let tokenName = tokens[fromChain as number][fromToken].symbol
+			
 			let fees: FeesInterface = {
 				gasFees: '',
 				amountToGet: '',
@@ -167,8 +169,8 @@ export const bridges: Bridge[] = [
 
 			const CELER_BASE_URL = "https://cbridge-prod2.celer.network/v2/estimateAmt"
 			try {
-				console.log(`${CELER_BASE_URL}?src_chain_id=${fromChain}&dst_chain_id=${toChain}&token_symbol=${fromToken}&amt=${amount}&usr_addr=0xaa47c83316edc05cf9ff7136296b026c5de7eccd&slippage_tolerance=3000`)
-				const res = await fetch(`${CELER_BASE_URL}?src_chain_id=${fromChain}&dst_chain_id=${toChain}&token_symbol=${fromToken}&amt=${amount}&usr_addr=0xaa47c83316edc05cf9ff7136296b026c5de7eccd&slippage_tolerance=3000`)
+				console.log(`${CELER_BASE_URL}?src_chain_id=${fromChain}&dst_chain_id=${toChain}&token_symbol=${tokenName}&amt=${amount}&usr_addr=0xaa47c83316edc05cf9ff7136296b026c5de7eccd&slippage_tolerance=3000`)
+				const res = await fetch(`${CELER_BASE_URL}?src_chain_id=${fromChain}&dst_chain_id=${toChain}&token_symbol=${tokenName}&amt=${amount}&usr_addr=0xaa47c83316edc05cf9ff7136296b026c5de7eccd&slippage_tolerance=3000`)
 				if(res.status >= 400) throw "Error 404"
 				const data = await res.json()
 				console.log(data)
