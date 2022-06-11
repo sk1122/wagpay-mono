@@ -1,2 +1,18 @@
 export * from "./bridge.enum"
 export * from "./bridge.type"
+export * from "./bridge.config"
+
+export const hopAddresses: any = {
+	1: {
+		'USDC': '0x3666f603Cc164936C1b87e207F36BEBa4AC5f18a',
+		'USDT': '0x3E4a3a4796d16c0Cd582C382691998f7c06420B6',
+		'ETH': '0xb8901acB165ed027E32754E0FFe830802919727f',
+		'MATIC': '0x22B1Cbb8D98a01a3B71D034BB899775A76Eb1cc2'
+	},
+	137: {
+		'USDC': '0x76b22b8C1079A44F1211D867D68b1eda76a635A7',
+		'USDT': '0x8741Ba6225A6BF91f9D73531A98A89807857a2B3',
+		'ETH': '0xc315239cFb05F1E130E7E28E603CEa4C014c57f0',
+		'MATIC': '0x884d1Aa15F9957E1aEAA86a82a72e49Bc2bfCbe3'
+	}
+}
