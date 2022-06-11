@@ -4,7 +4,7 @@ import {
 	tokens,
 	RouteData,
 	Routes
-} from "@wagpay/types"
+} from "../../../../vision"
 
 
 export const _getRoutes = async (route: RouteData): Promise<Routes[]> => {

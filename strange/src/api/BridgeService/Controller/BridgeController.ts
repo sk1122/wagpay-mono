@@ -1,11 +1,9 @@
 import express, { Request, Response } from "express"
 import route from "@shared/routes"
-import { Token, chainsSupported, tokensSupported, tokens, coinEnum, chainEnum, AllowDenyPrefer } from "@wagpay/types"
 import { ethers } from "ethers"
 import fetch from "cross-fetch"
 import Bridges from "src/utils/bridges"
-import { ChainId } from "@wagpay/sdk/dist/types/chain/chain.enum"
-import { CoinKey } from "@wagpay/sdk/dist/types/coin/coin.enum"
+import { CoinKey, ChainId, Token, chainsSupported, tokensSupported, tokens, coinEnum, chainEnum, AllowDenyPrefer } from "../../../../../vision"
 
 const bridges = new Bridges()
 

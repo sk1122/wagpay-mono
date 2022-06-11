@@ -1,7 +1,8 @@
 {
-  "dependencies": {
-    "@openzeppelin/contracts": "^4.6.0",
-    "@uniswap/v3-periphery": "^1.4.1",
-    "@wagpay/types": "0.0.7"
-  }
+  "name": "wagpay-mono",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:sk1122/wagpay-mono.git",
+  "author": "Satyam Kulkarni <punekar.satyam@gmail.com>",
+  "license": "MIT"
 }

@@ -1,6 +1,6 @@
 import { Chain, Hop } from "@hop-protocol/sdk"
 import tokens from "@shared/tokens"
-import { Token } from "@wagpay/types"
+import { Token } from "../../../../vision"
 import { ethers } from "ethers"
 
 class HopProvider {

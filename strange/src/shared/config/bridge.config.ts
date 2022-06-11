@@ -3,7 +3,7 @@ import {
 	tokens,
 	ChainId,
 	CoinKey
-} from '@wagpay/types'
+} from '../../../../vision'
 import { Chain } from "@hop-protocol/sdk"
 import { ethers } from "ethers"
 
@@ -109,7 +109,7 @@ export const bridges: Bridge[] = [
 
 			try {
 				const hop = new Hop('mainnet')
-				const bridge = hop.connect(signer).bridge(token.name);
+				const bridge = hop.connect(signer).bridge(token.chainAgnositcId);
 
 				const fromChainHop = hopChains[fromChain]
 				const toChainHop = hopChains[toChain]

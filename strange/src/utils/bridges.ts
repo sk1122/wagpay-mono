@@ -1,5 +1,5 @@
 import route from "@shared/routes"
-import { Token, AllowDenyPrefer, ChainId, tokens, chainsSupported, UniswapData, RouteResponse, Routes, CoinKey, coinEnum } from "@wagpay/types"
+import { Token, AllowDenyPrefer, ChainId, tokens, chainsSupported, UniswapData, RouteResponse, Routes, CoinKey, coinEnum } from "../../../vision"
 import { ethers } from "ethers"
 import HopProvider from "./bridges/HopProvider"
 import HyphenProvider from "./bridges/HyphenProvider"
@@ -70,7 +70,7 @@ class Bridges {
 
 			if(uniswapRequired) {
 				for(let j = 0; j < supported_dexes.length; j++) {
-					console.log(amount, tokens[fromChain as number][fromToken.toString()].decimals)
+					// console.log(amount, tokens[fromChain as number][fromToken.toString()], tokens[fromChain as number][toToken.toString()])
 					const uniswapRoute = await uniswap.getUniswapRoute(tokens[fromChain as number][fromToken.toString()], tokens[fromChain as number][toToken.toString()], Number(ethers.utils.formatUnits(amount, tokens[fromChain as number][fromToken.toString()].decimals).toString()))
 					route.uniswapData = uniswapRoute
 				}

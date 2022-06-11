@@ -16,7 +16,7 @@ import {
 	hopAddresses,
 	bridges,
 	BridgeId
-} from "@wagpay/types";
+} from "../../vision";
 
 class WagPay {
 	
@@ -237,6 +237,7 @@ export default WagPay
 
 // (async () => {
 // 	const wag = new WagPay()
+// 	console.log(wag.getSupportedBridges())
 // 	// const route = await wag.getRoutes({
 // 	// 	fromChain: ChainId.POL,
 // 	// 	toChain: ChainId.ETH,
