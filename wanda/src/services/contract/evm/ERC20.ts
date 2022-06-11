@@ -1,5 +1,5 @@
 import { ethers } from 'ethers'
-import { Token } from '@wagpay/types'
+import { Token } from '../../../../../vision'
 
 export interface ApproveERC20 {
 	amount: string

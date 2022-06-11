@@ -1,5 +1,4 @@
-import tokens from "@shared/tokens"
-import { Token, UniswapData } from "@wagpay/types"
+import { Token, UniswapData } from "../../../../vision"
 import fetch from "cross-fetch"
 
 class UniswapProvider {
@@ -12,8 +11,8 @@ class UniswapProvider {
 			toToken: toToken, 
 			amountToGet: amount
 		}
-
-		if(fromToken.name.startsWith('USD') && toToken.name.startsWith('USD') || fromToken.name === toToken.name) {
+		console.log(toToken, fromToken)
+		if(fromToken.chainAgnositcId.startsWith('USD') && toToken.chainAgnositcId.startsWith('USD') || fromToken.chainAgnositcId === toToken.chainAgnositcId) {
 			return uniswapData
 		}
 		
@@ -24,29 +23,29 @@ class UniswapProvider {
 		
 		var fromTokenPrice
 
-		if(fromToken.name === 'MATIC' || fromToken.name === 'ETH') {
-			fromTokenPrice = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${coingeckoName[fromToken.name]}&vs_currencies=usd`)
+		if(fromToken.chainAgnositcId === 'MATIC' || fromToken.chainAgnositcId === 'ETH') {
+			fromTokenPrice = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${coingeckoName[fromToken.chainAgnositcId]}&vs_currencies=usd`)
 			fromTokenPrice = await fromTokenPrice.json()
-			fromTokenPrice = fromTokenPrice[coingeckoName[fromToken.name]].usd
+			fromTokenPrice = fromTokenPrice[coingeckoName[fromToken.chainAgnositcId]].usd
 			fromTokenPrice = fromTokenPrice * amount
 		}
 		else fromTokenPrice = amount
 
-		if(toToken.name === 'MATIC') {
+		if(toToken.chainAgnositcId === 'MATIC') {
 			let toTokenPrice: any = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=usd`)
 			toTokenPrice = await toTokenPrice.json()
 			toTokenPrice = toTokenPrice['matic-network'].usd
 			
 			uniswapData.amountToGet = fromTokenPrice / toTokenPrice
 			uniswapData.fees = ((uniswapData.amountToGet * Number(toTokenPrice)) * 0.003)
-		} else if (toToken.name === 'ETH') {
+		} else if (toToken.chainAgnositcId === 'ETH') {
 			let toTokenPrice: any = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd`)
 			toTokenPrice = await toTokenPrice.json()
 			toTokenPrice = toTokenPrice['ethereum'].usd
 			
 			uniswapData.amountToGet = ((fromTokenPrice - ((Number(fromTokenPrice)) * 0.003)) / Number(toTokenPrice))
 			uniswapData.fees = (Number(fromTokenPrice)) * 0.003
-		} else if (toToken.name.startsWith('USD')) {
+		} else if (toToken.chainAgnositcId.startsWith('USD')) {
 			console.log(fromTokenPrice)
 			uniswapData.amountToGet = (Number(fromTokenPrice)) - (Number(fromTokenPrice) * 0.003)
 			uniswapData.fees = (Number(fromTokenPrice) * 0.003)
@@ -55,9 +54,7 @@ class UniswapProvider {
 	}
 	
 	getUniswapRoute = async (fromToken: Token, toToken: Token, amount: number): Promise<UniswapData> => {		
-		const swappedToken = tokens[fromToken.chainId][toToken.name]
-
-		return this._getUniswapRoute(fromToken, swappedToken, amount)
+		return this._getUniswapRoute(fromToken, toToken, amount)
 	}
 }
 
