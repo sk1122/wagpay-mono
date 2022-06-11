@@ -1,4 +1,4 @@
-import type { Chain } from '@wagpay/sdk/dist/types/chain/chain.type';
+import type { Chain } from '../../../vision';
 import React, { useState } from 'react';
 
 interface ISelectProps {

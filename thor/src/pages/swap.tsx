@@ -1,10 +1,10 @@
-import WagPay from '@wagpay/sdk';
+import WagPay from '../../../wanda';
 // import type { Routes } from '@wagpay/sdk/dist/types';
 // import { ChainId } from '@wagpay/sdk/dist/types/chain/chain.enum';
 // import type { Chain } from '@wagpay/sdk/dist/types/chain/chain.type';
 // import { CoinKey } from '@wagpay/sdk/dist/types/coin/coin.enum';
-import type { Chain, CoinKey, Routes } from '@wagpay/types';
-import { chainEnum, ChainId, coinEnum, tokens } from '@wagpay/types';
+import type { Chain, CoinKey, Routes } from '../../../vision';
+import { chainEnum, ChainId, coinEnum, tokens } from '../../../vision';
 import { ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
 import { FiRefreshCw } from 'react-icons/fi';
@@ -170,11 +170,16 @@ const Swap = () => {
   };
 
   const swap = async () => {
-    if (routes && routes[0] && signer) {
+    if (routeToExecute && routes && routes[0] && signer) {
+      console.log('dasdsa', signer)
       await wagpay.executeRoute(routeToExecute, signer);
       alert('Swapping done successfully');
     }
   };
+
+  useEffect(() => {
+    if(routes) setRouteToExecute(routes[0])
+  }, [routes])
 
   useEffect(() => {
     console.log(fromChain, toChain);
@@ -184,20 +189,20 @@ const Swap = () => {
     FetcAvalabaleRoutes();
   }, [fromChain, toChain, fromCoin, toCoin]);
 
-  useEffect(() => {
-    const delayReaction = setTimeout(() => {
-      FetcAvalabaleRoutes();
-      if (routes && true) {
-        setRouteToExecute(routes[0]);
-      }
-    }, 1000);
-    return () => clearTimeout(delayReaction);
-  }, [amount, routes]);
+  // useEffect(() => {
+  //   const delayReaction = setTimeout(() => {
+  //     FetcAvalabaleRoutes();
+  //     if (routes && true) {
+  //       setRouteToExecute(routes[0]);
+  //     }
+  //   }, 1000);
+  //   return () => clearTimeout(delayReaction);
+  // }, [amount, routes]);
 
-  useEffect(() => {
-    const interval = setInterval(getRoutes, 60000);
-    return () => clearInterval(interval);
-  }, []);
+  // useEffect(() => {
+  //   const interval = setInterval(getRoutes, 60000);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   // const getRoutesLocal = async (
   //   fromChainId: number,
@@ -361,7 +366,7 @@ const Swap = () => {
                       type="number"
                       placeholder="0.00"
                       disabled
-                      value={routeToExecute ? routeToExecute.amountToGet : 12}
+                      value={routeToExecute ? Number(routeToExecute.amountToGet).toFixed(2) : 12}
                       className="block h-12 w-full rounded-l-md border-r border-none border-blue-400 bg-[#161B22] px-3 text-white shadow-sm outline-none focus:outline-none sm:text-sm"
                     />
                     <div className="pointer-events-none absolute inset-y-0 right-0 mt-1 flex items-center pr-3">

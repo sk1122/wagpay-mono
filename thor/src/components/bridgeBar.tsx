@@ -1,4 +1,4 @@
-import type { Routes } from '@wagpay/sdk/dist/types';
+import type { Routes } from '../../../vision';
 import { ethers } from 'ethers';
 import React from 'react';
 
@@ -17,7 +17,6 @@ const BridgeBar = ({ bridge }: IBridgeBarProps) => {
               <img src="/images/currency/usdcBadge.png" alt="usdc" />
             </div>
             <div className="flex flex-col space-y-1 text-center">
-              {console.log(bridge.route.amount, bridge.route.fromToken)}
               <span className="text-center text-sm text-white md:text-xl">
                 {ethers.utils.formatUnits(
                   bridge.route.amount.toString(),

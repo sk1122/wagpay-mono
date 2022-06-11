@@ -1,4 +1,4 @@
-import type { Coin } from '@wagpay/sdk/dist/types/coin/coin.type';
+import type { Coin } from '../../../vision';
 import React, { useState } from 'react';
 
 interface ISelectProps {
