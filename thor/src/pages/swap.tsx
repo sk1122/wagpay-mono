@@ -24,6 +24,7 @@ const Swap = () => {
   const [amount, setAmount] = useState('0');
   const [routes, setRoutes] = useState<Routes[]>();
   const [ammountToGet, setAmmountToGet] = useState<any>();
+  const [routeToExecute, setRouteToExecute] = useState<Routes>();
 
   const [account, setAccount] = useState<string | undefined>('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -165,7 +166,7 @@ const Swap = () => {
 
   const swap = async () => {
     if (routes && routes[0] && signer) {
-      await wagpay.executeRoute(routes[0], signer);
+      await wagpay.executeRoute(routeToExecute, signer);
       alert('Swapping done successfully');
     }
   };
@@ -181,8 +182,8 @@ const Swap = () => {
   useEffect(() => {
     const delayReaction = setTimeout(() => {
       FetcAvalabaleRoutes();
-      if (routes && undefined) {
-        setAmmountToGet(routes[0]?.amountToGet);
+      if (routes && true) {
+        setRouteToExecute(routes[0]);
       }
     }, 1000);
     return () => clearTimeout(delayReaction);
@@ -350,7 +351,7 @@ const Swap = () => {
                       type="number"
                       placeholder="0.00"
                       disabled
-                      value={ammountToGet}
+                      value={routeToExecute ? routeToExecute.amountToGet : 12}
                       className="block h-12 w-full rounded-l-md border-r border-none border-blue-400 bg-gray-700 px-3 text-white shadow-sm outline-none focus:outline-none sm:text-sm"
                     />
                     <div className="pointer-events-none absolute inset-y-0 right-0 mt-1 flex items-center pr-3">
@@ -453,7 +454,17 @@ const Swap = () => {
               {/* single option */}
               {routes ? (
                 routes.map((value: Routes) => {
-                  return <BridgeBar key={value.name} bridge={value} />;
+                  return (
+                    <div
+                      className="cursor-pointer"
+                      key={value.name}
+                      onClick={() => {
+                        setRouteToExecute(value);
+                      }}
+                    >
+                      <BridgeBar bridge={value} />;
+                    </div>
+                  );
                 })
               ) : (
                 <>
