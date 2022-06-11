@@ -1,5 +1,5 @@
 import { _getRoutes } from "./services";
-import { ethers } from "ethers";
+import { ethers, BigNumber } from "ethers";
 import { ApproveERC20, _checkApprove, _approve } from "./services/contract/evm/ERC20";
 import {
 	CoinKey,
@@ -96,21 +96,21 @@ class WagPay {
 						[1, 1]
 					)
 				}
-
+				
 				const routeDataArr = [
 					address,
-					bridgeId[route.name],
-					Number(route.route.toChain),
+					BigNumber.from(bridgeId[route.name]),
+					BigNumber.from(Number(route.route.toChain)),
 					route.route.fromToken.address,
-					Number(route.route.amount),
+					BigNumber.from(Number(route.route.amount)),
 					bridgeAddress,
 					route.uniswapData ? true : false,
 					[
 						route.uniswapData.dex,
-						Number(route.route.amount),
-						Number(ethers.utils.formatUnits(route.uniswapData.amountToGet, route.uniswapData.toToken.decimals)),
-						Number(3000),
-						Number(route.uniswapData.chainId),
+						BigNumber.from(Number(route.route.amount)),
+						BigNumber.from(ethers.utils.parseUnits(route.uniswapData.amountToGet.toString(), route.uniswapData.toToken.decimals).toString()),
+						BigNumber.from(Number(3000)),
+						BigNumber.from(Number(route.uniswapData.chainId)),
 						route.uniswapData.fromToken.address,
 						route.uniswapData.toToken.address,
 						bridgeAddress
