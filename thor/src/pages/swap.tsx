@@ -7,6 +7,8 @@ import type { Chain, CoinKey, Routes } from '@wagpay/types';
 import { chainEnum, ChainId, coinEnum, tokens } from '@wagpay/types';
 import { ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
+import { FiRefreshCw } from 'react-icons/fi';
+import { MdArrowDropDown } from 'react-icons/md';
 
 import BridgeBar from '@/components/bridgeBar';
 import ChainSelect from '@/components/ChainSelect';
@@ -29,6 +31,9 @@ const Swap = () => {
   const [account, setAccount] = useState<string | undefined>('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [signer, setSigner] = useState<ethers.Signer>();
+  const [isDropDownOpenp, setIsDropDownOpenp] = useState(false);
+  const priorties = ['Hight returns', 'Low Gas fees', 'Less time'];
+  const [priorityValue, setPRiorityValue] = useState(priorties[0]);
 
   const wagpay = new WagPay();
 
@@ -254,7 +259,12 @@ const Swap = () => {
     >
       <Navbar2 />
 
-      <div className="mx-auto grid max-w-7xl grid-cols-5 py-12">
+      <div
+        className="mx-auto grid max-w-7xl grid-cols-5 py-12"
+        onClick={() => {
+          setIsDropDownOpenp(false);
+        }}
+      >
         <div
           className={
             toggle === false
@@ -262,7 +272,7 @@ const Swap = () => {
               : `col-span-5 mt-4 sm:mx-auto sm:w-full sm:max-w-md xl:mt-12`
           }
         >
-          <div className="mx-4 rounded-lg bg-wagpay-dark py-8 px-4 shadow sm:mx-auto sm:max-w-md sm:px-6">
+          <div className="mx-4 rounded-lg bg-[#010409] py-8 px-4 shadow sm:mx-auto sm:max-w-md sm:px-6">
             {/* card starts here */}
             <div className="grid grid-cols-7 place-content-center gap-y-6 sm:grid-cols-7 sm:gap-y-0 sm:gap-x-2">
               <div className="col-span-3">
@@ -283,7 +293,7 @@ const Swap = () => {
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   xmlnsXlink="http://www.w3.org/1999/xlink"
-                  className="rounded-full bg-gray-700 p-1"
+                  className="rounded-full bg-[#161B22] p-1"
                   aria-hidden="true"
                   role="img"
                   width="32"
@@ -324,7 +334,7 @@ const Swap = () => {
                       onChange={setAmountToSwap}
                       type="number"
                       placeholder="0.00"
-                      className="block h-12 w-full rounded-l-md border-none bg-gray-700 px-3 text-white shadow-sm outline-none focus:border-none focus:outline-none active:outline-none sm:text-sm"
+                      className="block h-12 w-full rounded-l-md border-none bg-[#161B22] px-3 text-white shadow-sm outline-none focus:border-none focus:outline-none active:outline-none sm:text-sm"
                     />
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                       <span className="text-xs text-gray-300">MAX</span>
@@ -352,7 +362,7 @@ const Swap = () => {
                       placeholder="0.00"
                       disabled
                       value={routeToExecute ? routeToExecute.amountToGet : 12}
-                      className="block h-12 w-full rounded-l-md border-r border-none border-blue-400 bg-gray-700 px-3 text-white shadow-sm outline-none focus:outline-none sm:text-sm"
+                      className="block h-12 w-full rounded-l-md border-r border-none border-blue-400 bg-[#161B22] px-3 text-white shadow-sm outline-none focus:outline-none sm:text-sm"
                     />
                     <div className="pointer-events-none absolute inset-y-0 right-0 mt-1 flex items-center pr-3">
                       <span className="text-xs text-gray-300">MAX</span>
@@ -448,8 +458,50 @@ const Swap = () => {
             </div>
           </div>
         </div>
-        {toggle === false && (
-          <div className="col-span-5 mt-12 mb-20 w-full sm:mx-auto sm:w-full xl:col-span-3 xl:mt-12">
+        <div className="col-span-5 mt-12 mb-20 w-full sm:mx-auto sm:w-full xl:col-span-3 xl:mt-12">
+          <div className="mb-12 flex w-full items-center justify-between  bg-[#010409] p-4 ">
+            <div className="rounded-full bg-[#161B22] p-1">
+              <FiRefreshCw className="text-3xl" />
+            </div>
+            <div className="rounded-lg bg-[#161B22] p-2">
+              <button
+                className=" group relative flex w-full items-center justify-center text-white shadow focus:outline-none"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsDropDownOpenp(!isDropDownOpenp);
+                }}
+              >
+                <div className=" flex w-full items-center justify-center">
+                  {priorityValue ? (
+                    <p className="" data-value={priorityValue}>
+                      {priorityValue}
+                    </p>
+                  ) : null}
+                  <MdArrowDropDown className="text-2xl font-bold" />
+                </div>
+                {isDropDownOpenp ? (
+                  <div className=" absolute top-full z-50 mt-4 w-max min-w-full rounded bg-[#161B22]">
+                    <ul className="rounded  text-left">
+                      {priorties.map((item) => {
+                        return (
+                          <li
+                            onClick={(e) => {
+                              setPRiorityValue(item);
+                            }}
+                            className="px-4  py-1 hover:bg-gray-700 "
+                            key={item}
+                          >
+                            <span className="">{item}</span>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                ) : null}
+              </button>
+            </div>
+          </div>
+          {toggle === false && (
             <div className="mx-auto flex w-full flex-col justify-center space-y-12 md:max-w-2xl xl:items-start">
               {/* single option */}
               {routes ? (
@@ -485,8 +537,8 @@ const Swap = () => {
                 </>
               )}
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </Main>
   );
