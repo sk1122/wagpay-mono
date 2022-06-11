@@ -59,6 +59,7 @@ class WagPay {
 		return new Promise(async (resolve, reject) => {
 			try {
 				const bridgeAddress = wagpayBridge[Number(route.route.fromChain)]
+				console.log(bridgeAddress, "da")
 				const address = await signer.getAddress()
 				
 				// @note - get erc20 approval
@@ -230,6 +231,43 @@ class WagPay {
 			},
 		]
 		return bridge
+	}
+
+	getSupportedCoins = () => {
+		const coins: Coin[] = [
+			{
+				logoUri: '',
+				coinKey: CoinKey.USDC,
+				coinName: 'USDC'
+			},
+			{
+				logoUri: '',
+				coinKey: CoinKey.USDT,
+				coinName: 'USDT'
+			},
+			{
+				logoUri: '',
+				coinKey: CoinKey.ETH,
+				coinName: 'ETH'
+			},
+			{
+				logoUri: '',
+				coinKey: CoinKey.AVAX,
+				coinName: 'AVAX'
+			},
+			{
+				logoUri: '',
+				coinKey: CoinKey.BNB,
+				coinName: 'BNB'
+			},
+			{
+				logoUri: '',
+				coinKey: CoinKey.MATIC,
+				coinName: 'MATIC'
+			}
+		]
+		
+		return coins
 	}
 }
 

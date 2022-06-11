@@ -7,12 +7,13 @@ export interface ApproveERC20 {
 }
 
 export const _checkApprove = async (token: Token, spender: string, amount: string, signer: ethers.Signer): Promise<ApproveERC20> => {
-	const address = await signer.getAddress()
+	const addres = await signer.getAddress()
+	console.log(addres, spender, "Dsa", token.address)
 	
 	const abi = ['function allowance(address owner, address spender) public view returns (uint256)']
 	const erc20 = new ethers.Contract(token.address, abi, signer)
 	
-	const allowance = await erc20.allowance(address, spender)
+	const allowance = await erc20.allowance(addres.toString(), spender.toString())
 
 	const allowanceNumber = Number(ethers.utils.formatUnits(allowance.toString(), token.decimals))
 	const amountNumber = Number(ethers.utils.formatUnits(amount, token.decimals))
