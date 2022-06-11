@@ -22,7 +22,7 @@ const CoinSelect = ({ supportedCoins, value, setValue }: ISelectProps) => {
           className="flex flex-row overflow-hidden rounded-r-md"
           onClick={() => setIsDropDownOpen(!isDropDownOpen)}
         >
-          <div className="flex h-12 w-full cursor-pointer select-none flex-row justify-between bg-gray-700 px-1 text-white">
+          <div className="flex h-12 w-full cursor-pointer select-none flex-row justify-between bg-[#161B22] px-1 text-white">
             <div className="flex flex-row items-center">
               <img
                 className="mr-2.5 rounded-md bg-gray-300 object-cover"

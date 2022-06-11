@@ -36,7 +36,7 @@ const ChainSelect = ({
           className="flex flex-row overflow-hidden rounded-md"
           onClick={() => setIsDropDownOpen(!isDropDownOpen)}
         >
-          <div className="flex h-11 w-full cursor-pointer select-none flex-row justify-between bg-gray-700 py-2.5 pl-3 pr-2 text-white">
+          <div className="flex h-11 w-full cursor-pointer select-none flex-row justify-between bg-[#161B22] py-2.5 pl-3 pr-2 text-white">
             <div className="flex flex-row items-center">
               <img
                 className="mr-2.5 h-6 w-6 rounded-md bg-gray-300 object-cover"
