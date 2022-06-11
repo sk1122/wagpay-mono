@@ -5,9 +5,11 @@ import type { AppProps } from 'next/app';
 import { ConnectWalletProvider } from '@/contexts/ConnectWalletContext';
 
 const MyApp = ({ Component, pageProps }: AppProps) => (
-  <ConnectWalletProvider>
-    <Component {...pageProps} />
-  </ConnectWalletProvider>
+  <div className="min-h-screen bg-wagpay-dark text-white">
+    <ConnectWalletProvider>
+      <Component {...pageProps} />
+    </ConnectWalletProvider>
+  </div>
 );
 
 export default MyApp;
