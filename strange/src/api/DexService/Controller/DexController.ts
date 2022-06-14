@@ -1,6 +1,6 @@
 import tokens from "@shared/tokens"
 import { Request, Response } from "express"
-import UniswapProvider from "src/utils/dexes/UniswapProvider"
+import UniswapProvider from "@utils/dexes/UniswapProvider"
 
 const uniswap = new UniswapProvider()
 

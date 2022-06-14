@@ -2,7 +2,7 @@ import express, { Request, Response } from "express"
 import route from "@shared/routes"
 import { ethers } from "ethers"
 import fetch from "cross-fetch"
-import Bridges from "src/utils/bridges"
+import Bridges from "@utils/bridges"
 import { CoinKey, ChainId, Token, chainsSupported, tokensSupported, tokens, coinEnum, chainEnum, AllowDenyPrefer } from "../../../../../vision"
 
 const bridges = new Bridges()
