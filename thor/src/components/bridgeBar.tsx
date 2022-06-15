@@ -1,6 +1,6 @@
 import React from 'react';
 import { ethers } from 'ethers';
-import type { Routes } from '../../../vision';
+import type { Routes } from '@wagpay/types';
 
 interface IBridgeBarProps {
   bridge: Routes;

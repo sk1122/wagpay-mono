@@ -1,4 +1,4 @@
-import type { Token } from '../../../vision';
+import type { Token } from '@wagpay/types';
 import React, { useState } from 'react';
 
 interface ISelectProps {

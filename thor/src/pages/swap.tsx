@@ -1,10 +1,10 @@
-import WagPay from '../../../wanda';
+import WagPay from '@wagpay/sdk';
 // import type { Routes } from '@wagpay/sdk/dist/types';
 // import { ChainId } from '@wagpay/sdk/dist/types/chain/chain.enum';
 // import type { Chain } from '@wagpay/sdk/dist/types/chain/chain.type';
 // import { CoinKey } from '@wagpay/sdk/dist/types/coin/coin.enum';
-import type { Chain, CoinKey, Routes } from '../../../vision';
-import { chainEnum, ChainId, coinEnum, tokens } from '../../../vision';
+import type { Chain, CoinKey, Routes } from '@wagpay/types';
+import { chainEnum, ChainId, coinEnum, tokens } from '@wagpay/types';
 import { ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
 import { FiRefreshCw } from 'react-icons/fi';

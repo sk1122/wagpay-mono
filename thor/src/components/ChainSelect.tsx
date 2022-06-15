@@ -1,4 +1,4 @@
-import type { Chain } from '../../../vision';
+import type { Chain } from '@wagpay/types';
 import React, { useState } from 'react';
 
 interface ISelectProps {
