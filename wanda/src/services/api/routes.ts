@@ -22,7 +22,7 @@ export const _getRoutes = async (route: RouteData): Promise<Routes[]> => {
 				dex: route.dex,
 			}
 
-			const response = await axios.get("http://localhost:5001/api/bridge/best-route", {
+			const response = await axios.get("https://wagpay.club/api/bridge/best-route", {
 				params: requestData
 			})
 
