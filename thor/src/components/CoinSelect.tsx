@@ -1,4 +1,4 @@
-import type { ChainTokens, Token } from '../../../vision';
+import type { Token } from '../../../vision';
 import React, { useState } from 'react';
 
 interface ISelectProps {

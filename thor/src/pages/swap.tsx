@@ -9,8 +9,8 @@ import { ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
 import { FiRefreshCw } from 'react-icons/fi';
 import { MdArrowDropDown } from 'react-icons/md';
-import { useSigner } from 'wagmi'
-import toast from 'react-hot-toast'
+import { useSigner } from 'wagmi';
+import toast from 'react-hot-toast';
 
 import BridgeBar from '@/components/bridgeBar';
 import ChainSelect from '@/components/ChainSelect';
@@ -19,7 +19,7 @@ import Navbar2 from '@/components/Navbar2';
 import { Meta } from '@/layouts/Meta';
 import { Main } from '@/templates/Main';
 import Modal from '@/components/Modal';
-import { db } from '@/utils/db'
+import { db } from '@/utils/db';
 
 const Swap = () => {
   const [toggle, setToggle] = useState(false);
@@ -29,44 +29,46 @@ const Swap = () => {
   const [toCoin, setToCoin] = useState('');
   const [amount, setAmount] = useState('0');
   const [routes, setRoutes] = useState<Routes[]>();
-  const [ammountToGet, setAmmountToGet] = useState<any>();
   const [routeToExecute, setRouteToExecute] = useState<Routes>();
 
+  // @ts-ignore
   const [account, setAccount] = useState<string | undefined>('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // @ts-ignore
   const [signer, setSigner] = useState<ethers.Signer>();
   const [isDropDownOpenp, setIsDropDownOpenp] = useState(false);
   const priorties = ['Hight returns', 'Low Gas fees', 'Less time'];
   const [priorityValue, setPRiorityValue] = useState(priorties[0]);
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [swapping, setSwapping] = useState(false)
-  const [access, setAccess] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [swapping, setSwapping] = useState(false);
+  const [access, setAccess] = useState(false);
 
-  const { data: signerData, isError, isLoading } = useSigner()
+  // @ts-ignore
+  const { data: signerData, isError, isLoading } = useSigner();
 
   useEffect(() => {
-    if(signerData) {
-      signerData.getAddress()
-        .then(address => {
-          setAccount(address)
-          db(address)
-            .then(find => {
-              if(find) {
-                setAccess(true)
-                toast.success("You are whitelisted")
-              } else {
-                setAccess(false)
-                toast.error("You are not whitelisted")
-              }
-            })
-            .catch(e => {
-              setAccess(false)
-              toast.error("You are not whitelisted")
-            })
-        })
-      setIsModalOpen(true)
+    if (signerData) {
+      signerData.getAddress().then((address) => {
+        setAccount(address);
+        db(address)
+          .then((find) => {
+            if (find) {
+              setAccess(true);
+              toast.success('You are whitelisted');
+            } else {
+              setAccess(false);
+              toast.error('You are not whitelisted');
+            }
+          })
+          // @ts-ignore
+          .catch((e) => {
+            setAccess(false);
+            toast.error('You are not whitelisted');
+          });
+      });
+      setIsModalOpen(true);
     }
-  }, [signerData])
+  }, [signerData]);
 
   const wagpay = new WagPay();
 
@@ -134,13 +136,13 @@ const Swap = () => {
     toToken: string,
     _amount: string
   ): Promise<void> => {
-    if(!access) {
-      toast.error("You don't have access ser!")
-      return
+    if (!access) {
+      toast.error("You don't have access ser!");
+      return;
     }
-    var availableRoutes
+    var availableRoutes;
 
-    const toastId = toast.loading('Fetching Routes')
+    const toastId = toast.loading('Fetching Routes');
 
     try {
       availableRoutes = await wagpay.getRoutes({
@@ -150,16 +152,16 @@ const Swap = () => {
         toToken: coinEnum[toToken] as CoinKey,
         amount: _amount,
       });
-    } catch(e) {
+    } catch (e) {
       toast.error("Can't Fetch Routes Between these chains", {
-        id: toastId
-      })
-      return
+        id: toastId,
+      });
+      return;
     }
 
-    toast.success("Fetched routes successfully", {
-      id: toastId
-    })
+    toast.success('Fetched routes successfully', {
+      id: toastId,
+    });
 
     setRoutes(availableRoutes);
   };
@@ -205,33 +207,33 @@ const Swap = () => {
   };
 
   const swap = async () => {
-    if(!access) {
-      toast.error("You don't have access ser!")
-      return
+    if (!access) {
+      toast.error("You don't have access ser!");
+      return;
     }
 
-    setSwapping(true)
+    setSwapping(true);
     if (routeToExecute && routes && routes[0] && signerData) {
-      const id = toast.loading('Swapping...')
+      const id = toast.loading('Swapping...');
       try {
         await wagpay.executeRoute(routeToExecute, signerData);
-      } catch(e) {
+      } catch (e) {
         toast.error('some error', {
-          id: id
-        })
-        setSwapping(false)
-        return
+          id: id,
+        });
+        setSwapping(false);
+        return;
       }
       toast.success('Successfully swapped', {
-        id: id
-      })
+        id: id,
+      });
     }
-    setSwapping(false)
+    setSwapping(false);
   };
 
   useEffect(() => {
-    if(routes) setRouteToExecute(routes[0])
-  }, [routes])
+    if (routes) setRouteToExecute(routes[0]);
+  }, [routes]);
 
   useEffect(() => {
     console.log(fromChain, toChain);
@@ -400,7 +402,9 @@ const Swap = () => {
                   <CoinSelect
                     value={fromCoin}
                     setValue={setFromCoin}
-                    supportedCoins={Object.values(wagpay.getSupportedCoins(fromChain))}
+                    supportedCoins={Object.values(
+                      wagpay.getSupportedCoins(fromChain)
+                    )}
                   />
                 </div>
               </div>
@@ -418,7 +422,11 @@ const Swap = () => {
                       type="number"
                       placeholder="0.00"
                       disabled
-                      value={routeToExecute ? Number(routeToExecute.amountToGet).toFixed(2) : 0.00}
+                      value={
+                        routeToExecute
+                          ? Number(routeToExecute.amountToGet).toFixed(2)
+                          : 0.0
+                      }
                       className="block h-12 w-full rounded-l-md border-r border-none border-blue-400 bg-[#161B22] px-3 text-white shadow-sm outline-none focus:outline-none sm:text-sm"
                     />
                     <div className="pointer-events-none absolute inset-y-0 right-0 mt-1 flex items-center pr-3">
@@ -428,7 +436,9 @@ const Swap = () => {
                   <CoinSelect
                     value={toCoin}
                     setValue={setToCoin}
-                    supportedCoins={Object.values(wagpay.getSupportedCoins(toChain))}
+                    supportedCoins={Object.values(
+                      wagpay.getSupportedCoins(toChain)
+                    )}
                   />
                 </div>
               </div>
@@ -505,7 +515,7 @@ const Swap = () => {
               )}
               {isAuthenticated && (
                 <>
-                  {swapping && 
+                  {swapping && (
                     <button
                       onClick={() => swap()}
                       type="button"
@@ -516,23 +526,26 @@ const Swap = () => {
                           className="animate-spin h-5 w-5 text-white"
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
-                          viewBox="0 0 24 24">
+                          viewBox="0 0 24 24"
+                        >
                           <circle
                             className="opacity-25"
                             cx="12"
                             cy="12"
                             r="10"
                             stroke="#000"
-                            stroke-width="4"></circle>
+                            stroke-width="4"
+                          ></circle>
                           <path
                             className="opacity-75"
                             fill="#000"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
                         </svg>
                       </div>
                     </button>
-                  }
-                  {!swapping && 
+                  )}
+                  {!swapping && (
                     <button
                       onClick={() => swap()}
                       type="button"
@@ -540,7 +553,7 @@ const Swap = () => {
                     >
                       Swap
                     </button>
-                  }
+                  )}
                 </>
               )}
             </div>
@@ -573,6 +586,7 @@ const Swap = () => {
                       {priorties.map((item) => {
                         return (
                           <li
+                            // @ts-ignore
                             onClick={(e) => {
                               setPRiorityValue(item);
                             }}
@@ -608,67 +622,76 @@ const Swap = () => {
                 })
               ) : (
                 <>
-                  {swapping && 
+                  {swapping && (
                     <>
-                    <div className="sk-cube-grid">
-                      <div className="sk-cube sk-cube1"></div>
-                      <div className="sk-cube sk-cube2"></div>
-                      <div className="sk-cube sk-cube3"></div>
-                      <div className="sk-cube sk-cube4"></div>
-                      <div className="sk-cube sk-cube5"></div>
-                      <div className="sk-cube sk-cube6"></div>
-                      <div className="sk-cube sk-cube7"></div>
-                      <div className="sk-cube sk-cube8"></div>
-                      <div className="sk-cube sk-cube9"></div>
-                    </div>
-                    <div className="mx-auto w-full text-center text-xl">
-                      Fetching available bridges ...
-                    </div>
+                      <div className="sk-cube-grid">
+                        <div className="sk-cube sk-cube1"></div>
+                        <div className="sk-cube sk-cube2"></div>
+                        <div className="sk-cube sk-cube3"></div>
+                        <div className="sk-cube sk-cube4"></div>
+                        <div className="sk-cube sk-cube5"></div>
+                        <div className="sk-cube sk-cube6"></div>
+                        <div className="sk-cube sk-cube7"></div>
+                        <div className="sk-cube sk-cube8"></div>
+                        <div className="sk-cube sk-cube9"></div>
+                      </div>
+                      <div className="mx-auto w-full text-center text-xl">
+                        Fetching available bridges ...
+                      </div>
                     </>
-                  }
+                  )}
                 </>
               )}
             </div>
           )}
-        </div> 
+        </div>
         <Modal isOpen={isModalOpen} setIsOpen={setIsModalOpen}>
           <div className="w-full h-full flex justify-center flex-col items-center text-black font-inter">
-            <div onClick={() => setIsModalOpen(false)} className='cursor-pointer absolute top-5 right-5'>X</div>
-            {!access && 
+            <div
+              onClick={() => setIsModalOpen(false)}
+              className="cursor-pointer absolute top-5 right-5"
+            >
+              X
+            </div>
+            {!access && (
               <>
-                <h1 className='text-2xl'>
+                <h1 className="text-2xl">
                   Checking if you are in the whitelist
                 </h1>
-                <div className='mb-5'>
+                <div className="mb-5">
                   <div className="bg-white text-sm cursor-pointer text-black px-3 py-3 rounded-md font-semibold w-40 flex justify-center items-center">
                     <svg
                       className="animate-spin h-5 w-5 text-white"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
-                      viewBox="0 0 24 24">
+                      viewBox="0 0 24 24"
+                    >
                       <circle
                         className="opacity-25"
                         cx="12"
                         cy="12"
                         r="10"
                         stroke="#000"
-                        stroke-width="4"></circle>
+                        stroke-width="4"
+                      ></circle>
                       <path
                         className="opacity-75"
                         fill="#000"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
                     </svg>
                   </div>
                 </div>
               </>
-            }
-            {access && 
-              <h1 className='text-2xl'>
-                You have access to WagPay ser!
-              </h1>
-            }
+            )}
+            {access && (
+              <h1 className="text-2xl">You have access to WagPay ser!</h1>
+            )}
             <div>
-              If not please fill this <a className='text-blue-500 font-bold' href="">form</a> 
+              If not please fill this{' '}
+              <a className="text-blue-500 font-bold" href="">
+                form
+              </a>
             </div>
           </div>
         </Modal>

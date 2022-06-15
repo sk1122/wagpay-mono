@@ -1,6 +1,6 @@
-import type { Routes } from '../../../vision';
-import { ethers } from 'ethers';
 import React from 'react';
+import { ethers } from 'ethers';
+import type { Routes } from '../../../vision';
 
 interface IBridgeBarProps {
   bridge: Routes;

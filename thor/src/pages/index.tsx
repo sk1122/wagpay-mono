@@ -1,10 +1,6 @@
 import React from 'react';
 
-import Footer from '@/components/Footer';
 import First from '@/components/landing/first';
-import Second from '@/components/landing/second';
-import Support from '@/components/landing/support';
-import Third from '@/components/landing/third';
 import Navbar from '@/components/Navbar';
 import { Meta } from '@/layouts/Meta';
 import { Main } from '@/templates/Main';

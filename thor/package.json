@@ -9,9 +9,7 @@
     "export": "next export",
     "build-prod": "run-s clean build export",
     "clean": "rimraf .next out",
-    "lint": "next lint",
-    "build-types": "tsc --noEmit --pretty",
-    "prepare": "husky install"
+    "build-types": "tsc --noEmit"
   },
   "dependencies": {
     "@rainbow-me/rainbowkit": "^0.1.0",
