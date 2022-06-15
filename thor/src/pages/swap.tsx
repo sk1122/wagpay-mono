@@ -1,4 +1,4 @@
-import WagPay from '../../../wanda';
+import WagPay from '@wagpay/sdk';
 // import type { Routes } from '@wagpay/sdk/dist/types';
 // import { ChainId } from '@wagpay/sdk/dist/types/chain/chain.enum';
 // import type { Chain } from '@wagpay/sdk/dist/types/chain/chain.type';
