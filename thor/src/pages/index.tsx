@@ -24,7 +24,7 @@ const Index = () => {
         <div className="mx-auto max-w-7xl sm:mb-28">
           <First />
         </div>
-        <div className="relative w-full bg-wagpay-dark">
+        {/* <div className="relative w-full bg-wagpay-dark">
           <svg
             width="1512"
             height="1175"
@@ -63,7 +63,7 @@ const Index = () => {
         <div className="mx-auto max-w-7xl text-white">
           <Support />
         </div>
-        <Footer />
+        <Footer /> */}
       </main>
     </Main>
   );

@@ -9,6 +9,8 @@ import { ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
 import { FiRefreshCw } from 'react-icons/fi';
 import { MdArrowDropDown } from 'react-icons/md';
+import { useSigner } from 'wagmi'
+import toast from 'react-hot-toast'
 
 import BridgeBar from '@/components/bridgeBar';
 import ChainSelect from '@/components/ChainSelect';
@@ -16,6 +18,8 @@ import CoinSelect from '@/components/CoinSelect';
 import Navbar2 from '@/components/Navbar2';
 import { Meta } from '@/layouts/Meta';
 import { Main } from '@/templates/Main';
+import Modal from '@/components/Modal';
+import { db } from '@/utils/db'
 
 const Swap = () => {
   const [toggle, setToggle] = useState(false);
@@ -34,6 +38,35 @@ const Swap = () => {
   const [isDropDownOpenp, setIsDropDownOpenp] = useState(false);
   const priorties = ['Hight returns', 'Low Gas fees', 'Less time'];
   const [priorityValue, setPRiorityValue] = useState(priorties[0]);
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [swapping, setSwapping] = useState(false)
+  const [access, setAccess] = useState(false)
+
+  const { data: signerData, isError, isLoading } = useSigner()
+
+  useEffect(() => {
+    if(signerData) {
+      signerData.getAddress()
+        .then(address => {
+          setAccount(address)
+          db(address)
+            .then(find => {
+              if(find) {
+                setAccess(true)
+                toast.success("You are whitelisted")
+              } else {
+                setAccess(false)
+                toast.error("You are not whitelisted")
+              }
+            })
+            .catch(e => {
+              setAccess(false)
+              toast.error("You are not whitelisted")
+            })
+        })
+      setIsModalOpen(true)
+    }
+  }, [signerData])
 
   const wagpay = new WagPay();
 
@@ -101,30 +134,32 @@ const Swap = () => {
     toToken: string,
     _amount: string
   ): Promise<void> => {
-    console.log(
-      fromChainId,
-      toChainId,
-      fromToken,
-      coinEnum[toToken] as CoinKey
-    );
-    console.log(
-      tokens,
-      ChainId[fromChainId] as ChainId as number,
-      ChainId.POL,
-      chainEnum[fromChainId]
-    );
-    // @ts-ignore
-    console.log(tokens[chainEnum[fromChainId]][fromCoin]);
+    if(!access) {
+      toast.error("You don't have access ser!")
+      return
+    }
+    var availableRoutes
 
-    const availableRoutes = await wagpay.getRoutes({
-      fromChain: chainEnum[fromChainId] as ChainId,
-      toChain: chainEnum[toChainId] as ChainId,
-      fromToken: coinEnum[fromToken] as CoinKey,
-      toToken: coinEnum[toToken] as CoinKey,
-      amount: _amount,
-    });
+    const toastId = toast.loading('Fetching Routes')
 
-    console.log(availableRoutes, 'availableRoutes');
+    try {
+      availableRoutes = await wagpay.getRoutes({
+        fromChain: chainEnum[fromChainId] as ChainId,
+        toChain: chainEnum[toChainId] as ChainId,
+        fromToken: coinEnum[fromToken] as CoinKey,
+        toToken: coinEnum[toToken] as CoinKey,
+        amount: _amount,
+      });
+    } catch(e) {
+      toast.error("Can't Fetch Routes Between these chains", {
+        id: toastId
+      })
+      return
+    }
+
+    toast.success("Fetched routes successfully", {
+      id: toastId
+    })
 
     setRoutes(availableRoutes);
   };
@@ -170,11 +205,28 @@ const Swap = () => {
   };
 
   const swap = async () => {
-    if (routeToExecute && routes && routes[0] && signer) {
-      console.log('dasdsa', signer)
-      await wagpay.executeRoute(routeToExecute, signer);
-      alert('Swapping done successfully');
+    if(!access) {
+      toast.error("You don't have access ser!")
+      return
     }
+
+    setSwapping(true)
+    if (routeToExecute && routes && routes[0] && signerData) {
+      const id = toast.loading('Swapping...')
+      try {
+        await wagpay.executeRoute(routeToExecute, signerData);
+      } catch(e) {
+        toast.error('some error', {
+          id: id
+        })
+        setSwapping(false)
+        return
+      }
+      toast.success('Successfully swapped', {
+        id: id
+      })
+    }
+    setSwapping(false)
   };
 
   useEffect(() => {
@@ -348,7 +400,7 @@ const Swap = () => {
                   <CoinSelect
                     value={fromCoin}
                     setValue={setFromCoin}
-                    supportedCoins={wagpay.getSupportedCoins()}
+                    supportedCoins={Object.values(wagpay.getSupportedCoins(fromChain))}
                   />
                 </div>
               </div>
@@ -366,7 +418,7 @@ const Swap = () => {
                       type="number"
                       placeholder="0.00"
                       disabled
-                      value={routeToExecute ? Number(routeToExecute.amountToGet).toFixed(2) : 12}
+                      value={routeToExecute ? Number(routeToExecute.amountToGet).toFixed(2) : 0.00}
                       className="block h-12 w-full rounded-l-md border-r border-none border-blue-400 bg-[#161B22] px-3 text-white shadow-sm outline-none focus:outline-none sm:text-sm"
                     />
                     <div className="pointer-events-none absolute inset-y-0 right-0 mt-1 flex items-center pr-3">
@@ -376,7 +428,7 @@ const Swap = () => {
                   <CoinSelect
                     value={toCoin}
                     setValue={setToCoin}
-                    supportedCoins={wagpay.getSupportedCoins()}
+                    supportedCoins={Object.values(wagpay.getSupportedCoins(toChain))}
                   />
                 </div>
               </div>
@@ -452,13 +504,44 @@ const Swap = () => {
                 </button>
               )}
               {isAuthenticated && (
-                <button
-                  onClick={() => swap()}
-                  type="button"
-                  className="col-span-7 mt-5 w-full rounded-full border border-transparent bg-white py-2 px-4 text-base font-medium text-wagpay-dark hover:bg-indigo-50"
-                >
-                  Swap
-                </button>
+                <>
+                  {swapping && 
+                    <button
+                      onClick={() => swap()}
+                      type="button"
+                      className="flex justify-center items-center col-span-7 mt-5 w-full rounded-full border border-transparent bg-white py-2 px-4 text-base font-medium text-wagpay-dark hover:bg-indigo-50"
+                    >
+                      <div className="bg-white text-sm cursor-pointer text-black px-3 py-3 rounded-md font-semibold w-40 flex justify-center items-center">
+                        <svg
+                          className="animate-spin h-5 w-5 text-white"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24">
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="#000"
+                            stroke-width="4"></circle>
+                          <path
+                            className="opacity-75"
+                            fill="#000"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                      </div>
+                    </button>
+                  }
+                  {!swapping && 
+                    <button
+                      onClick={() => swap()}
+                      type="button"
+                      className="col-span-7 mt-5 w-full rounded-full border border-transparent bg-white py-2 px-4 text-base font-medium text-wagpay-dark hover:bg-indigo-50"
+                    >
+                      Swap
+                    </button>
+                  }
+                </>
               )}
             </div>
           </div>
@@ -525,25 +608,70 @@ const Swap = () => {
                 })
               ) : (
                 <>
-                  <div className="sk-cube-grid">
-                    <div className="sk-cube sk-cube1"></div>
-                    <div className="sk-cube sk-cube2"></div>
-                    <div className="sk-cube sk-cube3"></div>
-                    <div className="sk-cube sk-cube4"></div>
-                    <div className="sk-cube sk-cube5"></div>
-                    <div className="sk-cube sk-cube6"></div>
-                    <div className="sk-cube sk-cube7"></div>
-                    <div className="sk-cube sk-cube8"></div>
-                    <div className="sk-cube sk-cube9"></div>
-                  </div>
-                  <div className="mx-auto w-full text-center text-xl">
-                    Fetching available bridges ...
-                  </div>
+                  {swapping && 
+                    <>
+                    <div className="sk-cube-grid">
+                      <div className="sk-cube sk-cube1"></div>
+                      <div className="sk-cube sk-cube2"></div>
+                      <div className="sk-cube sk-cube3"></div>
+                      <div className="sk-cube sk-cube4"></div>
+                      <div className="sk-cube sk-cube5"></div>
+                      <div className="sk-cube sk-cube6"></div>
+                      <div className="sk-cube sk-cube7"></div>
+                      <div className="sk-cube sk-cube8"></div>
+                      <div className="sk-cube sk-cube9"></div>
+                    </div>
+                    <div className="mx-auto w-full text-center text-xl">
+                      Fetching available bridges ...
+                    </div>
+                    </>
+                  }
                 </>
               )}
             </div>
           )}
-        </div>
+        </div> 
+        <Modal isOpen={isModalOpen} setIsOpen={setIsModalOpen}>
+          <div className="w-full h-full flex justify-center flex-col items-center text-black font-inter">
+            <div onClick={() => setIsModalOpen(false)} className='cursor-pointer absolute top-5 right-5'>X</div>
+            {!access && 
+              <>
+                <h1 className='text-2xl'>
+                  Checking if you are in the whitelist
+                </h1>
+                <div className='mb-5'>
+                  <div className="bg-white text-sm cursor-pointer text-black px-3 py-3 rounded-md font-semibold w-40 flex justify-center items-center">
+                    <svg
+                      className="animate-spin h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24">
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="#000"
+                        stroke-width="4"></circle>
+                      <path
+                        className="opacity-75"
+                        fill="#000"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                  </div>
+                </div>
+              </>
+            }
+            {access && 
+              <h1 className='text-2xl'>
+                You have access to WagPay ser!
+              </h1>
+            }
+            <div>
+              If not please fill this <a className='text-blue-500 font-bold' href="">form</a> 
+            </div>
+          </div>
+        </Modal>
       </div>
     </Main>
   );

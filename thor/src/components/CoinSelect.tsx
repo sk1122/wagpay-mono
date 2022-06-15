@@ -1,17 +1,17 @@
-import type { Coin } from '../../../vision';
+import type { ChainTokens, Token } from '../../../vision';
 import React, { useState } from 'react';
 
 interface ISelectProps {
   value: string;
   setValue: Function;
-  supportedCoins: Coin[];
+  supportedCoins: Token[];
 }
 
 const CoinSelect = ({ supportedCoins, value, setValue }: ISelectProps) => {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
 
-  const selectedCoin = (coin: Coin) => {
-    setValue(coin.coinKey);
+  const selectedCoin = (coin: Token) => {
+    setValue(coin.chainAgnositcId);
     setIsDropDownOpen(!isDropDownOpen);
   };
 
@@ -45,9 +45,9 @@ const CoinSelect = ({ supportedCoins, value, setValue }: ISelectProps) => {
         </div>
         {isDropDownOpen && (
           <div className="absolute top-12 left-0 z-10 w-full overflow-hidden rounded-b-md bg-gray-700 text-white shadow">
-            {supportedCoins.map((coin: Coin) => (
+            {supportedCoins.map((coin: Token) => (
               <div
-                key={coin.coinKey}
+                key={coin.chainAgnositcId}
                 className="flex h-11 w-full cursor-pointer select-none flex-row justify-between bg-gray-700 py-2.5 pl-3 pr-2 text-white hover:bg-gray-900"
                 onClick={() => selectedCoin(coin)}
               >
@@ -57,7 +57,7 @@ const CoinSelect = ({ supportedCoins, value, setValue }: ISelectProps) => {
                     src="https://movricons.s3.ap-south-1.amazonaws.com/Ether.svg"
                     alt="chain_icon"
                   />
-                  <span className="leading-6">{coin.coinName}</span>
+                  <span className="leading-6">{coin.name}</span>
                 </div>
               </div>
             ))}

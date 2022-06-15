@@ -21,7 +21,7 @@ const First = () => {
           Helping you choose the best bridge for your swap
         </div>
         <div className="flex w-full items-center justify-center space-x-4 md:space-x-6 lg:justify-start">
-          <Link href="/">
+          <Link href="/swap">
             <a className="flex items-center rounded-full bg-wagpay-primary py-2 px-4 text-sm text-white drop-shadow-lg sm:py-3 sm:px-6 sm:text-base">
               <span>Open App</span>
               <svg
@@ -46,7 +46,7 @@ const First = () => {
             className="rounded-full border border-white bg-transparent px-4 py-2 text-sm text-white drop-shadow-lg sm:py-3 sm:px-6 sm:text-base"
             href="#"
           >
-            Download Extension
+            Join Waitlist
           </a>
         </div>
       </div>
