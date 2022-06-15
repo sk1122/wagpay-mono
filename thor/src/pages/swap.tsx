@@ -1,4 +1,4 @@
-import WagPay from '@wagpay/sdk';
+import WagPay from '../../../wanda';
 // import type { Routes } from '@wagpay/sdk/dist/types';
 // import { ChainId } from '@wagpay/sdk/dist/types/chain/chain.enum';
 // import type { Chain } from '@wagpay/sdk/dist/types/chain/chain.type';
@@ -22,9 +22,11 @@ import Modal from '@/components/Modal';
 import { db } from '@/utils/db';
 
 const Swap = () => {
+  const wagpay = new WagPay();
+
   const [toggle, setToggle] = useState(false);
-  const [fromChain, setFromChain] = useState(137);
-  const [toChain, setToChain] = useState(1);
+  const [fromChain, setFromChain] = useState<Chain>(wagpay.getSupportedChains()[0]);
+  const [toChain, setToChain] = useState<Chain>(wagpay.getSupportedChains()[1]);
   const [fromCoin, setFromCoin] = useState('');
   const [toCoin, setToCoin] = useState('');
   const [amount, setAmount] = useState('0');
@@ -69,8 +71,6 @@ const Swap = () => {
       setIsModalOpen(true);
     }
   }, [signerData]);
-
-  const wagpay = new WagPay();
 
   const checkWalletIsConnected = async () => {
     try {
@@ -129,6 +129,8 @@ const Swap = () => {
     checkWalletIsConnected();
   }, []);
 
+  useEffect(() => console.log(Object.values(wagpay.getSupportedCoins(toChain.id))))
+
   const getRoutes = async (
     fromChainId: number,
     toChainId: number,
@@ -168,8 +170,8 @@ const Swap = () => {
 
   const FetcAvalabaleRoutes = () => {
     console.log(
-      Number(fromChain),
-      Number(toChain),
+      Number(fromChain.id),
+      Number(toChain.id),
       fromCoin,
       toCoin,
       amount,
@@ -177,21 +179,21 @@ const Swap = () => {
         .parseUnits(
           amount,
           // @ts-ignore
-          tokens[Number(fromChain)][fromCoin.toString()]?.decimals
+          tokens[Number(fromChain.id)][fromCoin.toString()]?.decimals
         )
         .toString()
     );
     if (
       fromChain &&
-      Number(fromChain) &&
+      Number(fromChain.id) &&
       toChain &&
       fromCoin &&
       toCoin &&
       amount
     ) {
       getRoutes(
-        Number(fromChain),
-        Number(toChain),
+        Number(fromChain.id),
+        Number(toChain.id),
         fromCoin,
         toCoin,
         // @ts-ignore
@@ -199,7 +201,7 @@ const Swap = () => {
           .parseUnits(
             amount,
             // @ts-ignore
-            tokens[Number(fromChain)][fromCoin.toString()]?.decimals
+            tokens[Number(fromChain.id)][fromCoin.toString()]?.decimals
           )
           .toString()
       );
@@ -236,68 +238,22 @@ const Swap = () => {
   }, [routes]);
 
   useEffect(() => {
-    console.log(fromChain, toChain);
-  }, [fromChain, toChain]);
-
-  useEffect(() => {
     FetcAvalabaleRoutes();
   }, [fromChain, toChain, fromCoin, toCoin]);
-
-  // useEffect(() => {
-  //   const delayReaction = setTimeout(() => {
-  //     FetcAvalabaleRoutes();
-  //     if (routes && true) {
-  //       setRouteToExecute(routes[0]);
-  //     }
-  //   }, 1000);
-  //   return () => clearTimeout(delayReaction);
-  // }, [amount, routes]);
-
-  // useEffect(() => {
-  //   const interval = setInterval(getRoutes, 60000);
-  //   return () => clearInterval(interval);
-  // }, []);
-
-  // const getRoutesLocal = async (
-  //   fromChainId: number,
-  //   toChainId: number,
-  //   fromTokenId: string,
-  //   toTokenId: string,
-  //   _amount: string
-  // ): Promise<void> => {
-  //   const availableRoutes = await wagpay.getRoutes({
-  //     fromChain: ChainId[fromChainId] as ChainId,
-  //     toChain: ChainId[toChainId] as ChainId,
-  //     fromToken: enumDict.ETH as CoinKey,
-  //     toToken: enumDict.ETH as CoinKey,
-  //     amount: _amount,
-  //   });
-  //   setRoutes(availableRoutes);
-  // };
-
-  // if (fromChain && toChain && fromCoin && toCoin && amount) {
-  //   getRoutesLocal(
-  //     fromChain,
-  //     toChain,
-  //     fromCoin,
-  //     toCoin,
-  //     ethers.utils.parseUnits(amount, 6).toString()
-  //   );
-  // }
 
   const [filteredFromChains, setFilteredFromChains] = useState<Chain[]>([]);
   const [filteredToChains, setFilteredToChains] = useState<Chain[]>([]);
 
   useEffect(() => {
     const filteredChains = wagpay.getSupportedChains().filter((chain) => {
-      return chain.id !== toChain;
+      return chain.id !== toChain.id;
     });
     setFilteredFromChains([...filteredChains]);
   }, [toChain]);
 
   useEffect(() => {
     const filteredChains = wagpay.getSupportedChains().filter((chain) => {
-      return chain.id !== fromChain;
+      return chain.id !== fromChain.id;
     });
     setFilteredToChains([...filteredChains]);
   }, [fromChain]);
@@ -403,7 +359,7 @@ const Swap = () => {
                     value={fromCoin}
                     setValue={setFromCoin}
                     supportedCoins={Object.values(
-                      wagpay.getSupportedCoins(fromChain)
+                      wagpay.getSupportedCoins(fromChain.id)
                     )}
                   />
                 </div>
@@ -437,7 +393,7 @@ const Swap = () => {
                     value={toCoin}
                     setValue={setToCoin}
                     supportedCoins={Object.values(
-                      wagpay.getSupportedCoins(toChain)
+                      wagpay.getSupportedCoins(toChain.id)
                     )}
                   />
                 </div>

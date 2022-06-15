@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 
 interface ISelectProps {
   label?: string;
-  value: Number;
+  value: Chain;
   setValue: Function;
   supportedChains: Chain[];
 }
@@ -40,10 +40,10 @@ const ChainSelect = ({
             <div className="flex flex-row items-center">
               <img
                 className="mr-2.5 h-6 w-6 rounded-md bg-gray-300 object-cover"
-                src="https://movricons.s3.ap-south-1.amazonaws.com/Ether.svg"
+                src={value.logoUri}
                 alt="chain_icon"
               />
-              <span className="leading-6">{value as React.ReactNode}</span>
+              <span className="leading-6">{value.chainName}</span>
             </div>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -68,7 +68,7 @@ const ChainSelect = ({
                 <div className="flex flex-row items-center">
                   <img
                     className="mr-2.5 h-6 w-6 rounded-md bg-gray-300 object-cover"
-                    src="https://movricons.s3.ap-south-1.amazonaws.com/Ether.svg"
+                    src={chain.logoUri}
                     alt="chain_icon"
                   />
                   <span className="leading-6">{chain.chain}</span>

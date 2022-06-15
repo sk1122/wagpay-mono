@@ -61,10 +61,11 @@ class WagPay {
 			try {
 				const bridgeAddress = wagpayBridge[Number(route.route.fromChain)]
 				console.log(bridgeAddress, "da")
+				console.log(route.route.fromToken.address.toLowerCase() !== this.NATIVE_ADDRESS.toLowerCase(), "token")
 				const address = await signer.getAddress()
 				
 				// @note - get erc20 approval
-				if(route.route.fromToken.address !== this.NATIVE_ADDRESS) {
+				if(route.route.fromToken.address.toLowerCase() !== this.NATIVE_ADDRESS.toLowerCase()) {
 					const needed = await this.erc20ApproveNeeded(route.route.fromToken, bridgeAddress, route.route.amount.toString(), signer)
 					// console.log(needed)
 					if(needed.required) {
@@ -103,12 +104,12 @@ class WagPay {
 					BigNumber.from(bridgeId[route.name]),
 					BigNumber.from(Number(route.route.toChain)),
 					route.route.fromToken.address,
-					BigNumber.from(Number(route.route.amount)),
+					BigNumber.from(route.route.amount),
 					bridgeAddress,
 					route.uniswapData ? true : false,
 					[
 						route.uniswapData.dex,
-						BigNumber.from(Number(route.route.amount)),
+						BigNumber.from(route.route.amount),
 						BigNumber.from(ethers.utils.parseUnits(route.uniswapData.amountToGet.toString(), route.uniswapData.toToken.decimals).toString()),
 						BigNumber.from(Number(3000)),
 						BigNumber.from(Number(route.uniswapData.chainId)),
@@ -122,7 +123,8 @@ class WagPay {
 					'https://polygon-mainnet.g.alchemy.com/v2/DysZp2PQ51ql2Er-0GZKcnkGXEl9kIWn'
 				);
 				const amount = route.route.fromToken.address === this.NATIVE_ADDRESS.toLowerCase() ? route.route.amount : '0'
-				const transaction = await contract.transfer(routeDataArr, { value: ethers.utils.parseEther(amount), gasLimit: 15000000, gasPrice: connection.getGasPrice() })
+				console.log(amount, "amount")
+				const transaction = await contract.transfer(routeDataArr, { value: ethers.utils.formatEther(amount), gasLimit: 15000000, gasPrice: connection.getGasPrice() })
 				console.log(transaction)
 
 				resolve(true)
@@ -144,7 +146,7 @@ class WagPay {
 					CoinKey.ETH,
 					CoinKey.MATIC
 				],
-				logoUri: '',
+				logoUri: 'https://ethereum.org/static/6b935ac0e6194247347855dc3d328e83/81d9f/eth-diamond-black.webp',
 				id: ChainId.ETH,
 				chainName: 'ethereum'
 			},
@@ -157,36 +159,10 @@ class WagPay {
 					CoinKey.ETH,
 					CoinKey.MATIC
 				],
-				logoUri: '',
+				logoUri: 'https://i.imgur.com/aSvJwxM.png',
 				id: ChainId.POL,
 				chainName: 'polygon'
-			},
-			{
-				chain: Chains.AVA,
-				type: ChainType.EVM,
-				coinSupported: [
-					CoinKey.USDC,
-					CoinKey.USDT,
-					CoinKey.ETH,
-					CoinKey.AVAX
-				],
-				logoUri: '',
-				id: ChainId.AVA,
-				chainName: 'avalanche'
-			},
-			{
-				chain: Chains.BSC,
-				type: ChainType.EVM,
-				coinSupported: [
-					CoinKey.USDC,
-					CoinKey.USDT,
-					CoinKey.ETH,
-					CoinKey.BNB
-				],
-				logoUri: '',
-				id: ChainId.BSC,
-				chainName: 'BSC'
-			},
+			}
 		] 
 
 		return chains
