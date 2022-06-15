@@ -29,7 +29,7 @@ const BridgeBar = ({ bridge }: IBridgeBarProps) => {
             </div>
           </div>
           {/* center part */}
-          {bridge.uniswapData && (
+          {bridge && bridge.uniswapData && bridge.uniswapData.dex && (
             <div className="col-span-1 flex items-center space-x-3">
               <div className="h-[1px] w-1/3 border border-dashed border-gray-500" />
               <div className="flex w-full items-center justify-center space-x-2 rounded-full  py-1 px-4 text-xs text-white sm:w-1/3">
