@@ -94,7 +94,7 @@ class Bridges {
 			// route.transferFee = fees.transferFee
 
 			promises.push(
-				bridge.getTransferFees(fromChain, toChain, toToken2, uniswapRequired ? ethers.utils.parseUnits(route.uniswapData.amountToGet.toString(), toTToken2.decimals).toString() : amount)
+				bridge.getTransferFees(fromChain, toChain, toToken2, uniswapRequired ? ethers.utils.parseUnits(route.uniswapData.amountToGet.toFixed(2), toTToken2.decimals).toString() : amount)
 				.then(fees => {
 					route.amountToGet = fees.amountToGet
 					route.transferFee = fees.transferFee
