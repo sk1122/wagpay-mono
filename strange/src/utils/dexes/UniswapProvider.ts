@@ -25,23 +25,32 @@ class UniswapProvider {
 
 		if(fromToken.chainAgnositcId === 'MATIC' || fromToken.chainAgnositcId === 'ETH') {
 			fromTokenPrice = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${coingeckoName[fromToken.chainAgnositcId]}&vs_currencies=usd`)
+			console.log(fromTokenPrice)
 			fromTokenPrice = await fromTokenPrice.json()
+			console.log(fromTokenPrice)
 			fromTokenPrice = fromTokenPrice[coingeckoName[fromToken.chainAgnositcId]].usd
+			console.log(fromTokenPrice)
 			fromTokenPrice = fromTokenPrice * amount
 		}
 		else fromTokenPrice = amount
 
 		if(toToken.chainAgnositcId === 'MATIC') {
 			let toTokenPrice: any = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=usd`)
+			console.log(toTokenPrice)
 			toTokenPrice = await toTokenPrice.json()
+			console.log(toTokenPrice)
 			toTokenPrice = toTokenPrice['matic-network'].usd
+			console.log(toTokenPrice)
 			
 			uniswapData.amountToGet = fromTokenPrice / toTokenPrice
 			uniswapData.fees = ((uniswapData.amountToGet * Number(toTokenPrice)) * 0.003)
 		} else if (toToken.chainAgnositcId === 'ETH') {
 			let toTokenPrice: any = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd`)
+			console.log(toTokenPrice)
 			toTokenPrice = await toTokenPrice.json()
+			console.log(toTokenPrice)
 			toTokenPrice = toTokenPrice['ethereum'].usd
+			console.log(toTokenPrice)
 			
 			uniswapData.amountToGet = ((fromTokenPrice - ((Number(fromTokenPrice)) * 0.003)) / Number(toTokenPrice))
 			uniswapData.fees = (Number(fromTokenPrice)) * 0.003
