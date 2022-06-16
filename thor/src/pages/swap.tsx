@@ -1,9 +1,4 @@
 import WagPay from '@wagpay/sdk';
-// import type { Routes } from '@wagpay/sdk/dist/types';
-// import { ChainId } from '@wagpay/sdk/dist/types/chain/chain.enum';
-// import type { Chain } from '@wagpay/sdk/dist/types/chain/chain.type';
-// import { CoinKey } from '@wagpay/sdk/dist/types/coin/coin.enum';
-
 import {
   chainEnum,
   ChainId,
@@ -27,17 +22,11 @@ import Loading from '@/components/swap/loading';
 import EarlyAcess from '@/components/swap/EarlyAcess';
 import { useAppContext } from '@/context';
 import PriorityBar from '@/components/swap/priorityBar';
-import toggle from '@/utils/toggle';
 import SwapCard from '@/components/swap/swapCard';
 import { useSigner } from 'wagmi';
 
 const Swap = () => {
   const wagpay = new WagPay();
-
-  // @ts-ignore
-
-  // @ts-ignore
-
 
   const {
     access,
@@ -61,9 +50,11 @@ const Swap = () => {
     setRoutes,
     setFilteredFromChains,
     setFilteredToChains,
-    setSigner
+    setSigner,
+    setIsDropDownOpenCoin,
+    
   } = useAppContext();
-  // @ts-ignore
+
 
   const { data: signerData, isError, isLoading } = useSigner();
  
@@ -124,9 +115,8 @@ const Swap = () => {
     checkWalletIsConnected();
   }, []);
 
-  useEffect(() =>
-    console.log(Object.values(wagpay.getSupportedCoins(toChain.id)))
-  );
+
+
 
   const getRoutes = async (
     fromChainId: number,
@@ -217,22 +207,19 @@ const Swap = () => {
 
   useEffect(() => {
     const filteredChains = wagpay.getSupportedChains().filter((chain) => {
-      return chain.id !== toChain.id;
+      return chain.id == toChain.id;
     });
     setFilteredFromChains([...filteredChains]);
   }, [toChain]);
 
   useEffect(() => {
     const filteredChains = wagpay.getSupportedChains().filter((chain) => {
-      return chain.id !== fromChain.id;
+      return chain.id == fromChain.id;
     });
     setFilteredToChains([...filteredChains]);
   }, [fromChain]);
 
-  const setAmountToSwap = (e: any) => {
-    e.preventDefault();
-    setAmount(e.target.value);
-  };
+
 
   return (
     <Main
@@ -249,6 +236,7 @@ const Swap = () => {
         className="mx-auto grid max-w-7xl grid-cols-5 py-12"
         onClick={() => {
           setIsDropDownOpenp(false);
+          setIsDropDownOpenCoin(false)
         }}
       >
         <div

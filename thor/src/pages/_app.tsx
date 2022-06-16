@@ -6,7 +6,7 @@ import { Toaster } from 'react-hot-toast';
 import { useState } from 'react';;
 import WagPay from '@wagpay/sdk';
 import type { Chain, CoinKey, Routes } from '@wagpay/types';
-import { useSigner } from 'wagmi';
+import { chain, useSigner } from 'wagmi';
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 function MyApp({ Component, pageProps }: AppProps) {
   const wagpay = new WagPay()
@@ -19,14 +19,15 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [fromChain, setFromChain] = useState<Chain>(wagpay.getSupportedChains()[0]);
   const [toChain, setToChain] = useState<Chain>(wagpay.getSupportedChains()[1]);
   const [toggle, setToggle] = useState(false);
-  const [fromCoin, setFromCoin] = useState('');
-  const [toCoin, setToCoin] = useState('');
+  const [fromCoin, setFromCoin] = useState(Object.values(wagpay.getSupportedCoins(fromChain.id))[0].chainAgnositcId);
+  const [toCoin, setToCoin] = useState(Object.values(wagpay.getSupportedCoins(toChain.id))[1].chainAgnositcId);
   const [amount, setAmount] = useState('0');
   const [routeToExecute, setRouteToExecute] = useState<Routes>();
   const [account, setAccount] = useState<string | undefined>('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [swapping, setSwapping] = useState(false);
   const [routes, setRoutes] = useState<Routes[]>();
+  const [isDropDownOpenCoin, setIsDropDownOpenCoin] = useState(false);
   // @ts-ignore
   // const { data: signerData, isError, isLoading } = useSigner();
 
@@ -55,7 +56,9 @@ function MyApp({ Component, pageProps }: AppProps) {
     filteredFromChains, setFilteredFromChains,
     filteredToChains, setFilteredToChains,
     setSigner,
-    signer
+    signer,
+    isDropDownOpenCoin,
+    setIsDropDownOpenCoin
   }
 
   return (

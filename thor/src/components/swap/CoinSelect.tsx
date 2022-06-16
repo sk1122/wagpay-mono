@@ -1,3 +1,4 @@
+import { useAppContext } from '@/context';
 import type { Token } from '@wagpay/types';
 import React, { useState } from 'react';
 
@@ -8,11 +9,11 @@ interface ISelectProps {
 }
 
 const CoinSelect = ({ supportedCoins, value, setValue }: ISelectProps) => {
-  const [isDropDownOpen, setIsDropDownOpen] = useState(false);
+const {isDropDownOpenCoin, setIsDropDownOpenCoin} = useAppContext()
 
   const selectedCoin = (coin: Token) => {
     setValue(coin.chainAgnositcId);
-    setIsDropDownOpen(!isDropDownOpen);
+    setIsDropDownOpenCoin(!isDropDownOpenCoin);
   };
 
   return (
@@ -20,7 +21,9 @@ const CoinSelect = ({ supportedCoins, value, setValue }: ISelectProps) => {
       <div className="relative w-2/5">
         <div
           className="flex flex-row overflow-hidden rounded-r-md"
-          onClick={() => setIsDropDownOpen(!isDropDownOpen)}
+          onClick={(e) => {
+            e.stopPropagation()
+            setIsDropDownOpenCoin(!isDropDownOpenCoin)}}
         >
           <div className="flex h-12 w-full cursor-pointer select-none flex-row justify-between bg-[#161B22] px-1 text-white">
             <div className="flex flex-row items-center">
@@ -43,13 +46,15 @@ const CoinSelect = ({ supportedCoins, value, setValue }: ISelectProps) => {
             </svg>
           </div>
         </div>
-        {isDropDownOpen && (
+        {isDropDownOpenCoin && (
           <div className="absolute top-12 left-0 z-10 w-full overflow-hidden rounded-b-md bg-gray-700 text-white shadow">
             {supportedCoins.map((coin: Token) => (
               <div
                 key={coin.chainAgnositcId}
                 className="flex h-11 w-full cursor-pointer select-none flex-row justify-between bg-gray-700 py-2.5 pl-3 pr-2 text-white hover:bg-gray-900"
-                onClick={() => selectedCoin(coin)}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  selectedCoin(coin)}}
               >
                 <div className="flex flex-row items-center">
                   <img

@@ -4,6 +4,7 @@ import CoinSelect from './CoinSelect';
 import SwapChainButton from './swapChainButton';
 import WagPay from '@wagpay/sdk';
 import toast from 'react-hot-toast';
+import { useEffect } from 'react';
 
 const SwapCard = () => {
   const wagpay = new WagPay();
@@ -28,10 +29,21 @@ const SwapCard = () => {
     signerData,
     filteredFromChains,
     filteredToChains,
-    setAmountToSwap,
+    setAmount,
     setAccount,
     setIsAuthenticated
   } = useAppContext();
+
+    const setAmountToSwap = (e: any) => {
+    e.preventDefault();
+    setAmount(e.target.value);
+  };
+
+
+
+  useEffect(() => {
+      
+  }, [])
 
  const login = async () => {
     try {
@@ -56,7 +68,6 @@ const SwapCard = () => {
       console.log(e);
     }
   };
-
 
   const swap = async () => {
     if (!access) {
