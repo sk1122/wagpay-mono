@@ -17,7 +17,7 @@ const ChainSelect = ({
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
 
   const selectedChain = (chain: Chain) => {
-    setValue(chain.id);
+    setValue(chain);
     setIsDropDownOpen(false);
   };
 
