@@ -49,9 +49,15 @@ class Bridges {
 
 	bestBridgeV2 = async (fromChain: ChainId, toChain: ChainId, fromToken: CoinKey, toToken: CoinKey, amount: string, bridge?: AllowDenyPrefer, dex?: AllowDenyPrefer, optimize?: AlgoOptimize) => {
 		const supported_bridges = bridges.filter(bridge => ((bridge.supported_chains.includes(fromChain) && bridge.supported_chains.includes(toChain)) && (bridge.supported_coins.includes(fromToken) && bridge.supported_coins.includes(toToken))))
-		const supported_dexes = dexes.filter(dex => ((dex.supported_chains.includes(fromChain) && dex.supported_chains.includes(toChain)) && (dex.supported_coins.includes(fromToken) && dex.supported_coins.includes(toToken))))
+		const supported_dexes = dexes.filter(dex => ((dex.supported_chains.includes(fromChain)) && (dex.supported_coins.includes(fromToken) && dex.supported_coins.includes(toToken))))
 
 		const uniswapRequired = fromToken !== toToken
+
+		if(uniswapRequired) {
+			if(!supported_dexes) {
+				throw `Dex does not support chain ${fromChain} for ${fromToken} -> ${toToken}`
+			}
+		}
 
 		const routes: Routes[] = []
 		const promises: any[] = []
@@ -69,8 +75,9 @@ class Bridges {
 			}
 
 			if(uniswapRequired) {
+				console.log(supported_dexes)
 				for(let j = 0; j < supported_dexes.length; j++) {
-					// console.log(amount, tokens[fromChain as number][fromToken.toString()], tokens[fromChain as number][toToken.toString()])
+					console.log(amount, tokens[fromChain as number][fromToken.toString()], tokens[fromChain as number][toToken.toString()])
 					const uniswapRoute = await uniswap.getUniswapRoute(tokens[fromChain as number][fromToken.toString()], tokens[fromChain as number][toToken.toString()], Number(ethers.utils.formatUnits(amount, tokens[fromChain as number][fromToken.toString()].decimals).toString()))
 					route.uniswapData = uniswapRoute
 				}
@@ -86,12 +93,6 @@ class Bridges {
 
 			const toToken2 = uniswapRequired ? toToken : fromToken
 			const toTToken2 = tokens[Number(fromChain)][toToken2]
-
-			// const fees =  await bridge.getTransferFees(fromChain, toChain, toToken2, uniswapRequired ? ethers.utils.parseUnits(route.uniswapData.amountToGet.toString(), toTToken2.decimals).toString() : amount)
-			// console.log(fees, "dsadsa")
-			// route.amountToGet = fees.amountToGet
-			// // route.gasFees = fees.gasFees
-			// route.transferFee = fees.transferFee
 
 			promises.push(
 				bridge.getTransferFees(fromChain, toChain, toToken2, uniswapRequired ? ethers.utils.parseUnits(route.uniswapData.amountToGet.toFixed(2), toTToken2.decimals).toString() : amount)

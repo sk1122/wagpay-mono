@@ -139,14 +139,11 @@ export const bridges: Bridge[] = [
 						bridgeTime: '10'
 					}
 				}
-
-				console.log(fees, "das")
-
-				return fees
-
 			} catch (e) {
-				throw e
+				console.error(e)
 			}
+
+			return fees
 		}
 	},
 	{
@@ -189,11 +186,11 @@ export const bridges: Bridge[] = [
 						bridgeTime: '15'
 					}
 				}
-				
-				return fees
 			} catch (e) {
-				throw e
+				console.log(e)
 			}
+
+			return fees
 		}
 	},
 ]
@@ -203,7 +200,7 @@ export const dexes: Dex[] = [
 		logoUri: '',
 		name: DexId.Uniswap,
 		contract: '0xf9Eb876d23DEA670f984c9F2A52c8B51De67157d',
-		supported_chains: [ChainId.ETH, ChainId.AVA, ChainId.BSC, ChainId.POL],
-		supported_coins: [CoinKey.AVAX, CoinKey.MATIC, CoinKey.ETH, CoinKey.USDC, CoinKey.USDT, CoinKey.BNB]
+		supported_chains: [ChainId.ETH, ChainId.POL],
+		supported_coins: [CoinKey.MATIC, CoinKey.ETH, CoinKey.USDC, CoinKey.USDT]
 	}
 ]
