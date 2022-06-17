@@ -31,7 +31,7 @@ const Navbar = () => {
               ))}
             </div>
             <div className="ml-10 space-x-4">
-              <Link href="/">
+              <Link href="/swap">
                 <a className="flex items-center rounded-full border border-transparent bg-wagpay-primary py-2 px-4 text-sm font-medium text-white">
                   <span>Open App</span>
                   <svg

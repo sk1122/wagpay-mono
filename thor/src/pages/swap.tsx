@@ -248,7 +248,7 @@ const Swap = () => {
         >
           <div className="mx-4 rounded-lg bg-[#010409] py-8 px-4 shadow sm:mx-auto sm:max-w-md sm:px-6">
             {/* card starts here */}
-            <SwapCard />
+            <SwapCard signerData= {signerData} />
           </div>
         </div>
         <div className="col-span-5 mt-12 mb-20 w-full sm:mx-auto sm:w-full xl:col-span-3 xl:mt-12">
@@ -266,7 +266,7 @@ const Swap = () => {
                         setRouteToExecute(value);
                       }}
                     >
-                      <BridgeBar bridge={value} />;
+                      <BridgeBar bridge={value} />
                     </div>
                   );
                 })
