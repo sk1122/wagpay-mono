@@ -4,9 +4,14 @@ import CoinSelect from './CoinSelect';
 import SwapChainButton from './swapChainButton';
 import WagPay from '@wagpay/sdk';
 import toast from 'react-hot-toast';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
-const SwapCard = () => {
+interface Props {
+  signerData: any
+}
+
+
+const SwapCard = ({signerData}: Props) => {
   const wagpay = new WagPay();
   const {
     toChain,
@@ -26,7 +31,6 @@ const SwapCard = () => {
     setSwapping,
     amount,
     routes, 
-    signerData,
     filteredFromChains,
     filteredToChains,
     setAmount,
@@ -40,10 +44,6 @@ const SwapCard = () => {
   };
 
 
-
-  useEffect(() => {
-      
-  }, [])
 
  const login = async () => {
     try {
@@ -70,12 +70,17 @@ const SwapCard = () => {
   };
 
   const swap = async () => {
+    console.log("hiiii")
     if (!access) {
       toast.error("You don't have access ser!");
+      console.log("hii")
       return;
     }
 
     setSwapping(true);
+
+    
+
     if (routeToExecute && routes && routes[0] && signerData) {
       const id = toast.loading('Swapping...');
       try {
@@ -279,7 +284,7 @@ const SwapCard = () => {
             )}
             {!swapping && (
               <button
-                onClick={() => swap()}
+                onClick={swap}
                 type="button"
                 className="col-span-7 mt-5 w-full rounded-full border border-transparent bg-white py-2 px-4 text-base font-medium text-wagpay-dark hover:bg-indigo-50"
               >
