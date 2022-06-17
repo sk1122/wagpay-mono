@@ -78,12 +78,10 @@ const SwapCard = ({signerData}: Props) => {
     }
 
     setSwapping(true);
-
-    
-
     if (routeToExecute && routes && routes[0] && signerData) {
       const id = toast.loading('Swapping...');
       try {
+        console.log(signerData)
         await wagpay.executeRoute(routeToExecute, signerData);
       } catch (e) {
         toast.error('some error', {
