@@ -203,7 +203,20 @@ const Swap = () => {
     FetcAvalabaleRoutes();
   }, [fromChain, toChain, fromCoin, toCoin]);
 
+useEffect(() => {
+  const setTimeoutRef = setTimeout(() => {
+    FetcAvalabaleRoutes()
+  }, 1000);
+  return clearTimeout(setTimeoutRef)
+}, [amount])
 
+
+useEffect(() => {
+  const setIntervalRef = setInterval(() => {
+    FetcAvalabaleRoutes()
+  }, 60000)
+  return clearInterval(setIntervalRef)
+}, [])
 
   useEffect(() => {
     const filteredChains = wagpay.getSupportedChains().filter((chain) => {
