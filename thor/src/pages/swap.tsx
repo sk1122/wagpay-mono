@@ -220,14 +220,14 @@ useEffect(() => {
 
   useEffect(() => {
     const filteredChains = wagpay.getSupportedChains().filter((chain) => {
-      return chain.id == toChain.id;
+      return chain.id != fromChain.id;
     });
     setFilteredFromChains([...filteredChains]);
   }, [toChain]);
 
   useEffect(() => {
     const filteredChains = wagpay.getSupportedChains().filter((chain) => {
-      return chain.id == fromChain.id;
+      return chain.id != toChain.id;
     });
     setFilteredToChains([...filteredChains]);
   }, [fromChain]);
