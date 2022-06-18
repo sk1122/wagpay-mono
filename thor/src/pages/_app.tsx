@@ -27,7 +27,8 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [swapping, setSwapping] = useState(false);
   const [routes, setRoutes] = useState<Routes[]>();
-  const [isDropDownOpenCoin, setIsDropDownOpenCoin] = useState(false);
+  const [isDropDownOpenFromCoin, setIsDropDownOpenFromCoin] = useState(false);
+  const [isDropDownOpenToCoin, setIsDropDownOpenToCoin] = useState(false);
   // @ts-ignore
   // const { data: signerData, isError, isLoading } = useSigner();
 
@@ -57,8 +58,10 @@ function MyApp({ Component, pageProps }: AppProps) {
     filteredToChains, setFilteredToChains,
     setSigner,
     signer,
-    isDropDownOpenCoin,
-    setIsDropDownOpenCoin
+    isDropDownOpenFromCoin,
+    setIsDropDownOpenFromCoin,
+    isDropDownOpenToCoin,
+    setIsDropDownOpenToCoin
   }
 
   return (

@@ -6,10 +6,11 @@ interface ISelectProps {
   value: string;
   setValue: Function;
   supportedCoins: Token[];
+  isDropDownOpenCoin: boolean
+  setIsDropDownOpenCoin: Function
 }
 
-const CoinSelect = ({ supportedCoins, value, setValue }: ISelectProps) => {
-const {isDropDownOpenCoin, setIsDropDownOpenCoin} = useAppContext()
+const CoinSelect = ({ supportedCoins, value, setValue, isDropDownOpenCoin, setIsDropDownOpenCoin }: ISelectProps) => {
 
   const selectedCoin = (coin: Token) => {
     setValue(coin.chainAgnositcId);

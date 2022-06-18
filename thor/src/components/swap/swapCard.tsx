@@ -35,7 +35,11 @@ const SwapCard = ({signerData}: Props) => {
     filteredToChains,
     setAmount,
     setAccount,
-    setIsAuthenticated
+    setIsAuthenticated,
+    isDropDownOpenFromCoin,
+    setIsDropDownOpenFromCoin,
+    isDropDownOpenToCoin,
+    setIsDropDownOpenToCoin,
   } = useAppContext();
 
     const setAmountToSwap = (e: any) => {
@@ -97,6 +101,10 @@ const SwapCard = ({signerData}: Props) => {
     setSwapping(false);
   };
 
+  useEffect(() => {
+    console.log(fromCoin, toCoin, wagpay.getSupportedCoins(137), "fromCoin")
+  }, [fromCoin, toCoin])
+
   return (
     <>
       <div className="grid grid-cols-7 place-content-center gap-y-6 sm:grid-cols-7 sm:gap-y-0 sm:gap-x-2">
@@ -144,6 +152,8 @@ const SwapCard = ({signerData}: Props) => {
               supportedCoins={Object.values(
                 wagpay.getSupportedCoins(fromChain.id)
               )}
+              isDropDownOpenCoin={isDropDownOpenFromCoin}
+              setIsDropDownOpenCoin={setIsDropDownOpenFromCoin}
             />
           </div>
         </div>
@@ -178,6 +188,8 @@ const SwapCard = ({signerData}: Props) => {
               supportedCoins={Object.values(
                 wagpay.getSupportedCoins(toChain.id)
               )}
+              isDropDownOpenCoin={isDropDownOpenToCoin}
+              setIsDropDownOpenCoin={setIsDropDownOpenToCoin}
             />
           </div>
         </div>

@@ -51,8 +51,8 @@ const Swap = () => {
     setFilteredFromChains,
     setFilteredToChains,
     setSigner,
-    setIsDropDownOpenCoin,
-    
+    setIsDropDownOpenFromCoin,
+    setIsDropDownOpenToCoin
   } = useAppContext();
 
 
@@ -248,8 +248,8 @@ useEffect(() => {
       <div
         className="mx-auto grid max-w-7xl grid-cols-5 py-12"
         onClick={() => {
-          setIsDropDownOpenp(false);
-          setIsDropDownOpenCoin(false)
+          setIsDropDownOpenToCoin(false);
+          setIsDropDownOpenFromCoin(false)
         }}
       >
         <div
