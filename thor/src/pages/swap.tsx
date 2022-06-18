@@ -203,11 +203,12 @@ const Swap = () => {
     FetcAvalabaleRoutes();
   }, [fromChain, toChain, fromCoin, toCoin]);
 
+var t: any;
 useEffect(() => {
-  const setTimeoutRef = setTimeout(() => {
+  clearInterval(t)
+  t = setTimeout(() => {
     FetcAvalabaleRoutes()
   }, 1000);
-  return clearTimeout(setTimeoutRef)
 }, [amount])
 
 
