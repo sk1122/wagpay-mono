@@ -95,6 +95,8 @@ class BridgeController {
 			return
 		}
 
+		// console.log()
+
 		try {
 			var routes = await bridges.bestBridgeV2(chainEnum[Number(fromChainId)], chainEnum[Number(toChainId)], coinEnum[fromToken.toString()], coinEnum[toToken.toString()], amount.toString(), bridge, dex, optimize)
 			res.status(200).send(routes)

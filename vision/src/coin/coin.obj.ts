@@ -7,4 +7,5 @@ export const coinEnum: { [key: string]: CoinKey } = {
     'MATIC': CoinKey.MATIC,
     'BNB': CoinKey.BNB,
     'AVAX': CoinKey.AVAX,
+    'DAI': CoinKey.DAI
 }

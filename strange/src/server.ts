@@ -9,6 +9,7 @@ import 'express-async-errors';
 import { bridgeRouter } from './api/BridgeService/route';
 import { dexRouter } from './api/DexService/route';
 import cors from "cors"
+import { tokenRouter } from './api/TokenService/router';
 
 
 // Constants
@@ -39,6 +40,7 @@ if (process.env.NODE_ENV === 'production') {
 
 app.use('/api/bridge/', bridgeRouter)
 app.use('/api/dex/', dexRouter)
+app.use('/api/token/', tokenRouter)
 
 
 /***********************************************************************************
