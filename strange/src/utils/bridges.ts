@@ -61,13 +61,13 @@ class Bridges {
 
 		const routes: Routes[] = []
 		const promises: any[] = []
-		
+		console.log(fromToken, toToken, bridges.filter(bridge => ((bridge.supported_chains.includes(fromChain) && bridge.supported_chains.includes(toChain)) && (bridge.supported_coins.includes(fromToken) && bridge.supported_coins.includes(toToken)))))
 		for(let i = 0; i < supported_bridges.length; i++) {
 			const bridge = supported_bridges[i]
 			let route: Routes = {
 				name: bridge.name,
 				bridgeTime: '',
-				contractAddress: bridge.contract,
+				contractAddress: bridge.contract[fromChain as number],
 				amountToGet: '',
 				transferFee: '',
 				uniswapData: {} as UniswapData,

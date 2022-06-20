@@ -9,6 +9,7 @@ import 'express-async-errors';
 import { bridgeRouter } from './api/BridgeService/route';
 import { dexRouter } from './api/DexService/route';
 import cors from "cors"
+import { tokenRouter } from './api/TokenService/router';
 
 
 // Constants
@@ -24,7 +25,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(cors({
-    origin: ['http://localhost:3000']
+    origin: ['http://localhost:3000', "https://wagpay.xyz"]
 }))
 
 // Show routes called in console during development
@@ -39,6 +40,7 @@ if (process.env.NODE_ENV === 'production') {
 
 app.use('/api/bridge/', bridgeRouter)
 app.use('/api/dex/', dexRouter)
+app.use('/api/token/', tokenRouter)
 
 
 /***********************************************************************************
