@@ -1,6 +1,5 @@
 import { FiRefreshCw } from 'react-icons/fi';
 import { MdArrowDropDown } from 'react-icons/md';
-import { useState } from 'react';
 import { useAppContext } from '@/context';
 
 
@@ -9,11 +8,13 @@ const PriorityBar = () => {
 
   return (
     <>
-    <div className="mb-12 flex w-full items-center justify-between  bg-[#010409] p-4 ">
-            <div className="rounded-full bg-[#161B22] p-1">
-              <FiRefreshCw className="text-3xl" />
+    <div className="mb-12 flex w-full items-center justify-between  p-4 ">
+            <div className="flex">
+              <p className='text-lg mx-3'>Select btidge to swap </p>
+              <p className='flex text-[12px] text-white text-opacity-70'>refresh routes  <FiRefreshCw className="text-sm" /></p>
+              
             </div>
-            <div className="rounded-lg bg-[#161B22] p-2">
+            <div className=" bg-wagpay-card-bg-secondary px-4 py-2">
               <button
                 className=" group relative flex w-full items-center justify-center text-white shadow focus:outline-none"
                 onClick={(e) => {
@@ -30,7 +31,7 @@ const PriorityBar = () => {
                   <MdArrowDropDown className="text-2xl font-bold" />
                 </div>
                 {isDropDownOpenp ? (
-                  <div className=" absolute top-full z-50 mt-4 w-max min-w-full rounded bg-[#161B22]">
+                  <div className="w-max absolute top-full z-50 mt-4  min-w-full rounded bg-wagpay-card-bg-secondary">
                     <ul className="rounded  text-left">
                       {priorties.map((item:any) => {
                         return (
@@ -39,7 +40,7 @@ const PriorityBar = () => {
                             onClick={(e) => {
                               setPRiorityValue(item);
                             }}
-                            className="px-4  py-1 hover:bg-gray-700 "
+                            className="px-4  py-1  "
                             key={item}
                           >
                             <span className="">{item}</span>

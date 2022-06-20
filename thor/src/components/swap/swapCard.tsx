@@ -5,6 +5,7 @@ import SwapChainButton from './swapChainButton';
 import WagPay from '@wagpay/sdk';
 import toast from 'react-hot-toast';
 import { useEffect, useState } from 'react';
+import BottomCard from './BottomCard';
 
 interface Props {
   signerData: any;
@@ -116,7 +117,7 @@ const SwapCard = ({ signerData }: Props) => {
                 supportedChains={filteredFromChains}
               />
             </div>
-            {/* <SwapChainButton /> */}
+            <SwapChainButton />
             <div className="w-full">
               <ChainSelect
                 label="Destination chain"
@@ -129,7 +130,7 @@ const SwapCard = ({ signerData }: Props) => {
         </div>
 
         {/* you send section */}
-        <div className='col-span-7 px-5 py-6 bg-[#191919] my-4'>
+        <div className='col-span-7 px-5 py-6 bg-wagpay-card-bg my-4'>
           <h1 className='mb-4 text-lg'>Selected coins</h1>
         <div className="col-span-7 ">
           <label
@@ -163,9 +164,7 @@ const SwapCard = ({ signerData }: Props) => {
           </div>
           <p className='text-sm text-opacity-70 text-white mt-2'>100 used</p>
         </div>
-        <div className='w-full flex justify-center'>
-          <SwapChainButton />
-        </div>
+       
         {/* You receive section */}
         <div className="col-span-7 mt-0 sm:mt-5">
           <label
@@ -205,6 +204,7 @@ const SwapCard = ({ signerData }: Props) => {
           <p className='text-sm text-opacity-70 text-white mt-2'>100 used</p>
         </div>
         </div>
+        <BottomCard />
        
         <div className="col-span-7 mt-1 flex items-center justify-between sm:mt-6">
           <span className="text-white">Select bridge Automatically</span>
