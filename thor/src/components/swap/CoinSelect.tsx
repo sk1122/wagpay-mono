@@ -26,7 +26,7 @@ const CoinSelect = ({ supportedCoins, value, setValue, isDropDownOpenCoin, setIs
             e.stopPropagation()
             setIsDropDownOpenCoin(!isDropDownOpenCoin)}}
         >
-          <div className="flex h-12 w-full cursor-pointer select-none flex-row justify-between bg-[#161B22] px-1 text-white">
+          <div className="flex h-12 w-full cursor-pointer select-none flex-row justify-between bg-wagpay-card-bg-secondary px-1 text-white">
             <div className="flex flex-row items-center">
               <img
                 className="mr-2.5 rounded-md bg-gray-300 object-cover"
@@ -48,11 +48,11 @@ const CoinSelect = ({ supportedCoins, value, setValue, isDropDownOpenCoin, setIs
           </div>
         </div>
         {isDropDownOpenCoin && (
-          <div className="absolute top-12 left-0 z-10 w-full overflow-hidden rounded-b-md bg-gray-700 text-white shadow">
+          <div className="absolute top-12 left-0 z-10 w-full overflow-hidden rounded-b-md bg-wagpay-card-bg-secondary mt-2 text-white shadow">
             {supportedCoins.map((coin: Token) => (
               <div
                 key={coin.chainAgnositcId}
-                className="flex h-11 w-full cursor-pointer select-none flex-row justify-between bg-gray-700 py-2.5 pl-3 pr-2 text-white hover:bg-gray-900"
+                className="flex h-11 w-full cursor-pointer select-none flex-row justify-between bg-wagpay-card-bg-secondary mt-2 py-2.5 pl-3 pr-2 text-white hover:bg-gray-900"
                 onClick={(e) => {
                   e.stopPropagation()
                   selectedCoin(coin)}}
