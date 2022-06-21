@@ -13,9 +13,11 @@ contract AcrossProvider is IBridge, ReentrancyGuard, Ownable {
 	address private constant NATIVE_TOKEN_ADDRESS = address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE);
 
     IAcross public acrossRouter;
+    IERC20 public wrappedNative;
 
-    constructor(address _acrossRouter) {
+    constructor(address _acrossRouter, address _wrappedNative) {
         acrossRouter = IAcross(_acrossRouter);
+        wrappedNative = IERC20(_wrappedNative);
     }
 
 	function transferNative(uint amount, 
@@ -25,11 +27,11 @@ contract AcrossProvider is IBridge, ReentrancyGuard, Ownable {
 		) external payable nonReentrant {
 			require(msg.value == amount, "Wagpay: Please send amount greater than 0");
 			require(msg.value != 0, "WagPay: Please send amount greater than 0");
-			(address originToken, uint64 relayerFeePct, uint32 quoteTimestamp) = abi.decode(
+			(uint64 relayerFeePct, uint32 quoteTimestamp) = abi.decode(
             	extraData,
-            	(address, uint64, uint32)
+            	(uint64, uint32)
         	);
-			acrossRouter.deposit{value: amount}(receiver, originToken, amount, toChainId, relayerFeePct, quoteTimestamp);
+			acrossRouter.deposit{value: amount}(receiver, address(wrappedNative), amount, toChainId, relayerFeePct, quoteTimestamp);
 
 			emit NativeFundsTransferred(receiver, toChainId, amount);
 	}
@@ -45,15 +47,15 @@ contract AcrossProvider is IBridge, ReentrancyGuard, Ownable {
 
 			require(amount > 0, "WagPay: Please send amount greater than 0");
 
-			(address originToken, uint64 relayerFeePct, uint32 quoteTimestamp) = abi.decode(
+			(uint64 relayerFeePct, uint32 quoteTimestamp) = abi.decode(
             	extraData,
-            	(address, uint64, uint32)
+            	(uint64, uint32)
         	);
 
 			IERC20(tokenAddress).safeTransferFrom(msg.sender, address(this), amount);
 			IERC20(tokenAddress).safeIncreaseAllowance(address(acrossRouter), amount);
 
-			acrossRouter.deposit(receiver, originToken, amount, toChainId, relayerFeePct, quoteTimestamp);
+			acrossRouter.deposit(receiver, tokenAddress, amount, toChainId, relayerFeePct, quoteTimestamp);
 		
 			emit ERC20FundsTransferred(receiver, toChainId, amount, tokenAddress);
 	}
