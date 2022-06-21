@@ -11,16 +11,17 @@ import "./interface/IDex.sol";
 contract WagPayBridge is Ownable {
     using Counters for Counters.Counter;
     Counters.Counter private _bridgeIds;
+    Counters.Counter private _dexIds;
 	address private constant NATIVE_TOKEN_ADDRESS = address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE);
 
     mapping(uint => address) bridges;
 
+    mapping(uint => address) dexes;
+
     struct DexData {
-        address dex;
+        uint dexId;
         uint amountIn;
         uint amountOut;
-        uint fees;
-        uint64 chainId;
         address fromToken;
         address toToken;
         bytes extraData;
@@ -41,7 +42,7 @@ contract WagPayBridge is Ownable {
 
         require(bridges[route.bridgeId] != address(0), "WagPay: Bridge doesn't exist");        
 
-        IDex idex = IDex(route.dex.dex);
+        IDex idex = IDex(dexes[route.dex.dexId]);
         IBridge bridge = IBridge(bridges[route.bridgeId]);
 
         if(route.dexRequired) {
@@ -50,7 +51,7 @@ contract WagPayBridge is Ownable {
                 idex.swapNative{value: route.amount}(route.dex.toToken, route.dex.extraData);
             } else {
                 IERC20(route.fromToken).transferFrom(msg.sender, address(this), route.amount);
-                IERC20(route.dex.fromToken).approve(route.dex.dex, route.amount);
+                IERC20(route.dex.fromToken).approve(dexes[route.dex.dexId], route.amount);
                 idex.swapERC20(route.dex.fromToken, route.dex.toToken, route.dex.amountIn,  route.dex.extraData);
             }
 
@@ -89,6 +90,23 @@ contract WagPayBridge is Ownable {
 
     function getBridge(uint _bridgeId) external view returns (address) {
         return bridges[_bridgeId];
+    }
+
+    function addDex(address newDex) external onlyOwner returns (uint) {
+        require(newDex != address(0), "WagPay: Cannot be a address(0)");
+        _dexIds.increment();
+        uint dexId = _dexIds.current();
+        dexes[dexId] = newDex;
+        return dexId;
+    }
+
+    function removeDex(uint dexId) external onlyOwner {
+        require(dexes[dexId] != address(0), "WagPay: Dex doesn't exist");
+        dexes[dexId] = address(0);
+    }
+
+    function getDex(uint dexId) external view returns (address) {
+        return dexes[dexId];
     }
 
     function rescueFunds(address tokenAddr, uint amount) external onlyOwner {
