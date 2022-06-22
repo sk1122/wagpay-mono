@@ -1,0 +1,36 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum TxStatus {
+  PENDING
+  FAILED
+  COMPLETED
+}
+
+enum Bridge {
+  HOP
+  CELER
+  HYPHEN
+  ACROSS
+}
+
+model Transaction {
+  id             Int       @id @default(autoincrement())
+  from           String
+  to             String
+  origin_tx_hash String
+  dest_tx_hash   String?
+  bridge         Bridge
+  status         TxStatus
+  origin_time    DateTime  @default(now())
+  dest_time      DateTime?
+}
