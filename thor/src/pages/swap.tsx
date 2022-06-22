@@ -260,8 +260,9 @@ useEffect(() => {
               : `col-span-5 mt-4 sm:mx-auto sm:w-full sm:max-w-md xl:mt-12`
           }
         >
-          <div className="mx-4 rounded-lg bg-[#010409] py-8 px-4 shadow sm:mx-auto sm:max-w-md sm:px-6">
+          <div className="mx-4 rounded-lg py-8 px-4 shadow sm:mx-auto sm:max-w-md sm:px-6">
             {/* card starts here */}
+            
             <SwapCard signerData= {signerData} />
           </div>
         </div>

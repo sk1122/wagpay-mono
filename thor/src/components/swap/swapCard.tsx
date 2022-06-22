@@ -5,13 +5,13 @@ import SwapChainButton from './swapChainButton';
 import WagPay from '@wagpay/sdk';
 import toast from 'react-hot-toast';
 import { useEffect, useState } from 'react';
+import BottomCard from './BottomCard';
 
 interface Props {
-  signerData: any
+  signerData: any;
 }
 
-
-const SwapCard = ({signerData}: Props) => {
+const SwapCard = ({ signerData }: Props) => {
   const wagpay = new WagPay();
   const {
     toChain,
@@ -30,7 +30,7 @@ const SwapCard = ({signerData}: Props) => {
     swapping,
     setSwapping,
     amount,
-    routes, 
+    routes,
     filteredFromChains,
     filteredToChains,
     setAmount,
@@ -42,14 +42,12 @@ const SwapCard = ({signerData}: Props) => {
     setIsDropDownOpenToCoin,
   } = useAppContext();
 
-    const setAmountToSwap = (e: any) => {
+  const setAmountToSwap = (e: any) => {
     e.preventDefault();
     setAmount(e.target.value);
   };
 
-
-
- const login = async () => {
+  const login = async () => {
     try {
       const { ethereum } = window;
 
@@ -74,10 +72,10 @@ const SwapCard = ({signerData}: Props) => {
   };
 
   const swap = async () => {
-    console.log("hiiii")
+    console.log('hiiii');
     if (!access) {
       toast.error("You don't have access ser!");
-      console.log("hii")
+      console.log('hii');
       return;
     }
 
@@ -85,7 +83,7 @@ const SwapCard = ({signerData}: Props) => {
     if (routeToExecute && routes && routes[0] && signerData) {
       const id = toast.loading('Swapping...');
       try {
-        console.log(signerData)
+        console.log(signerData);
         await wagpay.executeRoute(routeToExecute, signerData);
       } catch (e) {
         toast.error('some error', {
@@ -102,36 +100,44 @@ const SwapCard = ({signerData}: Props) => {
   };
 
   useEffect(() => {
-    console.log(fromCoin, toCoin, wagpay.getSupportedCoins(137), "fromCoin")
-  }, [fromCoin, toCoin])
+    console.log(fromCoin, toCoin, wagpay.getSupportedCoins(137), 'fromCoin');
+  }, [fromCoin, toCoin]);
 
   return (
     <>
       <div className="grid grid-cols-7 place-content-center gap-y-6 sm:grid-cols-7 sm:gap-y-0 sm:gap-x-2">
-        <div className="col-span-3">
-          <ChainSelect
-            label="From"
-            value={fromChain}
-            setValue={setFromChain}
-            supportedChains={filteredFromChains}
-          />
+        <div className="col-span-7 bg-[#191919] p-6">
+          <h1 className='mb-4 text-lg'>selected chains</h1>
+          <div className='w-full flex space-x-2'>
+            <div className="w-full ">
+              <ChainSelect
+                label="source chain"
+                value={fromChain}
+                setValue={setFromChain}
+                supportedChains={filteredFromChains}
+              />
+            </div>
+            <SwapChainButton />
+            <div className="w-full">
+              <ChainSelect
+                label="Destination chain"
+                value={toChain}
+                setValue={setToChain}
+                supportedChains={filteredToChains}
+              />
+            </div>
+          </div>
         </div>
-        <SwapChainButton />
-        <div className="col-span-3">
-          <ChainSelect
-            label="To"
-            value={toChain}
-            setValue={setToChain}
-            supportedChains={filteredToChains}
-          />
-        </div>
+
         {/* you send section */}
-        <div className="col-span-7 mt-4 sm:mt-7">
+        <div className='col-span-7 px-5 py-6 bg-wagpay-card-bg my-4'>
+          <h1 className='mb-4 text-lg'>Selected coins</h1>
+        <div className="col-span-7 ">
           <label
             htmlFor="sender"
             className="mb-2 block text-sm font-medium text-white"
           >
-            You Send
+            You Sent
           </label>
           <div className="flex w-full">
             <div className="relative h-12 w-3/5 rounded-md shadow-sm">
@@ -140,7 +146,7 @@ const SwapCard = ({signerData}: Props) => {
                 onChange={setAmountToSwap}
                 type="number"
                 placeholder="0.00"
-                className="block h-12 w-full rounded-l-md border-none bg-[#161B22] px-3 text-white shadow-sm outline-none focus:border-none focus:outline-none active:outline-none sm:text-sm"
+                className="block h-12 w-full rounded-l-md border-none bg-[#464646] px-3 text-white shadow-sm outline-none focus:border-none focus:outline-none active:outline-none sm:text-sm"
               />
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                 <span className="text-xs text-gray-300">MAX</span>
@@ -156,14 +162,16 @@ const SwapCard = ({signerData}: Props) => {
               setIsDropDownOpenCoin={setIsDropDownOpenFromCoin}
             />
           </div>
+          <p className='text-sm text-opacity-70 text-white mt-2'>100 used</p>
         </div>
+       
         {/* You receive section */}
         <div className="col-span-7 mt-0 sm:mt-5">
           <label
             htmlFor="receive"
             className="mb-2 block text-sm font-medium text-white"
           >
-            You Receive
+            You Received (estimated)
           </label>
           <div className="flex w-full">
             <div className="relative w-3/5 rounded-md shadow-sm">
@@ -176,7 +184,7 @@ const SwapCard = ({signerData}: Props) => {
                     ? Number(routeToExecute.amountToGet).toFixed(2)
                     : 0.0
                 }
-                className="block h-12 w-full rounded-l-md border-r border-none border-blue-400 bg-[#161B22] px-3 text-white shadow-sm outline-none focus:outline-none sm:text-sm"
+                className="block h-12 w-full rounded-l-md border-r border-none border-blue-400 bg-[#464646] px-3 text-white shadow-sm outline-none focus:outline-none sm:text-sm"
               />
               <div className="pointer-events-none absolute inset-y-0 right-0 mt-1 flex items-center pr-3">
                 <span className="text-xs text-gray-300">MAX</span>
@@ -191,8 +199,13 @@ const SwapCard = ({signerData}: Props) => {
               isDropDownOpenCoin={isDropDownOpenToCoin}
               setIsDropDownOpenCoin={setIsDropDownOpenToCoin}
             />
+            
           </div>
+          <p className='text-sm text-opacity-70 text-white mt-2'>100 used</p>
         </div>
+        </div>
+        <BottomCard />
+       
         <div className="col-span-7 mt-1 flex items-center justify-between sm:mt-6">
           <span className="text-white">Select bridge Automatically</span>
           <div>

@@ -24,6 +24,10 @@ module.exports = {
     matic: {
       url: `${process.env.MATIC_URL}`,
       accounts: [`${process.env.PRIVATE_KEY}`]
+    },
+    eth: {
+      url: `${process.env.ETH_URL}`,
+      accounts: [`${process.env.PRIVATE_KEY}`]
     }
   },
   etherscan: {
