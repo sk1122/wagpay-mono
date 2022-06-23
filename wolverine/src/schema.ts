@@ -38,6 +38,8 @@ export const typeDefs = gql`
 	input CreateTransaction {
 		from: String!
 		to: String!
+		from_chain: Chain!
+		to_chain: Chain!
 		origin_tx_hash: String!
 		bridge: Bridge!
 		status: TxStatus!
@@ -48,6 +50,8 @@ export const typeDefs = gql`
 		id: ID!
 		from: String
 		to: String
+		from_chain: Chain!
+		to_chain: Chain!
 		origin_tx_hash: String
 		dest_tx_hash: String
 		bridge: Bridge
@@ -78,5 +82,12 @@ export const typeDefs = gql`
 		PENDING
 		FAILED
 		COMPLETED
+	}
+
+	enum Chain {
+		POL
+		ETH
+		AVAX
+		BSC
 	}
 `

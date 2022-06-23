@@ -8,6 +8,8 @@ export const Mutation = {
 				from: args.tx.from,
 				to: args.tx.to,
 				origin_tx_hash: args.tx.origin_tx_hash,
+				from_chain: args.tx.from_chain,
+				to_chain: args.tx.to_chain,
 				bridge: args.tx.bridge,
 				status: args.tx.status
 			}
@@ -23,6 +25,8 @@ export const Mutation = {
 				to: args.tx.to,
 				origin_tx_hash: args.tx.origin_tx_hash,
 				bridge: args.tx.bridge,
+				from_chain: args.tx.from_chain,
+				to_chain: args.tx.to_chain,
 				status: args.tx.status,
 				dest_time: args.tx.dest_time,
 				dest_tx_hash: args.tx.dest_tx_hash
