@@ -5,13 +5,14 @@ import SwapChainButton from './swapChainButton';
 import WagPay from '@wagpay/sdk';
 import toast from 'react-hot-toast';
 import { useEffect, useState } from 'react';
-import BottomCard from './BottomCard';
+
 
 interface Props {
   signerData: any;
 }
 
 const SwapCard = ({ signerData }: Props) => {
+ 
   const wagpay = new WagPay();
   const {
     toChain,
@@ -40,39 +41,21 @@ const SwapCard = ({ signerData }: Props) => {
     setIsDropDownOpenFromCoin,
     isDropDownOpenToCoin,
     setIsDropDownOpenToCoin,
-  } = useAppContext();
 
+
+  } = useAppContext();
+  const styles = routeToExecute ? ' ' : ' cursor-not-allowed'
   const setAmountToSwap = (e: any) => {
     e.preventDefault();
     setAmount(e.target.value);
   };
 
-  const login = async () => {
-    try {
-      const { ethereum } = window;
-
-      if (ethereum) {
-        const accounts = await ethereum.request({
-          method: 'eth_requestAccounts',
-        });
-
-        if (accounts.length !== 0) {
-          setAccount(accounts[0]);
-          setIsAuthenticated(true);
-          console.log('Found');
-        } else {
-          console.log('Not Found');
-        }
-      } else {
-        console.log('Install Metamask');
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
+ useEffect(() => {
+  console.log(isAuthenticated)
+ }, [])
 
   const swap = async () => {
-    console.log('hiiii');
+    console.log(signerData);
     if (!access) {
       toast.error("You don't have access ser!");
       console.log('hii');
@@ -80,7 +63,9 @@ const SwapCard = ({ signerData }: Props) => {
     }
 
     setSwapping(true);
+    console.log(routeToExecute, routes, routes[0], signerData)
     if (routeToExecute && routes && routes[0] && signerData) {
+      console.log("swapping")
       const id = toast.loading('Swapping...');
       try {
         console.log(signerData);
@@ -105,11 +90,12 @@ const SwapCard = ({ signerData }: Props) => {
 
   return (
     <>
-      <div className="grid grid-cols-7 place-content-center gap-y-6 sm:grid-cols-7 sm:gap-y-0 sm:gap-x-2">
-        <div className="col-span-7 bg-[#191919] p-6">
-          <h1 className='mb-4 text-lg'>selected chains</h1>
-          <div className='w-full flex space-x-2'>
-            <div className="w-full ">
+      <section className="col-span-full flex w-full flex-col space-y-4 px-2 sm:px-8 lg:col-span-3 lg:px-0">
+        <h1 className="mb-3 text-lg font-bold">Summary</h1>
+        <div className="w-full rounded-md p-2 dark:bg-secondaryDark">
+          <h2 className="mb-4 font-semibold">Selected Chains</h2>
+          <div className="flex w-full justify-evenly space-x-3">
+            <div className="w-1/2">
               <ChainSelect
                 label="source chain"
                 value={fromChain}
@@ -118,7 +104,7 @@ const SwapCard = ({ signerData }: Props) => {
               />
             </div>
             <SwapChainButton />
-            <div className="w-full">
+            <div className="w-1/2">
               <ChainSelect
                 label="Destination chain"
                 value={toChain}
@@ -129,27 +115,25 @@ const SwapCard = ({ signerData }: Props) => {
           </div>
         </div>
 
-        {/* you send section */}
-        <div className='col-span-7 px-5 py-6 bg-wagpay-card-bg my-4'>
-          <h1 className='mb-4 text-lg'>Selected coins</h1>
-        <div className="col-span-7 ">
+        <div className="col-span-7 mt-4 flex w-full flex-col space-y-2 rounded-md bg-primaryGray p-3 dark:bg-tertiaryGray sm:mt-7">
+          <h2 className="mb-4 font-semibold">Selected Tokens</h2>
           <label
             htmlFor="sender"
-            className="mb-2 block text-sm font-medium text-white"
+            className="mb-2 block text-left text-sm text-black dark:text-white"
           >
-            You Sent
+            You Send
           </label>
           <div className="flex w-full">
-            <div className="relative h-12 w-3/5 rounded-md shadow-sm">
+            <div className="relative h-12 w-3/5 shadow-sm">
               <input
                 value={amount}
                 onChange={setAmountToSwap}
                 type="number"
                 placeholder="0.00"
-                className="block h-12 w-full rounded-l-md border-none bg-[#464646] px-3 text-white shadow-sm outline-none focus:border-none focus:outline-none active:outline-none sm:text-sm"
+                className="block h-12 w-full rounded-l-md border-none bg-tertiaryLight px-3 text-black shadow-sm outline-none focus:border-none focus:outline-none active:outline-none dark:bg-quaternaryGray dark:text-white sm:text-sm"
               />
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                <span className="text-xs text-gray-300">MAX</span>
+                <span className="text-xs text-gray-400">MAX</span>
               </div>
             </div>
             <CoinSelect
@@ -162,32 +146,47 @@ const SwapCard = ({ signerData }: Props) => {
               setIsDropDownOpenCoin={setIsDropDownOpenFromCoin}
             />
           </div>
-          <p className='text-sm text-opacity-70 text-white mt-2'>100 used</p>
-        </div>
-       
-        {/* You receive section */}
-        <div className="col-span-7 mt-0 sm:mt-5">
-          <label
-            htmlFor="receive"
-            className="mb-2 block text-sm font-medium text-white"
+          <span className="text-sm text-primaryGray"></span>
+          {/* svg */}
+          {/* <svg
+            xmlns="http://www.w3.org/2000/svg"
+            xmlnsXlink="http://www.w3.org/1999/xlink"
+            aria-hidden="true"
+            role="img"
+            width="36"
+            height="36"
+            preserveAspectRatio="xMidYMid meet"
+            className="flex w-full items-center"
+            viewBox="0 0 24 24"
           >
-            You Received (estimated)
+            <path
+              fill="#888888"
+              d="m18 4l-4 4h3v8a2 2 0 0 1-2 2a2 2 0 0 1-2-2V8a4 4 0 0 0-4-4a4 4 0 0 0-4 4v8H2l4 4l4-4H7V8a2 2 0 0 1 2-2a2 2 0 0 1 2 2v8a4 4 0 0 0 4 4a4 4 0 0 0 4-4V8h3l-4-4Z"
+            ></path>
+          </svg> */}
+          {/* receive section */}
+          <label
+            htmlFor="sender"
+            className="mb-2 block text-left text-sm text-black dark:text-white"
+          >
+            You Receive
           </label>
           <div className="flex w-full">
-            <div className="relative w-3/5 rounded-md shadow-sm">
+            <div className="relative h-12 w-3/5 shadow-sm">
               <input
                 type="number"
                 placeholder="0.00"
-                disabled
+
                 value={
                   routeToExecute
                     ? Number(routeToExecute.amountToGet).toFixed(2)
                     : 0.0
                 }
-                className="block h-12 w-full rounded-l-md border-r border-none border-blue-400 bg-[#464646] px-3 text-white shadow-sm outline-none focus:outline-none sm:text-sm"
+                className="block h-12 w-full rounded-l-md border-none bg-tertiaryLight px-3 text-black shadow-sm outline-none focus:border-none focus:outline-none active:outline-none dark:bg-quaternaryGray dark:text-white sm:text-sm"
+                disabled
               />
-              <div className="pointer-events-none absolute inset-y-0 right-0 mt-1 flex items-center pr-3">
-                <span className="text-xs text-gray-300">MAX</span>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                <span className="text-xs text-gray-400">MAX</span>
               </div>
             </div>
             <CoinSelect
@@ -199,13 +198,25 @@ const SwapCard = ({ signerData }: Props) => {
               isDropDownOpenCoin={isDropDownOpenToCoin}
               setIsDropDownOpenCoin={setIsDropDownOpenToCoin}
             />
-            
           </div>
-          <p className='text-sm text-opacity-70 text-white mt-2'>100 used</p>
+          <span className="text-sm text-primaryGray"></span>
         </div>
+
+        <div className="flex w-full flex-col space-y-2 rounded-md p-2 dark:bg-secondaryDark">
+          <div className="flex w-full items-center justify-between">
+            <span>Bridge Name</span>
+            <span className="text-sm font-light">{routeToExecute?.name}</span>
+          </div>
+          <div className="flex w-full items-center justify-between">
+            <span>Bridge Fees</span>
+            <span className="text-sm font-light">{routeToExecute?.transferFee}</span>
+          </div>
+          <div className="flex w-full items-center justify-between">
+            <span>Gas Fees</span>
+            <span className="text-sm font-light">0.06 USDC</span>
+          </div>
         </div>
-        <BottomCard />
-       
+
         <div className="col-span-7 mt-1 flex items-center justify-between sm:mt-6">
           <span className="text-white">Select bridge Automatically</span>
           <div>
@@ -234,46 +245,9 @@ const SwapCard = ({ signerData }: Props) => {
             {/* End */}
           </div>
         </div>
-        {/* priority section */}
-        {toggle === true && (
-          <div className="col-span-7 mt-1 sm:mt-3 md:mt-6">
-            <span className="text-base text-gray-200">Give priority to :</span>
-            <div className="mt-4 flex space-x-6">
-              <div>
-                <label className="flex items-center">
-                  <input
-                    type="radio"
-                    name="radio-buttons"
-                    className="form-radio"
-                  />
-                  <span className="ml-2 text-sm text-white">Gas Fees</span>
-                </label>
-              </div>
-              <div>
-                <label className="flex items-center">
-                  <input
-                    type="radio"
-                    name="radio-buttons"
-                    className="form-radio"
-                  />
-                  <span className="ml-2 text-sm text-white">Time</span>
-                </label>
-              </div>
-            </div>
-          </div>
-        )}
-        {/* priority end */}
-        {/* connect wallet button */}
-        {!isAuthenticated && (
-          <button
-            onClick={() => login()}
-            type="button"
-            className="col-span-7 mt-5 w-full rounded-full border border-transparent bg-white py-2 px-4 text-base font-medium text-wagpay-dark hover:bg-indigo-50"
-          >
-            Connect Wallet
-          </button>
-        )}
-        {isAuthenticated && (
+        <div>
+         {/* connect wallet button */}
+        {signerData && (
           <>
             {swapping && (
               <button
@@ -309,14 +283,15 @@ const SwapCard = ({ signerData }: Props) => {
               <button
                 onClick={swap}
                 type="button"
-                className="col-span-7 mt-5 w-full rounded-full border border-transparent bg-white py-2 px-4 text-base font-medium text-wagpay-dark hover:bg-indigo-50"
+                className={` ${styles} col-span-7 mt-5 w-full rounded-full border border-transparent bg-white py-2 px-4 text-base font-medium text-wagpay-dark hover:bg-indigo-501 `}
               >
                 Swap
               </button>
             )}
           </>
         )}
-      </div>
+        </div>
+      </section>
     </>
   );
 };

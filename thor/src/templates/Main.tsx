@@ -1,4 +1,7 @@
+import Navbar from '@/components/Navbar';
 import type { ReactNode } from 'react';
+
+
 
 type IMainProps = {
   meta: ReactNode;
@@ -6,9 +9,11 @@ type IMainProps = {
 };
 
 const Main = (props: IMainProps) => (
-  <div className="w-full antialiased">
+  <div className="mx-auto min-h-screen w-full px-1 antialiased dark:bg-primaryDark dark:text-white lg:min-h-screen">
     {props.meta}
-    <div>{props.children}</div>
+    <div className="mx-auto max-w-7xl">
+      {props.children}
+    </div>
   </div>
 );
 

@@ -25,6 +25,7 @@ import PriorityBar from '@/components/swap/priorityBar';
 import SwapCard from '@/components/swap/swapCard';
 import { useSigner } from 'wagmi';
 
+
 const Swap = () => {
   const wagpay = new WagPay();
 
@@ -42,6 +43,7 @@ const Swap = () => {
     toCoin,
     swapping,
     setSwapping,
+    routeToExecute,
     setRouteToExecute,
     toggle,
     amount,
@@ -52,12 +54,15 @@ const Swap = () => {
     setFilteredToChains,
     setSigner,
     setIsDropDownOpenFromCoin,
-    setIsDropDownOpenToCoin
+    setIsDropDownOpenToCoin,
+    priorityValue, setPriorityValue,
+    priorties,
+    refreshRoutes, setRefreshRoutes
   } = useAppContext();
 
 
   const { data: signerData, isError, isLoading } = useSigner();
- 
+
   useEffect(() => {
     if (signerData) {
       signerData.getAddress().then((address:any) => {
@@ -81,6 +86,13 @@ const Swap = () => {
       setIsModalOpen(true);
     }
   }, [signerData]);
+
+
+
+  useEffect(() => {
+    console.log(signerData)
+
+  }, [signerData] )
 
   const checkWalletIsConnected = async () => {
     try {
@@ -110,7 +122,7 @@ const Swap = () => {
       console.log(e);
     }
   };
- 
+
   useEffect(() => {
     checkWalletIsConnected();
   }, []);
@@ -197,27 +209,29 @@ const Swap = () => {
 
   useEffect(() => {
     if (routes) setRouteToExecute(routes[0]);
+    console.log(routes)
   }, [routes]);
 
   useEffect(() => {
     FetcAvalabaleRoutes();
-  }, [fromChain, toChain, fromCoin, toCoin]);
-
-var t: any;
-useEffect(() => {
-  clearInterval(t)
-  t = setTimeout(() => {
-    FetcAvalabaleRoutes()
-  }, 1000);
-}, [amount])
+   
+  }, [fromChain, toChain, fromCoin, toCoin, refreshRoutes]);
 
 
-useEffect(() => {
-  const setIntervalRef = setInterval(() => {
-    FetcAvalabaleRoutes()
-  }, 60000)
-  return clearInterval(setIntervalRef)
-}, [])
+  useEffect(() => {
+    const timout = setTimeout(() => {
+      FetcAvalabaleRoutes()
+    }, 1000)
+    return () => clearTimeout(timout)
+  }, [amount])
+
+
+  useEffect(() => {
+    const setIntervalRef = setInterval(() => {
+      FetcAvalabaleRoutes()
+    }, 60000)
+    return clearInterval(setIntervalRef)
+  }, [])
 
   useEffect(() => {
     const filteredChains = wagpay.getSupportedChains().filter((chain) => {
@@ -235,6 +249,12 @@ useEffect(() => {
 
 
 
+  useEffect(() => {
+    if(toggle) {
+      setRouteToExecute(routes[0])
+    }
+  }, [toggle])
+
   return (
     <Main
       meta={
@@ -247,43 +267,36 @@ useEffect(() => {
       <Navbar2 />
 
       <div
-        className="mx-auto grid max-w-7xl grid-cols-5 py-12"
+        className="mt-4  grid w-full grid-cols-9 content-start gap-y-10 pb-6 md:pb-0 lg:mt-12 lg:gap-y-0 lg:gap-x-3"
         onClick={() => {
           setIsDropDownOpenToCoin(false);
           setIsDropDownOpenFromCoin(false)
         }}
       >
-        <div
-          className={
-            toggle === false
-              ? `col-span-5 mt-4 sm:mx-auto sm:w-full xl:col-span-2 xl:mt-12`
-              : `col-span-5 mt-4 sm:mx-auto sm:w-full sm:max-w-md xl:mt-12`
-          }
-        >
-          <div className="mx-4 rounded-lg py-8 px-4 shadow sm:mx-auto sm:max-w-md sm:px-6">
-            {/* card starts here */}
-            
-            <SwapCard signerData= {signerData} />
-          </div>
-        </div>
-        <div className="col-span-5 mt-12 mb-20 w-full sm:mx-auto sm:w-full xl:col-span-3 xl:mt-12">
+        <SwapCard signerData={signerData} />
+        <div className="col-span-full w-full px-2 sm:px-8 lg:col-span-6 lg:px-0 ">
           <PriorityBar />
-          {toggle === false && (
-            <div className="mx-auto flex w-full flex-col justify-center space-y-12 md:max-w-2xl xl:items-start">
-              {/* single option */}
+          <div className="relative flex w-full flex-col justify-center space-y-12 xl:items-start">
+            {/* single option */}
+
+            {
+              toggle ? routeToExecute ? <BridgeBar priority={priorityValue} bridge={routeToExecute} /> : null : <div>
               {routes ? (
-                routes.map((value: Routes) => {
+                routes.slice().sort((x: any, y: any) => {
+                  console.log(priorties[0], priorties[1], priorties[2])
+                  if(priorties[0] === priorityValue && Number(x.amountToGet) < Number(y.amountToGet)) {
+                    return 1
+                  } else if(priorties[1] === priorityValue && Number(x.transferFee) > Number(y.transferFee)) {
+                    return 1
+                  } else if(priorties[2] === priorityValue && Number(x.bridgeTime) < Number(y.bridgeTime)) {
+                    return 1
+                  } else {
+                    return -1
+                  }
+                }).map((value: Routes, idx: number) => {
                   return (
-                    <div
-                      className="cursor-pointer"
-                      key={value.name}
-                      onClick={() => {
-                        setRouteToExecute(value);
-                      }}
-                    >
-                      <BridgeBar bridge={value} />
-                    </div>
-                  );
+                      <BridgeBar priority={idx== 0 ? priorityValue: ''} bridge={value}  />
+                  ) 
                 })
               ) : (
                 <>
@@ -294,8 +307,10 @@ useEffect(() => {
                   )}
                 </>
               )}
-            </div>
-          )}
+  
+              </div>
+            }
+          </div>
         </div>
         <Modal isOpen={isModalOpen} setIsOpen={setIsModalOpen}>
           <EarlyAcess />
