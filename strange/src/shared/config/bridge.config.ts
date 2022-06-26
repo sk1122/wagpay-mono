@@ -57,7 +57,7 @@ export const bridges: Bridge[] = [
 				gasFees: '',
 				amountToGet: '',
 				transferFee: '',
-				bridgeTime: ''
+				bridgeTime: '5'
 			}
 
 			const fromTokenAddress = tokens[fromChain as number][fromToken]
@@ -104,7 +104,7 @@ export const bridges: Bridge[] = [
 				gasFees: '',
 				amountToGet: '',
 				transferFee: '',
-				bridgeTime: ''
+				bridgeTime: '15'
 			}
 			
 			const signer = ethers.Wallet.createRandom();
@@ -169,7 +169,7 @@ export const bridges: Bridge[] = [
 				gasFees: '',
 				amountToGet: '',
 				transferFee: '',
-				bridgeTime: ''
+				bridgeTime: '20'
 			}
 
 			const fromTokenAddress = tokens[fromChain as number][fromToken]
@@ -208,7 +208,7 @@ export const bridges: Bridge[] = [
 		name: BridgeId.Across,
 		contract: {
 			1: '',
-			137: ''
+			137: '15'
 		},
 		supported_chains: [ChainId.ETH, ChainId.POL],
 		supported_coins: [CoinKey.MATIC, CoinKey.ETH, CoinKey.USDC, CoinKey.DAI],
@@ -230,6 +230,7 @@ export const bridges: Bridge[] = [
 			if(!(Number(allowedData.minDeposit) <= Number(amount) && Number(amount) <= Number(allowedData.maxDeposit))) {
 				return fees
 			}
+			console.log("Across")
 
 			const ACROSS_BASE_URL = "https://across.to/api/suggested-fees"
 			try {
@@ -261,6 +262,7 @@ export const bridges: Bridge[] = [
 						bridgeTime: '15'
 					}
 				}
+				console.log(fees)
 			} catch (e) {
 				console.log(e)
 			}

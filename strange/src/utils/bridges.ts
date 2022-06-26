@@ -48,7 +48,7 @@ class Bridges {
 	}
 
 	bestBridgeV2 = async (fromChain: ChainId, toChain: ChainId, fromToken: CoinKey, toToken: CoinKey, amount: string, bridge?: AllowDenyPrefer, dex?: AllowDenyPrefer, optimize?: AlgoOptimize) => {
-		const supported_bridges = bridges.filter(bridge => ((bridge.supported_chains.includes(fromChain) && bridge.supported_chains.includes(toChain)) && (bridge.supported_coins.includes(fromToken) && bridge.supported_coins.includes(toToken))))
+		const supported_bridges = bridges.filter(bridge => ((bridge.supported_chains.includes(fromChain) && bridge.supported_chains.includes(toChain)) && (bridge.supported_coins.includes(toToken))))
 		const supported_dexes = dexes.filter(dex => ((dex.supported_chains.includes(fromChain)) && (dex.supported_coins.includes(fromToken) && dex.supported_coins.includes(toToken))))
 
 		const uniswapRequired = fromToken !== toToken
