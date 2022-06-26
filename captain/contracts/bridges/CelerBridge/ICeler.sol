@@ -7,7 +7,7 @@ interface ICeler {
         address _token,
         uint256 _amount,
         uint64 _dstChinId,
-        uint64 _nonce,
+        uint256 _nonce,
         uint32 _maxSlippage
     ) external;
 
@@ -15,7 +15,7 @@ interface ICeler {
         address _receiver,
         uint256 _amount,
         uint64 _dstChinId,
-        uint64 _nonce,
+        uint256 _nonce,
         uint32 _maxSlippage
     ) external payable;
 }
