@@ -6,6 +6,7 @@ import WagPay from '@wagpay/sdk';
 import toast from 'react-hot-toast';
 import { useEffect, useState } from 'react';
 
+
 interface Props {
   signerData: any;
 }
@@ -49,29 +50,9 @@ const SwapCard = ({ signerData }: Props) => {
     setAmount(e.target.value);
   };
 
-  const login = async () => {
-    try {
-      const { ethereum } = window;
-
-      if (ethereum) {
-        const accounts = await ethereum.request({
-          method: 'eth_requestAccounts',
-        });
-
-        if (accounts.length !== 0) {
-          setAccount(accounts[0]);
-          setIsAuthenticated(true);
-          console.log('Found');
-        } else {
-          console.log('Not Found');
-        }
-      } else {
-        console.log('Install Metamask');
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
+ useEffect(() => {
+  console.log(isAuthenticated)
+ }, [])
 
   const swap = async () => {
     console.log(signerData);

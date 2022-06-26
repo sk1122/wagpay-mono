@@ -23,6 +23,9 @@ const BridgeBar = ({ bridge }: IBridgeBarProps) => {
 
   return (
     <>
+    <label htmlFor="selected-bridge" onClick={() => {
+              setRouteToExecute(bridge)
+            }}>
       <div className="mb-2 rounded-md border-[1px] border-gray-700 p-2">
         <div className="mb-2 flex items-center justify-between">
           {/* left */}
@@ -52,16 +55,14 @@ const BridgeBar = ({ bridge }: IBridgeBarProps) => {
           {/* right */}
           <div className="m-3">
             {/* Start */}
-            <label onClick={() => {
-              setRouteToExecute(bridge)
-            }} className="flex items-center">
+            <div  className="flex items-center">
               <input 
              checked={bridge.name == routeToExecute?.name ? true: false}
                 type="radio"
                 name="selected-bridge"
                 className="form-radio border border-wagpayPurple bg-transparent text-indigo-500"
               />
-            </label>
+            </div>
             {/* End */}
           </div>
         </div>
@@ -119,6 +120,7 @@ const BridgeBar = ({ bridge }: IBridgeBarProps) => {
           </div>
         </div>
       </div>
+      </label>
     </>
   );
 };
