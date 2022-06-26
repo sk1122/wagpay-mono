@@ -21,14 +21,11 @@ contract CelerProvider is IBridge, ReentrancyGuard, Ownable {
 	function transferNative(uint amount, 
         address receiver, 
         uint64 toChainId, 
-        bytes memory extraData
+        bytes memory //extraData
 		) external payable nonReentrant {
 			require(msg.value == amount, "Wagpay: Please send amount greater than 0");
 			require(msg.value != 0, "WagPay: Please send amount greater than 0");
-			(uint64 nonce, uint32 maxSlippage) = abi.decode(
-            	extraData,
-            	(uint64, uint32)
-        	);
+		
 			celerRouter.sendNative{value: amount}(receiver, amount, toChainId, block.timestamp, 30000);
 
 			emit NativeFundsTransferred(receiver, toChainId, amount);
@@ -40,15 +37,10 @@ contract CelerProvider is IBridge, ReentrancyGuard, Ownable {
         address tokenAddress,
         address receiver,
         uint256 amount,
-        bytes memory extraData
+        bytes memory //extraData
 		) external nonReentrant {
 
 			require(amount > 0, "WagPay: Please send amount greater than 0");
-
-			(uint64 nonce, uint32 maxSlippage) = abi.decode(
-            	extraData,
-            	(uint64, uint32)
-        	);
 
 			IERC20(tokenAddress).safeTransferFrom(msg.sender, address(this), amount);
 			IERC20(tokenAddress).safeIncreaseAllowance(address(celerRouter), amount);

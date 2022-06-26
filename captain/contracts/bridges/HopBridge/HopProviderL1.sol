@@ -9,7 +9,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "./IHop.sol";
 import "../../interface/IBridge.sol";
 
-contract HopProviderL2 is IBridge, Ownable, ReentrancyGuard {
+contract HopProviderL1 is IBridge, Ownable, ReentrancyGuard {
 	using SafeERC20 for IERC20;
 
 	address private constant NATIVE_TOKEN_ADDRESS = address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE);
@@ -22,7 +22,7 @@ contract HopProviderL2 is IBridge, Ownable, ReentrancyGuard {
 			require(msg.value != 0, "WagPay: Please send amount greater than 0");
 			require(msg.value == amount, "WagPay: Please send amount same to msg.value");
 			(address bridgeAddress) = abi.decode(extraData, (address));
-			IHop(bridgeAddress).sendToL2{value: amount}(toChainId, receiver, amount, 0, block.timestamp + 10, 0, 0);
+			IHop(bridgeAddress).sendToL2{value: amount}(toChainId, receiver, amount, 0, block.timestamp + 10, address(0), 0);
 			emit NativeFundsTransferred(receiver, toChainId, amount);
 	}
 
@@ -39,7 +39,7 @@ contract HopProviderL2 is IBridge, Ownable, ReentrancyGuard {
 			IERC20(tokenAddress).safeTransferFrom(msg.sender, address(this), amount);
 			IERC20(tokenAddress).safeIncreaseAllowance(address(bridgeAddress), amount);
 
-			IHop(bridgeAddress).sendToL2(toChainId, receiver, amount, 0, block.timestamp + 10, 0, 0);
+			IHop(bridgeAddress).sendToL2(toChainId, receiver, amount, 0, block.timestamp + 10, address(0), 0);
 
 			emit ERC20FundsTransferred(receiver, toChainId, amount, tokenAddress);
 	}
