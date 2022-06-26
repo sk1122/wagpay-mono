@@ -146,7 +146,7 @@ const SwapCard = ({ signerData }: Props) => {
               setIsDropDownOpenCoin={setIsDropDownOpenFromCoin}
             />
           </div>
-          <span className="text-sm text-primaryGray">~ 95 USD</span>
+          <span className="text-sm text-primaryGray"></span>
           {/* svg */}
           {/* <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -199,7 +199,7 @@ const SwapCard = ({ signerData }: Props) => {
               setIsDropDownOpenCoin={setIsDropDownOpenToCoin}
             />
           </div>
-          <span className="text-sm text-primaryGray">~ 95 USD</span>
+          <span className="text-sm text-primaryGray"></span>
         </div>
 
         <div className="flex w-full flex-col space-y-2 rounded-md p-2 dark:bg-secondaryDark">
@@ -247,7 +247,7 @@ const SwapCard = ({ signerData }: Props) => {
         </div>
         <div>
          {/* connect wallet button */}
-        {isAuthenticated && (
+        {signerData && (
           <>
             {swapping && (
               <button
@@ -280,12 +280,6 @@ const SwapCard = ({ signerData }: Props) => {
               </button>
             )}
             {!swapping && (
-              routes ?  <button
-              type="button"
-              className={` ${styles} col-span-7 mt-5 w-full rounded-full border border-transparent bg-white py-2 px-4 text-base font-medium text-wagpay-dark hover:bg-indigo-501 `}
-            >
-              Swap
-            </button> : 
               <button
                 onClick={swap}
                 type="button"

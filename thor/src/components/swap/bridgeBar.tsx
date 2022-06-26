@@ -5,9 +5,10 @@ import { useAppContext } from '@/context';
 
 interface IBridgeBarProps {
   bridge: Routes;
+  priority: string
 }
 
-const BridgeBar = ({ bridge }: IBridgeBarProps) => {
+const BridgeBar = ({ bridge, priority }: IBridgeBarProps) => {
 
   const {routeToExecute, setRouteToExecute} = useAppContext()
   const chainObj: any = {
@@ -48,9 +49,12 @@ const BridgeBar = ({ bridge }: IBridgeBarProps) => {
             </svg>
 
             <h2 className="text-xl font-semibold">{bridge?.name}</h2>
-            <span className="h-fit rounded-full bg-green-800 px-2 text-center text-xs font-light text-white">
-              lowest fee
+            {
+              priority !== '' &&  <span className="h-fit rounded-full bg-green-800 px-2 text-center text-xs font-light text-white">
+              {priority}
             </span>
+            }
+            
           </div>
           {/* right */}
           <div className="m-3">

@@ -217,12 +217,12 @@ const Swap = () => {
    
   }, [fromChain, toChain, fromCoin, toCoin, refreshRoutes]);
 
-  var t: any;
+
   useEffect(() => {
-    clearInterval(t)
-    t = setTimeout(() => {
+    const timout = setTimeout(() => {
       FetcAvalabaleRoutes()
-    }, 1000);
+    }, 1000)
+    return () => clearTimeout(timout)
   }, [amount])
 
 
@@ -267,7 +267,7 @@ const Swap = () => {
       <Navbar2 />
 
       <div
-        className="mt-4 grid w-full grid-cols-9 content-start gap-y-10 pb-6 md:pb-0 lg:mt-12 lg:gap-y-0 lg:gap-x-3"
+        className="mt-4  grid w-full grid-cols-9 content-start gap-y-10 pb-6 md:pb-0 lg:mt-12 lg:gap-y-0 lg:gap-x-3"
         onClick={() => {
           setIsDropDownOpenToCoin(false);
           setIsDropDownOpenFromCoin(false)
@@ -280,7 +280,7 @@ const Swap = () => {
             {/* single option */}
 
             {
-              toggle ? routeToExecute ? <BridgeBar bridge={routeToExecute} /> : null : <div>
+              toggle ? routeToExecute ? <BridgeBar priority={priorityValue} bridge={routeToExecute} /> : null : <div>
               {routes ? (
                 routes.slice().sort((x: any, y: any) => {
                   console.log(priorties[0], priorties[1], priorties[2])
@@ -293,9 +293,9 @@ const Swap = () => {
                   } else {
                     return -1
                   }
-                }).map((value: Routes) => {
+                }).map((value: Routes, idx: number) => {
                   return (
-                      <BridgeBar bridge={value}  />
+                      <BridgeBar priority={idx== 0 ? priorityValue: ''} bridge={value}  />
                   ) 
                 })
               ) : (

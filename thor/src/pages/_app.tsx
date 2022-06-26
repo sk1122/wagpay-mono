@@ -10,7 +10,7 @@ import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 function MyApp({ Component, pageProps }: AppProps) {
   const wagpay = new WagPay()
   const queryClient = new QueryClient();
-  const priorties = ['returns (high to low)', 'gas fees (low to high)', 'time (low to high)'];
+  const priorties = ['Highest returns', 'Lowest bridge fees', 'Lowest time'];
   const [access, setAccess] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDropDownOpenp, setIsDropDownOpenp] = useState(false);
