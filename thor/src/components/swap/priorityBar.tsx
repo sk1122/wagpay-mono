@@ -4,7 +4,7 @@ import { useAppContext } from '@/context';
 
 
 const PriorityBar = () => {
-  const {isDropDownOpenp, setIsDropDownOpenp, priorties, priorityValue, setPriorityValue} = useAppContext()
+  const {isDropDownOpenp, setIsDropDownOpenp, priorties, priorityValue, setPriorityValue, refreshRoutes, setRefreshRoutes} = useAppContext()
 
   return (
     <>
@@ -13,6 +13,9 @@ const PriorityBar = () => {
           <span>Select bridges to swap</span>
           <button
             type="button"
+            onClick={() => {
+              setRefreshRoutes(true)
+            }}
             className="flex items-center justify-center space-x-2 text-xs text-primaryGray decoration-wavy hover:underline hover:underline-offset-2"
           >
             <span>Refresh routes</span>

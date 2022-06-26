@@ -28,6 +28,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [routes, setRoutes] = useState<Routes[]>();
   const [isDropDownOpenFromCoin, setIsDropDownOpenFromCoin] = useState(false);
   const [isDropDownOpenToCoin, setIsDropDownOpenToCoin] = useState(false);
+  const [refreshRoutes, setRefreshRoutes] = useState()
   // @ts-ignore
   // const { data: signerData, isError, isLoading } = useSigner();
 
@@ -60,7 +61,8 @@ function MyApp({ Component, pageProps }: AppProps) {
     isDropDownOpenFromCoin,
     setIsDropDownOpenFromCoin,
     isDropDownOpenToCoin,
-    setIsDropDownOpenToCoin
+    setIsDropDownOpenToCoin,
+    refreshRoutes, setRefreshRoutes
   }
 
   return (

@@ -11,6 +11,7 @@ interface Props {
 }
 
 const SwapCard = ({ signerData }: Props) => {
+ 
   const wagpay = new WagPay();
   const {
     toChain,
@@ -42,7 +43,7 @@ const SwapCard = ({ signerData }: Props) => {
 
 
   } = useAppContext();
-
+  const styles = routeToExecute ? ' ' : ' cursor-not-allowed'
   const setAmountToSwap = (e: any) => {
     e.preventDefault();
     setAmount(e.target.value);
@@ -121,6 +122,7 @@ const SwapCard = ({ signerData }: Props) => {
                 supportedChains={filteredFromChains}
               />
             </div>
+            <SwapChainButton />
             <div className="w-1/2">
               <ChainSelect
                 label="Destination chain"
@@ -165,7 +167,7 @@ const SwapCard = ({ signerData }: Props) => {
           </div>
           <span className="text-sm text-primaryGray">~ 95 USD</span>
           {/* svg */}
-          <svg
+          {/* <svg
             xmlns="http://www.w3.org/2000/svg"
             xmlnsXlink="http://www.w3.org/1999/xlink"
             aria-hidden="true"
@@ -180,7 +182,7 @@ const SwapCard = ({ signerData }: Props) => {
               fill="#888888"
               d="m18 4l-4 4h3v8a2 2 0 0 1-2 2a2 2 0 0 1-2-2V8a4 4 0 0 0-4-4a4 4 0 0 0-4 4v8H2l4 4l4-4H7V8a2 2 0 0 1 2-2a2 2 0 0 1 2 2v8a4 4 0 0 0 4 4a4 4 0 0 0 4-4V8h3l-4-4Z"
             ></path>
-          </svg>
+          </svg> */}
           {/* receive section */}
           <label
             htmlFor="sender"
@@ -264,15 +266,6 @@ const SwapCard = ({ signerData }: Props) => {
         </div>
         <div>
          {/* connect wallet button */}
-         {!isAuthenticated && (
-          <button
-            onClick={() => login()}
-            type="button"
-            className="col-span-7 mt-5 w-full rounded-full border border-transparent bg-white py-2 px-4 text-base font-medium text-wagpay-dark hover:bg-indigo-50"
-          >
-            Connect Wallet
-          </button>
-        )}
         {isAuthenticated && (
           <>
             {swapping && (
@@ -306,10 +299,16 @@ const SwapCard = ({ signerData }: Props) => {
               </button>
             )}
             {!swapping && (
+              routes ?  <button
+              type="button"
+              className={` ${styles} col-span-7 mt-5 w-full rounded-full border border-transparent bg-white py-2 px-4 text-base font-medium text-wagpay-dark hover:bg-indigo-501 `}
+            >
+              Swap
+            </button> : 
               <button
                 onClick={swap}
                 type="button"
-                className="col-span-7 mt-5 w-full rounded-full border border-transparent bg-white py-2 px-4 text-base font-medium text-wagpay-dark hover:bg-indigo-50"
+                className={` ${styles} col-span-7 mt-5 w-full rounded-full border border-transparent bg-white py-2 px-4 text-base font-medium text-wagpay-dark hover:bg-indigo-501 `}
               >
                 Swap
               </button>

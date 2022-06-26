@@ -15,13 +15,7 @@ const BridgeBar = ({ bridge }: IBridgeBarProps) => {
     137: "Polygon"
   }
 
-  const coinObj : any = {
-    'Ethereum' : 'ETh', 
-    'Tether USD': "USDT", 
-    'Wrapped Ethereum' : 'wETH',
-    'USD coin': 'USDC', 
-    'Wrapped Matic': 'WMATIC' 
-  }
+
 
   useEffect(( ) => {
       console.log("this is the bridge is selected ", routeToExecute)
@@ -79,7 +73,7 @@ const BridgeBar = ({ bridge }: IBridgeBarProps) => {
                 {ethers.utils.formatUnits(
                   bridge.route.amount.toString(),
                   bridge.route.fromToken.decimals
-                )} {coinObj[ bridge.route.fromToken.name]}
+                )} {[ bridge.route.fromToken.symbol]}
               </span>
             </div>
             <span className="block text-xs text-primaryGray md:ml-9 md:text-sm">
@@ -105,7 +99,7 @@ const BridgeBar = ({ bridge }: IBridgeBarProps) => {
             <div className="flex justify-end space-x-2">
               <img src="/images/usdc.png" alt="usdc" className="h-6 w-6" />
               <span className="text-base md:text-lg md:font-semibold">
-                {Number(bridge.amountToGet).toFixed(2)} {coinObj[bridge.route.toToken.name]}
+                {Number(bridge.amountToGet).toFixed(2)} {bridge.route.toToken.symbol}
               </span>
             </div>
             <span className="block text-xs text-primaryGray md:ml-9 md:text-sm">

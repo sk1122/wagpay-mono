@@ -56,7 +56,8 @@ const Swap = () => {
     setIsDropDownOpenFromCoin,
     setIsDropDownOpenToCoin,
     priorityValue, setPriorityValue,
-    priorties
+    priorties,
+    refreshRoutes, setRefreshRoutes
   } = useAppContext();
 
 
@@ -208,11 +209,13 @@ const Swap = () => {
 
   useEffect(() => {
     if (routes) setRouteToExecute(routes[0]);
+    console.log(routes)
   }, [routes]);
 
   useEffect(() => {
     FetcAvalabaleRoutes();
-  }, [fromChain, toChain, fromCoin, toCoin]);
+   
+  }, [fromChain, toChain, fromCoin, toCoin, refreshRoutes]);
 
   var t: any;
   useEffect(() => {
