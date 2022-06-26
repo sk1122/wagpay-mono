@@ -11,8 +11,17 @@
 	src: url('/fonts/PlusJakartaSans-Bold.woff2')
 }
 
+@font-face {
+	font-family: 'JakartaSmall';
+	src: url('/fonts/PlusJakartaSans-Medium.woff2')
+}
+
 body {
   font-family: 'Jakarta', sans-serif;
+}
+
+.font-jakarta-small {
+  font-family: 'JakartaSmall', sans-serif;
 }
 
 @layer utilities {
