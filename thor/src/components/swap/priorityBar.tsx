@@ -4,55 +4,64 @@ import { useAppContext } from '@/context';
 
 
 const PriorityBar = () => {
-  const {isDropDownOpenp, setIsDropDownOpenp, priorties, priorityValue, setPRiorityValue} = useAppContext()
+  const {isDropDownOpenp, setIsDropDownOpenp, priorties, priorityValue, setPriorityValue} = useAppContext()
 
   return (
     <>
-    <div className="mb-12 flex w-full items-center justify-between  p-4 ">
-            <div className="flex">
-              <p className='text-lg mx-3'>Select btidge to swap </p>
-              <p className='flex text-[12px] text-white text-opacity-70'>refresh routes  <FiRefreshCw className="text-sm" /></p>
-              
-            </div>
-            <div className=" bg-wagpay-card-bg-secondary px-4 py-2">
-              <button
-                className=" group relative flex w-full items-center justify-center text-white shadow focus:outline-none"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsDropDownOpenp(!isDropDownOpenp);
-                }}
+     <div className="mb-4 flex w-full items-center justify-between">
+        <div className="flex items-center space-x-2">
+          <span>Select bridges to swap</span>
+          <button
+            type="button"
+            className="flex items-center justify-center space-x-2 text-xs text-primaryGray decoration-wavy hover:underline hover:underline-offset-2"
+          >
+            <span>Refresh routes</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              xmlnsXlink="http://www.w3.org/1999/xlink"
+              aria-hidden="true"
+              role="img"
+              width="16"
+              height="16"
+              preserveAspectRatio="xMidYMid meet"
+              viewBox="0 0 21 21"
+            >
+              <g
+                fill="none"
+                fillRule="evenodd"
+                stroke="#888888"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               >
-                <div className=" flex w-full items-center justify-center">
-                  {priorityValue ? (
-                    <p className="" data-value={priorityValue}>
-                      {priorityValue}
-                    </p>
-                  ) : null}
-                  <MdArrowDropDown className="text-2xl font-bold" />
-                </div>
-                {isDropDownOpenp ? (
-                  <div className="w-max absolute top-full z-50 mt-4  min-w-full rounded bg-wagpay-card-bg-secondary">
-                    <ul className="rounded  text-left">
-                      {priorties.map((item:any) => {
-                        return (
-                          <li
-                            // @ts-ignore
-                            onClick={(e) => {
-                              setPRiorityValue(item);
-                            }}
-                            className="px-4  py-1  "
-                            key={item}
-                          >
-                            <span className="">{item}</span>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </div>
-                ) : null}
-              </button>
-            </div>
-          </div>
+                <path d="M3.5 6.5c1.378-2.412 4.024-4 7-4a8 8 0 0 1 8 8m-1 4c-1.408 2.287-4.118 4-7 4a8 8 0 0 1-8-8"></path>
+                <path d="M8.5 6.5h-5v-5m9 13h5v5"></path>
+              </g>
+            </svg>
+          </button>
+        </div>
+        <select
+        onChange={(e) => setPriorityValue(e.target.value)}
+          name="filter"
+          id="filter"
+          className="form-select rounded-md border-none bg-secondaryDark outline-none dark:text-white"
+        >
+
+          {
+            priorties.map((priority: any) => {
+              return <option
+              selected={priority === priority[0]}
+              value={priority}
+              className="rounded-b-md border-none bg-secondaryDark outline-none dark:text-white"
+          
+            >
+             {priority}
+            </option>
+            })
+          }
+          
+          
+        </select>
+      </div>
     </>
   )
 }

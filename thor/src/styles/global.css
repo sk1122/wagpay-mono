@@ -37,9 +37,6 @@ input[type=number] {
     -moz-appearance:textfield;
 }
 
-.form-radio {
-  @apply text-[#FC575E] bg-wagpay-dark focus:text-[#FC575E] border border-[#FC575E];
-}
 
 .form-radio:focus {
   box-shadow: none !important;

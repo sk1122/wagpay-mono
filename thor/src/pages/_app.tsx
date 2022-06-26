@@ -6,16 +6,15 @@ import { Toaster } from 'react-hot-toast';
 import { useState } from 'react';;
 import WagPay from '@wagpay/sdk';
 import type { Chain, CoinKey, Routes } from '@wagpay/types';
-import { chain, useSigner } from 'wagmi';
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 function MyApp({ Component, pageProps }: AppProps) {
   const wagpay = new WagPay()
   const queryClient = new QueryClient();
   const priorties = ['returns (high to low)', 'gas fees (low to high)', 'time (low to high)'];
-  const [access, setAccess] = useState(false);
+  const [access, setAccess] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDropDownOpenp, setIsDropDownOpenp] = useState(false);
-  const [priorityValue, setPRiorityValue] = useState(priorties[0]);
+  const [priorityValue, setPriorityValue] = useState(priorties[0]);
   const [fromChain, setFromChain] = useState<Chain>(wagpay.getSupportedChains()[0]);
   const [toChain, setToChain] = useState<Chain>(wagpay.getSupportedChains()[1]);
   const [toggle, setToggle] = useState(false);
@@ -40,7 +39,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     access, setAccess,
     isModalOpen, setIsModalOpen,
     isDropDownOpenp, setIsDropDownOpenp,
-    priorityValue, setPRiorityValue,
+    priorityValue, setPriorityValue,
     priorties,
     fromChain, setFromChain,
     toChain, setToChain,
@@ -65,17 +64,17 @@ function MyApp({ Component, pageProps }: AppProps) {
   }
 
   return (
-    <div className="min-h-screen bg-wagpay-dark text-white">
-       <QueryClientProvider client={queryClient}>
- <AppContext.Provider value={sharedState}>
-        <ConnectWalletProvider>
-          <Toaster></Toaster>
-          <Component {...pageProps} />
-        </ConnectWalletProvider>
-      </AppContext.Provider>
+    <div className="min-h-screen bg-wagpay-dark  text-white">
+      <QueryClientProvider client={queryClient}>
+        <AppContext.Provider value={sharedState}>
+          <ConnectWalletProvider>
+            <Toaster></Toaster>
+            <Component {...pageProps} />
+          </ConnectWalletProvider>
+        </AppContext.Provider>
 
-       </QueryClientProvider>
-     
+      </QueryClientProvider>
+
     </div>
   )
 }
