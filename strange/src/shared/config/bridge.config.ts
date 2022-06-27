@@ -223,9 +223,15 @@ export const bridges: Bridge[] = [
 			}
 
 			const fromTokenAddress = tokens[fromChain as number][fromToken]
+			let allowed, allowedData
 
-			const allowed = await fetch(`https://across.to/api/limits?token=${fromTokenAddress.address}&destinationChainId=${toChain}`)
-			const allowedData = await allowed.json()
+			try {
+				allowed = await fetch(`https://across.to/api/limits?token=${fromTokenAddress.address}&destinationChainId=${toChain}`)
+				allowedData = await allowed.json()
+				console.log(allowedData, "dsa")
+			} catch(e) {
+				console.log(e)
+			}
 
 			if(!(Number(allowedData.minDeposit) <= Number(amount) && Number(amount) <= Number(allowedData.maxDeposit))) {
 				return fees
