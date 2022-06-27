@@ -52,7 +52,7 @@ const CoinSelect = ({ supportedCoins, value, setValue, isDropDownOpenCoin, setIs
             {supportedCoins.map((coin: Token) => (
               <div
                 key={coin.chainAgnositcId}
-                className="flex h-11 w-full cursor-pointer select-none flex-row justify-between bg-wagpay-card-bg-secondary mt-2 py-2.5 pl-3 pr-2 text-white hover:bg-gray-900"
+                className="flex h-11 w-full cursor-pointer select-none flex-row justify-between bg-wagpay-card-bg-secondary mt-2 py-2.5 pl-3 pr-2 text-white hover:bg-tertiaryGray"
                 onClick={(e) => {
                   e.stopPropagation()
                   selectedCoin(coin)}}
