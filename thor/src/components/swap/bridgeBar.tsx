@@ -85,7 +85,15 @@ const BridgeBar = ({ bridge, priority }: IBridgeBarProps) => {
               {chainObj[bridge.route.fromChain]}
             </span>
           </div>
-          <div className="col-span-5 flex w-full items-center justify-center">
+          {bridge && bridge.uniswapData && bridge.uniswapData.dex && (
+            <div className="col-span-2 flex items-center ">
+                <span className='w-full '>
+                  Uniswap {Number(bridge.uniswapData.amountToGet).toFixed(2)} on{' '}
+                  {bridge.uniswapData.toToken.symbol}
+                </span>
+            </div>
+          )}
+          <div className="col-span-2 flex w-full items-center justify-center">
             <svg
               width=""
               height="10"
