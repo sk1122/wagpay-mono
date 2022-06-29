@@ -6,12 +6,17 @@ interface ISelectProps {
   value: string;
   setValue: Function;
   supportedCoins: Token[];
-  isDropDownOpenCoin: boolean
-  setIsDropDownOpenCoin: Function
+  isDropDownOpenCoin: boolean;
+  setIsDropDownOpenCoin: Function;
 }
 
-const CoinSelect = ({ supportedCoins, value, setValue, isDropDownOpenCoin, setIsDropDownOpenCoin }: ISelectProps) => {
-
+const CoinSelect = ({
+  supportedCoins,
+  value,
+  setValue,
+  isDropDownOpenCoin,
+  setIsDropDownOpenCoin,
+}: ISelectProps) => {
   const selectedCoin = (coin: Token) => {
     setValue(coin.chainAgnositcId);
     setIsDropDownOpenCoin(!isDropDownOpenCoin);
@@ -23,8 +28,9 @@ const CoinSelect = ({ supportedCoins, value, setValue, isDropDownOpenCoin, setIs
         <div
           className="flex flex-row overflow-hidden rounded-r-md"
           onClick={(e) => {
-            e.stopPropagation()
-            setIsDropDownOpenCoin(!isDropDownOpenCoin)}}
+            e.stopPropagation();
+            setIsDropDownOpenCoin(!isDropDownOpenCoin);
+          }}
         >
           <div className="flex h-12 w-full cursor-pointer select-none flex-row justify-between bg-wagpay-card-bg-secondary px-1 text-white">
             <div className="flex flex-row items-center">
@@ -54,8 +60,9 @@ const CoinSelect = ({ supportedCoins, value, setValue, isDropDownOpenCoin, setIs
                 key={coin.chainAgnositcId}
                 className="flex h-11 w-full cursor-pointer select-none flex-row justify-between bg-wagpay-card-bg-secondary mt-2 py-2.5 pl-3 pr-2 text-white hover:bg-tertiaryGray"
                 onClick={(e) => {
-                  e.stopPropagation()
-                  selectedCoin(coin)}}
+                  e.stopPropagation();
+                  selectedCoin(coin);
+                }}
               >
                 <div className="flex flex-row items-center">
                   <img
@@ -63,7 +70,7 @@ const CoinSelect = ({ supportedCoins, value, setValue, isDropDownOpenCoin, setIs
                     src="https://movricons.s3.ap-south-1.amazonaws.com/Ether.svg"
                     alt="chain_icon"
                   />
-                  <span className="leading-6">{coin.name}</span>
+                  <span className="leading-6">{coin.symbol}</span>
                 </div>
               </div>
             ))}

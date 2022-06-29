@@ -24,7 +24,7 @@ import { useAppContext } from '@/context';
 import PriorityBar from '@/components/swap/priorityBar';
 import SwapCard from '@/components/swap/swapCard';
 import { useSigner } from 'wagmi';
-
+import { useChainContext } from '@/contexts/ChainContext';
 
 const Swap = () => {
   const wagpay = new WagPay();
@@ -35,19 +35,12 @@ const Swap = () => {
     isModalOpen,
     setIsModalOpen,
     setIsDropDownOpenp,
-    toChain,
-    fromChain,
     setAccount,
     setIsAuthenticated,
-    fromCoin,
-    toCoin,
     swapping,
     setSwapping,
     routeToExecute,
     setRouteToExecute,
-    toggle,
-    amount,
-    setAmount,
     routes,
     setRoutes,
     setFilteredFromChains,
@@ -55,17 +48,33 @@ const Swap = () => {
     setSigner,
     setIsDropDownOpenFromCoin,
     setIsDropDownOpenToCoin,
-    priorityValue, setPriorityValue,
+    priorityValue,
+    setPriorityValue,
     priorties,
-    refreshRoutes, setRefreshRoutes
+    refreshRoutes,
+    setRefreshRoutes,
   } = useAppContext();
 
+  const {
+    fromChain,
+    toChain,
+    fromCoin,
+    toCoin,
+    amount,
+    toggle,
+    setFromChain,
+    setToChain,
+    setFromCoin,
+    setToCoin,
+    setAmount,
+    setToggle,
+  } = useChainContext();
 
   const { data: signerData, isError, isLoading } = useSigner();
 
   useEffect(() => {
     if (signerData) {
-      signerData.getAddress().then((address:any) => {
+      signerData.getAddress().then((address: any) => {
         setAccount(address);
         db(address)
           .then((find) => {
@@ -87,12 +96,9 @@ const Swap = () => {
     }
   }, [signerData]);
 
-
-
   useEffect(() => {
-    console.log(signerData)
-
-  }, [signerData] )
+    console.log(signerData);
+  }, [signerData]);
 
   const checkWalletIsConnected = async () => {
     try {
@@ -126,9 +132,6 @@ const Swap = () => {
   useEffect(() => {
     checkWalletIsConnected();
   }, []);
-
-
-
 
   const getRoutes = async (
     fromChainId: number,
@@ -168,27 +171,14 @@ const Swap = () => {
   };
 
   const FetcAvalabaleRoutes = () => {
-    console.log(
-      Number(fromChain.id),
-      Number(toChain.id),
-      fromCoin,
-      toCoin,
-      amount,
-      ethers.utils
-        .parseUnits(
-          amount,
-          // @ts-ignore
-          tokens[Number(fromChain.id)][fromCoin.toString()]?.decimals
-        )
-        .toString()
-    );
     if (
       fromChain &&
       Number(fromChain.id) &&
       toChain &&
       fromCoin &&
       toCoin &&
-      amount
+      amount &&
+      amount !== '0'
     ) {
       getRoutes(
         Number(fromChain.id),
@@ -209,51 +199,66 @@ const Swap = () => {
 
   useEffect(() => {
     if (routes) setRouteToExecute(routes[0]);
-    console.log(routes)
+    console.log(routes);
   }, [routes]);
 
   useEffect(() => {
     FetcAvalabaleRoutes();
-   
   }, [fromChain, toChain, fromCoin, toCoin, refreshRoutes]);
-
 
   useEffect(() => {
     const timout = setTimeout(() => {
-      FetcAvalabaleRoutes()
-    }, 1000)
-    return () => clearTimeout(timout)
-  }, [amount])
-
+      FetcAvalabaleRoutes();
+    }, 1000);
+    return () => clearTimeout(timout);
+  }, [amount]);
 
   useEffect(() => {
     const setIntervalRef = setInterval(() => {
-      FetcAvalabaleRoutes()
-    }, 60000)
-    return clearInterval(setIntervalRef)
-  }, [])
+      FetcAvalabaleRoutes();
+    }, 60000);
+    return clearInterval(setIntervalRef);
+  }, []);
 
   useEffect(() => {
     const filteredChains = wagpay.getSupportedChains().filter((chain) => {
       return chain.id != fromChain.id;
     });
-    setFilteredFromChains([...filteredChains]);
-  }, [toChain]);
+    setFilteredFromChains(filteredChains);
+  }, [fromChain]);
 
   useEffect(() => {
     const filteredChains = wagpay.getSupportedChains().filter((chain) => {
       return chain.id != toChain.id;
     });
     setFilteredToChains([...filteredChains]);
-  }, [fromChain]);
-
-
+  }, [toChain]);
 
   useEffect(() => {
-    if(toggle) {
-      setRouteToExecute(routes[0])
+    if (toChain.id === fromChain.id) {
+      const toC = wagpay.getSupportedChains().find((chain) => {
+        return fromChain.id != chain.id;
+      });
+      if (!toC) return;
+      setToChain(toC);
     }
-  }, [toggle])
+  }, [fromChain]);
+
+  useEffect(() => {
+    if (toChain.id === fromChain.id) {
+      const toC = wagpay.getSupportedChains().find((chain) => {
+        return toChain.id != chain.id;
+      });
+      if (!toC) return;
+      setFromChain(toC);
+    }
+  }, [toChain]);
+
+  useEffect(() => {
+    if (toggle) {
+      setRouteToExecute(routes[0]);
+    }
+  }, [toggle]);
 
   return (
     <Main
@@ -270,7 +275,7 @@ const Swap = () => {
         className="mt-4  grid w-full grid-cols-9 content-start gap-y-10 pb-6 md:pb-0 lg:mt-12 lg:gap-y-0 lg:gap-x-3"
         onClick={() => {
           setIsDropDownOpenToCoin(false);
-          setIsDropDownOpenFromCoin(false)
+          setIsDropDownOpenFromCoin(false);
         }}
       >
         <SwapCard signerData={signerData} />
@@ -279,37 +284,55 @@ const Swap = () => {
           <div className="relative flex w-full flex-col justify-center space-y-12 xl:items-start">
             {/* single option */}
 
-            {
-              toggle ? routeToExecute ? <BridgeBar priority={priorityValue} bridge={routeToExecute} /> : null : <div>
-              {routes ? (
-                routes.slice().sort((x: any, y: any) => {
-                  console.log(priorties[0], priorties[1], priorties[2])
-                  if(priorties[0] === priorityValue && Number(x.amountToGet) < Number(y.amountToGet)) {
-                    return 1
-                  } else if(priorties[1] === priorityValue && Number(x.transferFee) > Number(y.transferFee)) {
-                    return 1
-                  } else if(priorties[2] === priorityValue && Number(x.bridgeTime) < Number(y.bridgeTime)) {
-                    return 1
-                  } else {
-                    return -1
-                  }
-                }).map((value: Routes, idx: number) => {
-                  return (
-                      <BridgeBar priority={idx== 0 ? priorityValue: ''} bridge={value}  />
-                  ) 
-                })
-              ) : (
-                <>
-                  {swapping && (
-                    <>
-                      <Loading />
-                    </>
-                  )}
-                </>
-              )}
-  
+            {toggle ? (
+              routeToExecute ? (
+                <BridgeBar priority={priorityValue} bridge={routeToExecute} />
+              ) : null
+            ) : (
+              <div>
+                {routes ? (
+                  routes
+                    .slice()
+                    .sort((x: any, y: any) => {
+                      console.log(priorties[0], priorties[1], priorties[2]);
+                      if (
+                        priorties[0] === priorityValue &&
+                        Number(x.amountToGet) < Number(y.amountToGet)
+                      ) {
+                        return 1;
+                      } else if (
+                        priorties[1] === priorityValue &&
+                        Number(x.transferFee) > Number(y.transferFee)
+                      ) {
+                        return 1;
+                      } else if (
+                        priorties[2] === priorityValue &&
+                        Number(x.bridgeTime) < Number(y.bridgeTime)
+                      ) {
+                        return 1;
+                      } else {
+                        return -1;
+                      }
+                    })
+                    .map((value: Routes, idx: number) => {
+                      return (
+                        <BridgeBar
+                          priority={idx == 0 ? priorityValue : ''}
+                          bridge={value}
+                        />
+                      );
+                    })
+                ) : (
+                  <>
+                    {swapping && (
+                      <>
+                        <Loading />
+                      </>
+                    )}
+                  </>
+                )}
               </div>
-            }
+            )}
           </div>
         </div>
         <Modal isOpen={isModalOpen} setIsOpen={setIsModalOpen}>

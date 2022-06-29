@@ -1,5 +1,6 @@
 import type { Chain } from '@wagpay/types';
 import React, { useState } from 'react';
+import { useNetwork } from 'wagmi';
 
 interface ISelectProps {
   label?: string;
@@ -20,6 +21,8 @@ const ChainSelect = ({
     setValue(chain);
     setIsDropDownOpen(false);
   };
+
+  const { activeChain, chains } = useNetwork();
 
   return (
     <>
@@ -43,7 +46,14 @@ const ChainSelect = ({
                 src={value.logoUri}
                 alt="chain_icon"
               />
-              <span className="leading-6">{value.chainName}</span>
+              <span className="leading-6 flex">
+                {value.chainName}
+                {value.id === activeChain?.id && (
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5">
+                    <circle cx="5" cy="5" r="5" fill="green" />
+                  </svg>
+                )}
+              </span>
             </div>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -71,7 +81,17 @@ const ChainSelect = ({
                     src={chain.logoUri}
                     alt="chain_icon"
                   />
-                  <span className="leading-6">{chain.chain}</span>
+                  <span className="leading-6 flex">
+                    {chain.chain}
+                    {chain.id == activeChain?.id && (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="w-5 h-5"
+                      >
+                        <circle cx="5" cy="5" r="5" fill="green" />
+                      </svg>
+                    )}
+                  </span>
                 </div>
               </div>
             ))}

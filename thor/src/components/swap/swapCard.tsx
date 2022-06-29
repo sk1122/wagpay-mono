@@ -5,54 +5,55 @@ import SwapChainButton from './swapChainButton';
 import WagPay from '@wagpay/sdk';
 import toast from 'react-hot-toast';
 import { useEffect, useState } from 'react';
-
+import { useChainContext } from '@/contexts/ChainContext';
 
 interface Props {
   signerData: any;
 }
 
 const SwapCard = ({ signerData }: Props) => {
- 
   const wagpay = new WagPay();
   const {
-    toChain,
-    setToChain,
-    setFromChain,
-    fromChain,
     access,
     routeToExecute,
-    fromCoin,
-    toCoin,
-    setFromCoin,
-    setToCoin,
     isAuthenticated,
-    toggle,
-    setToggle,
     swapping,
     setSwapping,
-    amount,
     routes,
     filteredFromChains,
     filteredToChains,
-    setAmount,
     setAccount,
     setIsAuthenticated,
     isDropDownOpenFromCoin,
     setIsDropDownOpenFromCoin,
     isDropDownOpenToCoin,
     setIsDropDownOpenToCoin,
-
-
   } = useAppContext();
-  const styles = routeToExecute ? ' ' : ' cursor-not-allowed'
+
+  const {
+    fromChain,
+    toChain,
+    fromCoin,
+    toCoin,
+    amount,
+    toggle,
+    setFromChain,
+    setToChain,
+    setFromCoin,
+    setToCoin,
+    setAmount,
+    setToggle,
+  } = useChainContext();
+
+  const styles = routeToExecute ? ' ' : ' cursor-not-allowed';
   const setAmountToSwap = (e: any) => {
     e.preventDefault();
     setAmount(e.target.value);
   };
 
- useEffect(() => {
-  console.log(isAuthenticated)
- }, [])
+  useEffect(() => {
+    console.log(isAuthenticated);
+  }, []);
 
   const swap = async () => {
     console.log(signerData);
@@ -63,9 +64,9 @@ const SwapCard = ({ signerData }: Props) => {
     }
 
     setSwapping(true);
-    console.log(routeToExecute, routes, routes[0], signerData)
+    console.log(routeToExecute, routes, routes[0], signerData);
     if (routeToExecute && routes && routes[0] && signerData) {
-      console.log("swapping")
+      console.log('swapping');
       const id = toast.loading('Swapping...');
       try {
         console.log(signerData);
@@ -176,7 +177,6 @@ const SwapCard = ({ signerData }: Props) => {
               <input
                 type="number"
                 placeholder="0.00"
-
                 value={
                   routeToExecute
                     ? Number(routeToExecute.amountToGet).toFixed(2)
@@ -209,7 +209,9 @@ const SwapCard = ({ signerData }: Props) => {
           </div>
           <div className="flex w-full items-center justify-between">
             <span>Bridge Fees</span>
-            <span className="text-sm font-light">{routeToExecute?.transferFee}</span>
+            <span className="text-sm font-light">
+              {routeToExecute?.transferFee}
+            </span>
           </div>
           <div className="flex w-full items-center justify-between">
             <span>Gas Fees</span>
@@ -246,50 +248,50 @@ const SwapCard = ({ signerData }: Props) => {
           </div>
         </div>
         <div>
-         {/* connect wallet button */}
-        {signerData && (
-          <>
-            {swapping && (
-              <button
-                onClick={() => swap()}
-                type="button"
-                className="flex justify-center items-center col-span-7 mt-5 w-full rounded-full border border-transparent bg-white py-2 px-4 text-base font-medium text-wagpay-dark hover:bg-indigo-50"
-              >
-                <div className="bg-white text-sm cursor-pointer text-black px-3 py-3 rounded-md font-semibold w-40 flex justify-center items-center">
-                  <svg
-                    className="animate-spin h-5 w-5 text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="#000"
-                      stroke-width="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="#000"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
-                </div>
-              </button>
-            )}
-            {!swapping && (
-              <button
-                onClick={swap}
-                type="button"
-                className={` ${styles} col-span-7 mt-5 w-full rounded-full border border-transparent bg-white py-2 px-4 text-base font-medium text-wagpay-dark hover:bg-indigo-501 `}
-              >
-                Swap
-              </button>
-            )}
-          </>
-        )}
+          {/* connect wallet button */}
+          {signerData && (
+            <>
+              {swapping && (
+                <button
+                  onClick={() => swap()}
+                  type="button"
+                  className="flex justify-center items-center col-span-7 mt-5 w-full rounded-full border border-transparent bg-white py-2 px-4 text-base font-medium text-wagpay-dark hover:bg-indigo-50"
+                >
+                  <div className="bg-white text-sm cursor-pointer text-black px-3 py-3 rounded-md font-semibold w-40 flex justify-center items-center">
+                    <svg
+                      className="animate-spin h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="#000"
+                        stroke-width="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="#000"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                  </div>
+                </button>
+              )}
+              {!swapping && (
+                <button
+                  onClick={swap}
+                  type="button"
+                  className={` ${styles} col-span-7 mt-5 w-full rounded-full border border-transparent bg-white py-2 px-4 text-base font-medium text-wagpay-dark hover:bg-indigo-501 `}
+                >
+                  Swap
+                </button>
+              )}
+            </>
+          )}
         </div>
       </section>
     </>

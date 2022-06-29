@@ -1,8 +1,9 @@
-import { useAppContext } from "@/context";
-import {TbArrowsLeftRight} from "react-icons/tb"
+import { useAppContext } from '@/context';
+import { useChainContext } from '@/contexts/ChainContext';
+import { TbArrowsLeftRight } from 'react-icons/tb';
 
 const SwapChainButton = () => {
-  const { setFromChain, toChain, setToChain, fromChain } = useAppContext()
+  const { setFromChain, toChain, setToChain, fromChain } = useChainContext();
 
   return (
     <>
@@ -16,7 +17,7 @@ const SwapChainButton = () => {
         <TbArrowsLeftRight />
       </div>
     </>
-  )
-}
+  );
+};
 
 export default SwapChainButton;
