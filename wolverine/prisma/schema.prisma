@@ -43,3 +43,8 @@ model Transaction {
   origin_time    DateTime  @default(now())
   dest_time      DateTime?
 }
+
+model Block {
+  id           Int    @id @default(autoincrement())
+  block_number String @default("1")
+}

@@ -27,6 +27,8 @@ export const typeDefs = gql`
 		id: ID!
 		from: String!
 		to: String!
+		from_chain: String!
+		to_chain: String!
 		origin_tx_hash: String!
 		dest_tx_hash: String
 		bridge: Bridge!

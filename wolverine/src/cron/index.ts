@@ -1,63 +1,54 @@
 import { TxStatus } from "@prisma/client"
 import { prisma } from "../prisma"
+import { ethers } from "ethers"
+import { config } from 'dotenv'
+config()
 
-const get_pending_transactions = () => {
-	return prisma.transaction.findMany({
-		where: {
-			status: "PENDING"
-		}
-	})
-}
+/*
+1. Check Transactions of every Block
+2. Check if `to` of that tx exists in database for any pending tx 
+3. Decode Tx Data and compare depositHash
+4. If it exists, compare the tokens, compare the value
+*/
 
-const tx_update = (id: number, status: TxStatus) => {
-	return prisma.transaction.update({
+const provider = new ethers.providers.JsonRpcProvider(process.env.POL_RPC_URL)
+
+const find_tx_by_to = (to: string) => {
+	return prisma.transaction.findFirst({
 		where: {
-			id: id
+			to: to
 		},
-		data: {
-			status: status
+		orderBy: {
+			origin_time: 'desc'
 		}
 	})
 }
 
-const check_eth_tx = async (transaction_hash: string): Promise<boolean> => {
-	return true
-}
-
-const check_pol_tx = async (transaction_hash: string): Promise<boolean> => {
-	return true
-}
-
-const check_avax_tx = async (transaction_hash: string): Promise<boolean> => {
-	return true
-}
-
-const check_bsc_tx = async (transaction_hash: string): Promise<boolean> => {
-	return true
-}
-
-const cron_job_to_check_hashes = async () => {
-	const functions = {
-		'ETH': check_eth_tx,
-		'POL': check_pol_tx,
-		'AVAX': check_avax_tx,
-		'BSC': check_bsc_tx
+const getLatestBlock = async (block_number?: number) => {
+	if(!block_number) {
+		const prev_block_number = await prisma.block.findFirst()
+		if(prev_block_number?.block_number) {
+			block_number = Number(prev_block_number.block_number) + 1
+		} else {
+			block_number = 0
+		}
 	}
 	
-	const pending_transactions = await get_pending_transactions()
+	const newBlock = await provider.getBlockWithTransactions(block_number)
+	const txs = newBlock.transactions
 
-	for(let i = 0; i < pending_transactions.length; i++) {
-		const tx = pending_transactions[i]
-		const f = functions[tx.from_chain]
+	txs.map(async (tx) => {
+		const db_tx = await find_tx_by_to(tx.to as string)
+		console.log(tx.hash, tx.value.toString(), "Hash and Value")
+		
+		if(!db_tx) return
 
-		const tx_finality = await f(tx.origin_tx_hash)
+		if(db_tx.)
 
-		if(tx_finality) {
-			await tx_update(tx.id, TxStatus.COMPLETED)
-		} else {
-			await tx_update(tx.id, TxStatus.FAILED)
-		}
-	}
+		// if(!tx.data.indexOf('0xabcffc26')) {
+			
+		// }
+	})
 }
 
-cron_job_to_check_hashes()
+getLatestBlock(30094266)
