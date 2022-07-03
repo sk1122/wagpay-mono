@@ -12,13 +12,20 @@ contract HyphenProvider is ReentrancyGuard, IBridge, Ownable{
 	using SafeERC20 for IERC20;
 	address private constant NATIVE_TOKEN_ADDRESS = address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE);
 	
-	// Hyphen Liquidty Pool Address
 	ILiquidityPool public hyphenLiquidityPool;
 
+	// @notice Liquidty Pool Address required
 	constructor(address _hyphen) {
 		hyphenLiquidityPool = ILiquidityPool(_hyphen);
 	}
 
+	/**
+	// @notice function responsible to bridge Native tokens
+	// @param toChainId Id of destination chain
+	// @param receiver Address of receiver
+	// @param amount Amount to be bridged
+	// param extraData extra data if needed
+	 */
     function transferNative(uint amount, 
         address receiver, 
         uint64 toChainId, 
@@ -31,6 +38,14 @@ contract HyphenProvider is ReentrancyGuard, IBridge, Ownable{
 			emit NativeFundsTransferred(receiver, toChainId, amount);
 	}
 
+	/**
+	// @notice function responsible to bridge ERC20 tokens
+	// @param toChainId Id of destination chain
+	// @param tokenAddress Address of token to be bridged
+	// @param receiver Address of receiver
+	// @param amount Amount to be bridged
+	// param extraData extra data if needed
+	 */
 	function transferERC20(
 		uint64 toChainId,
         address tokenAddress,
@@ -49,16 +64,25 @@ contract HyphenProvider is ReentrancyGuard, IBridge, Ownable{
 			emit ERC20FundsTransferred(receiver, toChainId, amount, tokenAddress);
 	}
 
+	/**
+	// @notice function responsible to change pool address
+	// @param  newPool address of new pool
+	 */
 	function changePool(address newPool) external onlyOwner {
 		hyphenLiquidityPool = ILiquidityPool(newPool);
 	}
 
-	function rescueFunds(address tokenAddr, uint amount) external onlyOwner {
+	/**
+	// @notice function responsible to rescue funds if any
+	// @param  tokenAddr address of token
+	 */
+	function rescueFunds(address tokenAddr) external onlyOwner nonReentrant {
         if (tokenAddr == NATIVE_TOKEN_ADDRESS) {
             uint balance = address(this).balance;
             payable(msg.sender).transfer(balance);
         } else {
-            IERC20(tokenAddr).transferFrom(address(this), msg.sender, amount);
+            uint balance = IERC20(tokenAddr).balanceOf(address(this));
+            IERC20(tokenAddr).transferFrom(address(this), msg.sender, balance);
         }
     }
 }

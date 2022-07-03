@@ -4,5 +4,8 @@
   "main": "index.js",
   "repository": "git@github.com:sk1122/wagpay-mono.git",
   "author": "Satyam Kulkarni <punekar.satyam@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.7.0"
+  }
 }
