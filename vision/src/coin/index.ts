@@ -32,7 +32,7 @@ export const oldTokens: Tokens = {
 			chainId: ChainId.ETH,
 		},
 		WETH: {
-			chainAgnositcId: CoinKey.WETH,
+			chainAgnositcId: CoinKey.ETH,
 			symbol: "WETH",
 			name: "Wrapped Ethereum",
 			address: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
@@ -221,7 +221,7 @@ const tokensV2: any = {
 			43114: "",
 		},
 		decimals: 18,
-		chains: [ChainId.POL],
+		chains: [ChainId.ETH, ChainId.POL],
 	},
 	USDC: {
 		chainAgnositcId: CoinKey.USDC,
