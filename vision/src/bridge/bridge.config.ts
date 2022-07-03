@@ -108,7 +108,7 @@ export const dexes: Dex[] = [
 ];
 
 export const wagpayBridge: { [key: number]: string } = {
-	1: "",
+	1: "0x4e3c2Ea295C78AaEC276c666a95E76142aE2A999",
 	137: "0xB8f0B05516B7675632f5BeecCf9320aEf2C90982",
 	56: "",
 	43114: "",

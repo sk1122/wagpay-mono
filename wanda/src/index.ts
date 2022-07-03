@@ -403,20 +403,22 @@ class WagPay {
 				];
 
 				const connection = new ethers.providers.JsonRpcProvider(
-					"https://polygon-mainnet.g.alchemy.com/v2/DysZp2PQ51ql2Er-0GZKcnkGXEl9kIWn"
+					route.route.fromChain == "1"
+						? "https://eth-mainnet.g.alchemy.com/v2/y141okG6TC3PecBM1mL0BfST9f4WQmLx"
+						: "https://polygon-mainnet.g.alchemy.com/v2/DysZp2PQ51ql2Er-0GZKcnkGXEl9kIWn"
 				);
+
 				const amount =
 					route.route.fromToken.address ===
 					this.NATIVE_ADDRESS.toLowerCase()
 						? route.route.amount
 						: "0";
-				console.log(amount, "amount");
+
 				const transaction = await contract.transfer(routeDataArr, {
-					value: ethers.utils.formatEther(amount),
+					value: BigNumber.from(amount),
 					gasLimit: 15000000,
 					gasPrice: connection.getGasPrice(),
 				});
-				console.log(transaction);
 
 				resolve(true);
 			} catch (e) {

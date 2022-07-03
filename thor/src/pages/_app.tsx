@@ -3,14 +3,14 @@ import type { AppProps } from 'next/app';
 import { AppContext } from '@/context';
 import { ConnectWalletProvider } from '@/contexts/ConnectWalletContext';
 import { Toaster } from 'react-hot-toast';
-import { useState } from 'react';;
+import { useState } from 'react';
 import WagPay from '@wagpay/sdk';
 import type { Chain, CoinKey, Routes } from '@wagpay/types';
-import { QueryClient, QueryClientProvider, useQuery } from "react-query";
+import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
 import { ChainContextProvider } from '@/contexts/ChainContext';
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const wagpay = new WagPay()
+  const wagpay = new WagPay();
   const queryClient = new QueryClient();
   const priorties = ['Highest returns', 'Lowest bridge fees', 'Lowest time'];
   const [access, setAccess] = useState(true);
@@ -30,19 +30,23 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [routes, setRoutes] = useState<Routes[]>();
   const [isDropDownOpenFromCoin, setIsDropDownOpenFromCoin] = useState(false);
   const [isDropDownOpenToCoin, setIsDropDownOpenToCoin] = useState(false);
-  const [refreshRoutes, setRefreshRoutes] = useState()
+  const [refreshRoutes, setRefreshRoutes] = useState();
   // @ts-ignore
   // const { data: signerData, isError, isLoading } = useSigner();
 
   const [filteredFromChains, setFilteredFromChains] = useState<Chain[]>([]);
   const [filteredToChains, setFilteredToChains] = useState<Chain[]>([]);
-  const [signer, setSigner] = useState()
+  const [signer, setSigner] = useState();
 
   const sharedState = {
-    access, setAccess,
-    isModalOpen, setIsModalOpen,
-    isDropDownOpenp, setIsDropDownOpenp,
-    priorityValue, setPriorityValue,
+    access,
+    setAccess,
+    isModalOpen,
+    setIsModalOpen,
+    isDropDownOpenp,
+    setIsDropDownOpenp,
+    priorityValue,
+    setPriorityValue,
     priorties,
     // fromChain, setFromChain,
     // toChain, setToChain,
@@ -50,22 +54,30 @@ function MyApp({ Component, pageProps }: AppProps) {
     // fromCoin, setFromCoin,
     // toCoin, setToCoin,
     // amount, setAmount,
-    routeToExecute, setRouteToExecute,
-    account, setAccount,
-    isAuthenticated, setIsAuthenticated,
-    swapping, setSwapping,
-    routes, setRoutes,
+    routeToExecute,
+    setRouteToExecute,
+    account,
+    setAccount,
+    isAuthenticated,
+    setIsAuthenticated,
+    swapping,
+    setSwapping,
+    routes,
+    setRoutes,
     // signerData,
-    filteredFromChains, setFilteredFromChains,
-    filteredToChains, setFilteredToChains,
+    filteredFromChains,
+    setFilteredFromChains,
+    filteredToChains,
+    setFilteredToChains,
     setSigner,
     signer,
     isDropDownOpenFromCoin,
     setIsDropDownOpenFromCoin,
     isDropDownOpenToCoin,
     setIsDropDownOpenToCoin,
-    refreshRoutes, setRefreshRoutes
-  }
+    refreshRoutes,
+    setRefreshRoutes,
+  };
 
   return (
     <div className="min-h-screen bg-wagpay-dark  text-white">
@@ -79,10 +91,8 @@ function MyApp({ Component, pageProps }: AppProps) {
           </AppContext.Provider>
         </ChainContextProvider>
       </QueryClientProvider>
-
     </div>
-  )
+  );
 }
 
-export default MyApp
-
+export default MyApp;
